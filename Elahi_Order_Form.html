@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elahi Enterprises - Order Form</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f4f8; color: #222; }
+
+.header {
+  background: linear-gradient(135deg, #1F4E79, #2E75B6);
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.header h1 { font-size: 18px; }
+.header p { font-size: 12px; opacity: 0.85; margin-top: 3px; }
+
+.search-bar {
+  background: white;
+  padding: 12px 15px;
+  border-bottom: 2px solid #e0e0e0;
+  position: sticky;
+  top: 68px;
+  z-index: 99;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.search-bar input {
+  flex: 1;
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 2px solid #2E75B6;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+}
+.search-bar select {
+  padding: 8px 10px;
+  border: 2px solid #2E75B6;
+  border-radius: 20px;
+  font-size: 13px;
+  outline: none;
+  background: white;
+  max-width: 180px;
+}
+
+.cart-bar {
+  background: #1F4E79;
+  color: white;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: sticky;
+  top: 130px;
+  z-index: 98;
+}
+.cart-bar span { font-size: 14px; }
+.cart-count {
+  background: #FF6B35;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.company-section { margin: 10px; }
+.company-header {
+  background: #1F4E79;
+  color: white;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 13px;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+.company-header .toggle-btn {
+  cursor: pointer;
+  font-size: 16px;
+  background: none;
+  border: none;
+  color: white;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.products-table th {
+  background: #2E75B6;
+  color: white;
+  padding: 8px 6px;
+  font-size: 11px;
+  text-align: center;
+}
+.products-table td {
+  padding: 7px 6px;
+  font-size: 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+.products-table tr:nth-child(even) { background: #f7f9fc; }
+.products-table tr:hover { background: #e8f0fe; }
+
+.prod-name { text-align: left !important; font-weight: 500; }
+.prod-code { color: #666; font-size: 10px; text-align: center; }
+.price-cell { text-align: center; color: #1F4E79; font-weight: bold; }
+.net-price { color: #c0392b !important; }
+
+.qty-input {
+  width: 55px;
+  padding: 5px;
+  border: 2px solid #2E75B6;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+.qty-input:focus { outline: none; border-color: #FF6B35; background: #fff3ee; }
+.qty-input.has-value { background: #e8f5e9; border-color: #27ae60; }
+
+/* Cart Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+}
+.modal {
+  background: white;
+  margin: 20px auto;
+  max-width: 600px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  background: #1F4E79;
+  color: white;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+.modal-body { padding: 15px; overflow-y: auto; flex: 1; }
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+.cart-item-name { flex: 1; font-weight: 500; }
+.cart-item-detail { color: #666; font-size: 11px; }
+.cart-total {
+  background: #f0f4f8;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-weight: bold;
+  text-align: right;
+  font-size: 15px;
+  color: #1F4E79;
+}
+
+.customer-form { margin-top: 15px; }
+.customer-form label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 4px;
+}
+.customer-form input, .customer-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.customer-form input:focus, .customer-form textarea:focus {
+  outline: none;
+  border-color: #2E75B6;
+}
+
+.send-btn {
+  width: 100%;
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.send-btn:hover { background: #128C7E; }
+.send-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.empty-cart { text-align: center; color: #999; padding: 30px; font-size: 14px; }
+
+.no-results { text-align: center; padding: 30px; color: #999; }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏥 ELAHI ENTERPRISES</h1>
+  <p>Pharmaceutical Distribution — Mingora, Swat</p>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="🔍 Product name search karein..." oninput="filterProducts()">
+  <select id="companyFilter" onchange="filterProducts()">
+    <option value="">-- Sab Companies --</option>
+  </select>
+</div>
+
+<div class="cart-bar" onclick="openCart()">
+  <span>🛒 Mera Order <span class="cart-count" id="cartCount">0</span></span>
+  <span id="cartTotal" style="font-size:13px;">Rs. 0.00</span>
+</div>
+
+<div id="productList"></div>
+
+<!-- Cart Modal -->
+<div class="modal-overlay" id="cartModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>🛒 Mera Order</span>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotalDisplay">Total: Rs. 0.00</div>
+      
+      <div class="customer-form">
+        <label>👤 Aapka Naam *</label>
+        <input type="text" id="custName" placeholder="Apna naam likhein">
+        
+        <label>🏪 Dukan / Clinic ka Naam *</label>
+        <input type="text" id="custShop" placeholder="Dukan ya clinic ka naam">
+        
+        <label>📍 Pata (Address)</label>
+        <input type="text" id="custAddress" placeholder="Gali, mohalla, shehar">
+        
+        <label>📞 Phone Number</label>
+        <input type="tel" id="custPhone" placeholder="0300-0000000">
+        
+        <label>📝 Koi aur baat (Optional)</label>
+        <textarea id="custRemarks" rows="2" placeholder="Koi khaas baat ya hidayat..."></textarea>
+        
+        <button class="send-btn" onclick="sendWhatsApp()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp se Order Bhejo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COMPANIES = ["BEST MARK COMPANY", "TAJ SYRINGES", "GERISHION INTERNATIONAL", "ALLMED LABORATORIES", "ALLMED PVT LTD", "MICKO CHEMICAL LABORATORIES", "SYAH IMPEX", "WERRICK PHARMACEUTICALS", "WERRICK BIOTECH", "PHARMEVO PVT LTD (BIOTECH)", "RESOURSE GALEYNICALS", "DENOVO PHARMA", "BRAINS PHARMA", "KRESTA CORPORATION", "CSH PHARMACEUTICALS PVT LTS", "5G HEALTHCARE PVT LIMITED", "ROOMI ENTERPRISES", "OPEN BUSINESS", "MEDI CARE DISPOSIBLE INDUSTRIES", "RASCO PHARMA", "OLIVE LABORATORIES", "BROOKS-SHIELD", "SEARLE COMPANY LTD", "M.HASHIM TAJIR SURMA", "ASTELLAS PHARMACEUTICALS (PVT) LTD", "COOL & COOL", "STOCKS & INVENTORY ADJUSTMENT"];
+const PRODUCTS = [
+  {c:'001001',n:'PETRO GEL (SMALL) 70GM',co:'BEST MARK COMPANY',r:170.0,t:155.0,p:200.0},
+  {c:'001002',n:'PEVERA GEL (LARGE) 150GM',co:'BEST MARK COMPANY',r:150.0,t:140.0,p:140.0},
+  {c:'001003',n:'PURE GEL (MEDIUM) 100GM',co:'BEST MARK COMPANY',r:75.0,t:50.0,p:80.0},
+  {c:'001004',n:'MARK METHILATED SPIRIT 10',co:'BEST MARK COMPANY',r:30.0,t:15.0,p:15.0},
+  {c:'001005',n:'MARK METHILATED SPIRIT 25GM',co:'BEST MARK COMPANY',r:50.0,t:30.0,p:30.0},
+  {c:'001006',n:'BEST-METHYLATED SPIRIT 50',co:'BEST MARK COMPANY',r:250.0,t:190.0,p:190.0},
+  {c:'001007',n:'BEST METHYLATED SPIRIT 120ML',co:'BEST MARK COMPANY',r:35.0,t:20.0,p:20.0},
+  {c:'001008',n:'BEST METHYLATED SPIRIT 25',co:'BEST MARK COMPANY',r:65.0,t:50.0,p:50.0},
+  {c:'001009',n:'BEST METHYLATED SPIRIT 45',co:'BEST MARK COMPANY',r:90.0,t:65.0,p:80.0},
+  {c:'001010',n:'BEST ISPAGHOL CHILKA 75G',co:'BEST MARK COMPANY',r:90.0,t:70.0,p:70.0},
+  {c:'001011',n:'BEST-ISPAGHOL CHILKA 120',co:'BEST MARK COMPANY',r:130.0,t:110.0,p:110.0},
+  {c:'001012',n:'BEST ISPAGHOL CHILKA 25G',co:'BEST MARK COMPANY',r:35.0,t:20.0,p:20.0},
+  {c:'001013',n:'GLYVERA(GLYCERIN+ALOVERA)',co:'BEST MARK COMPANY',r:180.0,t:150.0,p:150.0},
+  {c:'001014',n:'PEVERA GEL (SMALL) 70GM',co:'BEST MARK COMPANY',r:80.0,t:60.0,p:80.0},
+  {c:'001015',n:'PEARL CLEAR GEL 120ML',co:'BEST MARK COMPANY',r:100.0,t:80.0,p:80.0},
+  {c:'001016',n:'HAND AND FACE LOTION 120',co:'BEST MARK COMPANY',r:0.0,t:0.0,p:37.0},
+  {c:'001017',n:'GLACIER PRICKLY HEAT POWD',co:'BEST MARK COMPANY',r:80.0,t:65.0,p:60.0},
+  {c:'001018',n:'GLACIER CREAM PRICKLY',co:'BEST MARK COMPANY',r:45.0,t:30.0,p:35.0},
+  {c:'001019',n:'SOFTE MIST BAR 90GM',co:'BEST MARK COMPANY',r:60.0,t:45.0,p:115.0},
+  {c:'001020',n:'SULFO MIST BAR 90GM',co:'BEST MARK COMPANY',r:60.0,t:45.0,p:115.0},
+  {c:'001021',n:'FUNGI MIST BAR 90GM',co:'BEST MARK COMPANY',r:60.0,t:45.0,p:60.0},
+  {c:'001022',n:'ACNE MIST BAR 90GM',co:'BEST MARK COMPANY',r:60.0,t:45.0,p:60.0},
+  {c:'001023',n:'TAR MIST BAR 90GM',co:'BEST MARK COMPANY',r:60.0,t:45.0,p:60.0},
+  {c:'002001',n:'HEALTH PLUS 3CC SYRINGE',co:'TAJ SYRINGES',r:610.0,t:520.0,p:520.0},
+  {c:'002002',n:'HEALTH PLUS 5CC SYRINGE',co:'TAJ SYRINGES',r:610.0,t:520.0,p:520.0},
+  {c:'002003',n:'HEALTH-PLUS 1CC SYRINGES',co:'TAJ SYRINGES',r:360.0,t:330.0,p:330.0},
+  {c:'002004',n:'TAJ INFUSION SET',co:'TAJ SYRINGES',r:12.0,t:8.0,p:30.0},
+  {c:'002005',n:'TAJ INFUSION SET',co:'TAJ SYRINGES',r:14.0,t:8.0,p:9.0},
+  {c:'003001',n:'APZER SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003002',n:'BIOGLOBIN SYRUP 250ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003003',n:'BIOGLOBIN SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003004',n:'BIOVITAL CAPS 10S',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:150.0},
+  {c:'003005',n:'FATTY-VIT 500MG SOFTGEL C',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003006',n:'HEPAGAL SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003007',n:'LEUCONOR SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003008',n:'Q PECT SUSP 60ML APP',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:71.65},
+  {c:'003009',n:'BIOVITAL CAPS 30S',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:450.65},
+  {c:'003010',n:'COFRIL SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003011',n:'TIFLEX SYRUP 60 ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:35.65},
+  {c:'003012',n:'SOLOMEG SOFTGEL CAP 500MG',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003013',n:'LEUCONOR TABS',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003014',n:'BIOGLOBIN TABS',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:260.65},
+  {c:'003015',n:'BIO COLIC DROPS 30ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:45.65},
+  {c:'003016',n:'BIO-FOLATE SOFTGEL',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:275.65},
+  {c:'003017',n:'BIO-TONE 120ML SYRUP',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:153.65},
+  {c:'003018',n:'MUKUFF COUGH SYRUP',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003019',n:'BIO-BERRY SACHETS',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003020',n:'QUITO SAFE LOTION 50ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:95.65},
+  {c:'003021',n:'BIBONAL FORTE TABLETS 30S',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003022',n:'BIOCITOL SACHETS 10S',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003023',n:'BIO-D PLUS TABLETS 10S',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003024',n:'GERLEX SYRUP 120ML',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003025',n:'BIOLYSINE  FORT  120ML  SYRUP',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:170.0},
+  {c:'003026',n:'BIBONAL  SACHETS',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:230.0},
+  {c:'003027',n:'GERI-LYSIN 120ML SYRUP',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'003028',n:'SHON-D SOFTGEL',co:'GERISHION INTERNATIONAL',r:0.0,t:0.0,p:0.0},
+  {c:'004001',n:'EPINOR 4MG/4ML INJ',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:3450.0},
+  {c:'004002',n:'DETRIFLOW TABS 2MG',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:1450.0},
+  {c:'004003',n:'UROCIT-K TABS',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:1304.0},
+  {c:'004004',n:'URIFLOW CAPS 0.4MG  30"S',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:0.0},
+  {c:'004011',n:'UROPIN 100MG TABS',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:0.0},
+  {c:'004013',n:'URIFLOW 0.4MG TABS 10S',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:0.0},
+  {c:'004014',n:'ROAN INJECTION',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:3579.8},
+  {c:'005026',n:'RPL 800mg Tab  30S',co:'ALLMED LABORATORIES',r:0.0,t:0.0,p:3200.0},
+  {c:'004012',n:'FORMOLINE-L112 40 TAB',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:4975.0},
+  {c:'005001',n:'MONOFER 100MG INJECTION 1',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:2770.0},
+  {c:'005002',n:'A-BONE TABS 0.5MCG',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:552.0},
+  {c:'005007',n:'A-CIP 250MG TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:167.0},
+  {c:'005008',n:'A-CIP 500MG TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:276.0},
+  {c:'005009',n:'A-CIP 200MG INFUSION 100',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:154.0},
+  {c:'005013',n:'BIORAL-100MG SOFT-GELATIN',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:11670.0},
+  {c:'005014',n:'BIORAL-25MG SOFT-GELATIN',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:2915.0},
+  {c:'005015',n:'BIORAL-50MG SOFT-GELATIN',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:5840.0},
+  {c:'005016',n:'SUPRIMUN 500MG TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:7000.0},
+  {c:'005018',n:'TACOGEN 1MG CAP',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:7950.0},
+  {c:'005019',n:'METORIL 100S TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:0.0},
+  {c:'005020',n:'ZOMED 2.5MG TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:8466.0},
+  {c:'005021',n:'TACOGEN  0.5MG CAP',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:4650.0},
+  {c:'005022',n:'DEFOX 500MG DISPERSIBLE TABLETS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:0.0},
+  {c:'005023',n:'BIORAL  100MG/ML  ORAL SOLUTION  50ml',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:13000.0},
+  {c:'005024',n:'SEVOFLO  250ML INHALATION LIQUID',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:11766.0},
+  {c:'005025',n:'ISOFLO 250ML INHALATION LIQUID',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:9650.0},
+  {c:'005027',n:'SIROALL 1MG TABS',co:'ALLMED PVT LTD',r:0.0,t:0.0,p:0.0},
+  {c:'006001',n:'ACRIFLAVINE LOTION 50ML',co:'MICKO CHEMICAL LABORATORIES',r:0.0,t:0.0,p:170.0},
+  {c:'006002',n:'AMMONIA SOLUTION 450ML',co:'MICKO CHEMICAL LABORATORIES',r:130.0,t:120.0,p:150.0},
+  {c:'006003',n:'AMMONIA SOLUTION 50ML',co:'MICKO CHEMICAL LABORATORIES',r:390.0,t:360.0,p:50.0},
+  {c:'006004',n:'METHILATED SPIRIT 250ML',co:'MICKO CHEMICAL LABORATORIES',r:150.0,t:130.0,p:170.0},
+  {c:'006005',n:'BORIC-ACID POWDER 30GRAM',co:'MICKO CHEMICAL LABORATORIES',r:970.0,t:950.0,p:100.0},
+  {c:'006006',n:'BORIC-ACID POWDER 300GM',co:'MICKO CHEMICAL LABORATORIES',r:500.0,t:450.0,p:550.0},
+  {c:'006007',n:'CASTOR-OIL PURE 30ML',co:'MICKO CHEMICAL LABORATORIES',r:660.0,t:640.0,p:80.0},
+  {c:'006008',n:'CASTOR-OIL PURE 250ML',co:'MICKO CHEMICAL LABORATORIES',r:410.0,t:390.0,p:500.0},
+  {c:'006009',n:'CASTOR-OIL PURE 50ML',co:'MICKO CHEMICAL LABORATORIES',r:1010.0,t:990.0,p:120.0},
+  {c:'006010',n:'GENTION-VIOLET PAINT 30ML',co:'MICKO CHEMICAL LABORATORIES',r:820.0,t:800.0,p:100.0},
+  {c:'006011',n:'METHILATED SPIRIT  4500ML',co:'MICKO CHEMICAL LABORATORIES',r:1600.0,t:1000.0,p:1000.0},
+  {c:'006013',n:'GLYC SUPPOSITORIES ADULTS',co:'MICKO CHEMICAL LABORATORIES',r:101.0,t:99.0,p:120.0},
+  {c:'006014',n:'GLYC-SUPPOSITORIES INFANT',co:'MICKO CHEMICAL LABORATORIES',r:101.0,t:99.0,p:120.0},
+  {c:'006015',n:'GLYCERIN PURE 25GRAM 1X10',co:'MICKO CHEMICAL LABORATORIES',r:480.0,t:460.0,p:60.0},
+  {c:'006016',n:'GLYCERIN PURE 300GRAM',co:'MICKO CHEMICAL LABORATORIES',r:410.0,t:400.0,p:400.0},
+  {c:'006017',n:'GLYCERIN 150GM SPRAY',co:'MICKO CHEMICAL LABORATORIES',r:110.0,t:80.0,p:80.0},
+  {c:'006018',n:'GLYCERIN PURE 50GRAM',co:'MICKO CHEMICAL LABORATORIES',r:710.0,t:690.0,p:90.0},
+  {c:'006019',n:'GLYCERIN PURE PET 125GM',co:'MICKO CHEMICAL LABORATORIES',r:190.0,t:175.0,p:220.0},
+  {c:'006020',n:'GUM-PAINT 20ML',co:'MICKO CHEMICAL LABORATORIES',r:350.0,t:338.0,p:40.0},
+  {c:'006021',n:'PEROXYDOL(HYDROGEN) 100ML',co:'MICKO CHEMICAL LABORATORIES',r:610.0,t:595.0,p:80.0},
+  {c:'006022',n:'PEROXYDOL(HYDROGEN) 450M',co:'MICKO CHEMICAL LABORATORIES',r:200.0,t:190.0,p:240.0},
+  {c:'006023',n:'HERITAGE FACIAL SPRAY',co:'MICKO CHEMICAL LABORATORIES',r:110.0,t:85.0,p:95.0},
+  {c:'006024',n:'METHYLATED  SPIRIT 100ML',co:'MICKO CHEMICAL LABORATORIES',r:80.0,t:57.0,p:110.0},
+  {c:'006025',n:'ICHTHTHAMMOL-GLYCERIN 30M',co:'MICKO CHEMICAL LABORATORIES',r:590.0,t:570.0,p:70.0},
+  {c:'006026',n:'LIQUID-PARAFIN 15ML',co:'MICKO CHEMICAL LABORATORIES',r:410.0,t:390.0,p:50.0},
+  {c:'006027',n:'LIQUID-PARAFFIN 30ML',co:'MICKO CHEMICAL LABORATORIES',r:510.0,t:490.0,p:70.0},
+  {c:'006028',n:'LIQUID-PARAFFIN PURE 250',co:'MICKO CHEMICAL LABORATORIES',r:320.0,t:300.0,p:360.0},
+  {c:'006029',n:'LIQUID PARAFIN PURE 50GM',co:'MICKO CHEMICAL LABORATORIES',r:740.0,t:720.0,p:720.0},
+  {c:'006030',n:'LUGOLS-IODINE 30ML',co:'MICKO CHEMICAL LABORATORIES',r:280.0,t:240.0,p:240.0},
+  {c:'006031',n:'METHILATED SPIRIT 50ML(MI',co:'MICKO CHEMICAL LABORATORIES',r:450.0,t:435.0,p:60.0},
+  {c:'006032',n:'MERCUROCHROME LOTION 30ML',co:'MICKO CHEMICAL LABORATORIES',r:0.0,t:0.0,p:0.0},
+  {c:'006033',n:'PAIN AXE CREAM 35GM',co:'MICKO CHEMICAL LABORATORIES',r:25.0,t:22.0,p:22.0},
+  {c:'006034',n:'POVIDIN SOLUTION 500ML',co:'MICKO CHEMICAL LABORATORIES',r:150.0,t:110.0,p:115.0},
+  {c:'006035',n:'POVIDIN SOLUTION 50ML',co:'MICKO CHEMICAL LABORATORIES',r:155.0,t:149.0,p:180.0},
+  {c:'006036',n:'PULTACIN PULTICE 100GM',co:'MICKO CHEMICAL LABORATORIES',r:110.0,t:105.0,p:125.0},
+  {c:'006037',n:'TANSY LOTION 50ML',co:'MICKO CHEMICAL LABORATORIES',r:70.0,t:50.0,p:50.0},
+  {c:'006038',n:'THROAT PAINT 25ML',co:'MICKO CHEMICAL LABORATORIES',r:610.0,t:590.0,p:75.0},
+  {c:'006039',n:'TINCT-BENZOIN CO 30ML',co:'MICKO CHEMICAL LABORATORIES',r:500.0,t:480.0,p:60.0},
+  {c:'006040',n:'TINCT-BENZOIN CO 450ML',co:'MICKO CHEMICAL LABORATORIES',r:250.0,t:180.0,p:200.0},
+  {c:'006041',n:'TINCTURE IODINE 30ML',co:'MICKO CHEMICAL LABORATORIES',r:980.0,t:960.0,p:120.0},
+  {c:'006042',n:'WAX-AID DROPS 15ML',co:'MICKO CHEMICAL LABORATORIES',r:420.0,t:400.0,p:50.0},
+  {c:'006043',n:'STYPTICA ANTISEPTIC SOLUT',co:'MICKO CHEMICAL LABORATORIES',r:150.0,t:120.0,p:120.0},
+  {c:'006044',n:'INSECTO-PELL SPRAY',co:'MICKO CHEMICAL LABORATORIES',r:100.0,t:75.0,p:75.0},
+  {c:'006045',n:'XXXX CAREALL CLOSEXXXX',co:'MICKO CHEMICAL LABORATORIES',r:160.0,t:145.0,p:220.0},
+  {c:'006046',n:'ROXINOL LIQUID  60ML',co:'MICKO CHEMICAL LABORATORIES',r:90.0,t:75.0,p:100.0},
+  {c:'006047',n:'ROXINOL LIQUID  100 ML',co:'MICKO CHEMICAL LABORATORIES',r:140.0,t:128.0,p:160.0},
+  {c:'006048',n:'ROXINOL  LIQUD  1000ML',co:'MICKO CHEMICAL LABORATORIES',r:1480.0,t:1440.0,p:1800.0},
+  {c:'007001',n:'HAPPIES-MINI NEW BORN',co:'SYAH IMPEX',r:230.0,t:180.0,p:180.0},
+  {c:'007002',n:'HAPPIES-MINI SMALL',co:'SYAH IMPEX',r:230.0,t:180.0,p:180.0},
+  {c:'007003',n:'HAPPIES-MINI MEDIUM',co:'SYAH IMPEX',r:230.0,t:180.0,p:180.0},
+  {c:'007004',n:'HAPPIES-MINI LARGE',co:'SYAH IMPEX',r:230.0,t:180.0,p:180.0},
+  {c:'007005',n:'HAPPIES-MINI XTRA-LARGE',co:'SYAH IMPEX',r:230.0,t:180.0,p:180.0},
+  {c:'007006',n:'HAPPIES-REGULAR SMALL',co:'SYAH IMPEX',r:900.0,t:750.0,p:750.0},
+  {c:'007007',n:'HAPPIES-REGULAR MEDIUM',co:'SYAH IMPEX',r:900.0,t:750.0,p:750.0},
+  {c:'007008',n:'HAPPIES-REGULAR LARGE',co:'SYAH IMPEX',r:900.0,t:750.0,p:750.0},
+  {c:'007009',n:'HAPPIES-REGULAR XLARGE',co:'SYAH IMPEX',r:900.0,t:750.0,p:750.0},
+  {c:'007010',n:'HAPPIES ECONOMY SMALL',co:'SYAH IMPEX',r:1600.0,t:1400.0,p:1400.0},
+  {c:'007011',n:'HAPPIES ECONOMY MEDIUM',co:'SYAH IMPEX',r:1600.0,t:1400.0,p:1400.0},
+  {c:'007012',n:'HAPPIES ECONOMY LARGE',co:'SYAH IMPEX',r:1600.0,t:1400.0,p:1400.0},
+  {c:'007013',n:'HAPPIES ECONOMY X-LARGE',co:'SYAH IMPEX',r:1600.0,t:1400.0,p:1400.0},
+  {c:'007014',n:'LALS BABY SMALL DIAPERS',co:'SYAH IMPEX',r:650.0,t:500.0,p:500.0},
+  {c:'007015',n:'LALS BABY MEDIUM DIAPERS',co:'SYAH IMPEX',r:650.0,t:500.0,p:700.0},
+  {c:'007016',n:'LALS BABY LARGE DIAPERS',co:'SYAH IMPEX',r:650.0,t:500.0,p:500.0},
+  {c:'007017',n:'LALS BABY XLARGE DIAPERS',co:'SYAH IMPEX',r:650.0,t:500.0,p:500.0},
+  {c:'007018',n:'SHIFA SYRINGE 1CC-BLISTER',co:'SYAH IMPEX',r:1100.0,t:1050.0,p:1050.0},
+  {c:'007021',n:'SHIFA SYRINGE 10CC-BLISTER',co:'SYAH IMPEX',r:1600.0,t:1520.0,p:1520.0},
+  {c:'007022',n:'SHIFA SYRINGE 20CC-BLISTER',co:'SYAH IMPEX',r:1400.0,t:1300.0,p:1300.0},
+  {c:'007023',n:'SHIFA SYRINGE 50CC-BLISTE',co:'SYAH IMPEX',r:1500.0,t:1420.0,p:1420.0},
+  {c:'007024',n:'SHIFA SYRINGE INSULIN 1CC',co:'SYAH IMPEX',r:1950.0,t:1880.0,p:1880.0},
+  {c:'007025',n:'SHIFA POLY IV BUREETE 100CC',co:'SYAH IMPEX',r:170.0,t:160.0,p:160.0},
+  {c:'007026',n:'SHIFA BASIC IV SET',co:'SYAH IMPEX',r:32.0,t:30.0,p:30.0},
+  {c:'007027',n:'SHIFA BASIC/BLISTER I.V S',co:'SYAH IMPEX',r:32.0,t:29.5,p:29.5},
+  {c:'007028',n:'SHIFA URINARY BAG T OUTLE',co:'SYAH IMPEX',r:75.0,t:68.0,p:68.0},
+  {c:'007029',n:'SHIFA INSULIN 10S SMART',co:'SYAH IMPEX',r:275.0,t:235.0,p:320.0},
+  {c:'007030',n:'SHIFA SYRINGE 60CC-BLISTE',co:'SYAH IMPEX',r:3050.0,t:2980.0,p:2980.0},
+  {c:'007031',n:'SHIFA BLISTER BURETTE-IV 100CC',co:'SYAH IMPEX',r:225.0,t:190.0,p:190.0},
+  {c:'007033',n:'SHIFA LATEX-GLOVES 6.5/SI',co:'SYAH IMPEX',r:88.0,t:84.0,p:84.0},
+  {c:'007034',n:'SHIFA LATEX-GLOVES 7/SIZE',co:'SYAH IMPEX',r:88.0,t:84.0,p:42.0},
+  {c:'007035',n:'SHIFA LATEX-GLOVES 7.5/SI',co:'SYAH IMPEX',r:145.0,t:135.0,p:135.0},
+  {c:'007036',n:'SHIFA LATEX-GLOVES 8/SIZE',co:'SYAH IMPEX',r:88.0,t:84.0,p:84.0},
+  {c:'007037',n:'SHIFA LATEX-GLOVES 8.5/SI',co:'SYAH IMPEX',r:88.0,t:84.0,p:35.0},
+  {c:'007038',n:'SHIFA 18G I.V.CATHETER WINGS',co:'SYAH IMPEX',r:110.0,t:95.0,p:100.0},
+  {c:'007039',n:'SHIFA 20G I.V.CATHETER WINGS',co:'SYAH IMPEX',r:110.0,t:98.0,p:100.0},
+  {c:'007040',n:'SHIFA 22G I.V.CATHETER WINGS',co:'SYAH IMPEX',r:110.0,t:98.0,p:100.0},
+  {c:'007041',n:'SHIFA 24G I.V.CATHETER WINGS',co:'SYAH IMPEX',r:110.0,t:80.0,p:100.0},
+  {c:'007042',n:'SHIFA (NEW) Y PORT IV SET',co:'SYAH IMPEX',r:50.0,t:45.0,p:45.0},
+  {c:'007043',n:'HAPPIES-ADULT MEDIUM',co:'SYAH IMPEX',r:730.0,t:685.0,p:685.0},
+  {c:'007044',n:'HAPPIES-ADULTS LARGE',co:'SYAH IMPEX',r:745.0,t:700.0,p:700.0},
+  {c:'007045',n:'HAPPIES-ADULTS XX-LARGE',co:'SYAH IMPEX',r:810.0,t:730.0,p:730.0},
+  {c:'007046',n:'SHIFA MEDIUM ADULT DIAPERS',co:'SYAH IMPEX',r:600.0,t:529.0,p:529.0},
+  {c:'007047',n:'SHIFA LARGE ADULT DIAPERS',co:'SYAH IMPEX',r:600.0,t:535.0,p:535.0},
+  {c:'007048',n:'SHIFA XLARGE ADULT DIAPERS',co:'SYAH IMPEX',r:630.0,t:615.0,p:615.0},
+  {c:'007049',n:'SHIFA    FACE    MASK',co:'SYAH IMPEX',r:750.0,t:600.0,p:600.0},
+  {c:'007050',n:'SHIFA AD-5CC SYRINGES',co:'SYAH IMPEX',r:1000.0,t:980.0,p:980.0},
+  {c:'007051',n:'SHIFA AD-3CC SYRINGES',co:'SYAH IMPEX',r:1000.0,t:980.0,p:980.0},
+  {c:'007052',n:'SHIFA NEW INSULIN 1CC/30G',co:'SYAH IMPEX',r:310.0,t:275.0,p:275.0},
+  {c:'021005',n:'GIFAT OF GLASS (SHIFA INSULIN)',co:'SYAH IMPEX',r:0.0,t:0.0,p:0.0},
+  {c:'008001',n:'ENDONIL 400MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008002',n:'ENDONIL SUSP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:35.0},
+  {c:'008003',n:'FRECID SUSP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:160.0},
+  {c:'008004',n:'MENIDAZOLE SUSP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008005',n:'WERRIDAL SUSP 90ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008006',n:'KUF GO SYRUP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008007',n:'WERISOL ORS SACHETS',co:'WERRICK PHARMACEUTICALS',r:230.0,t:170.0,p:170.0},
+  {c:'008008',n:'SUPER 7 SACHETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:55.0},
+  {c:'008010',n:'WERIMOX 125MG SUSP 90ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008011',n:'WERIMOX 250MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:74.12},
+  {c:'008012',n:'WERIMOX 250MG SUSP 90ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008013',n:'WERIMOX 500MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008014',n:'KEFRIL SUSP 125MG 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008015',n:'KEFRIL SUSP 250MG 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008016',n:'KEFRIL CAPS 250MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008017',n:'KEFRIL CAPS 500MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008018',n:'CO-ZEAL TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008019',n:'AWARDIN PLUS CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008020',n:'CARDIOVASC 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:199.0},
+  {c:'008021',n:'CARDIOVASC 2.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:43.0},
+  {c:'008022',n:'CARDIOVASC 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:226.0},
+  {c:'008023',n:'MONITOR 2.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008024',n:'MONITOR 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:219.56},
+  {c:'008025',n:'MONITOR 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:409.44},
+  {c:'008026',n:'MEPRAZOLE CAPS 10MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008027',n:'MEPRAZOLE CAPS 20MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008028',n:'MEPRAZOLE CAPS 40MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008029',n:'PULSE 100MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:135.0},
+  {c:'008030',n:'PULSE 25MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:40.0},
+  {c:'008031',n:'PULSE 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:130.0},
+  {c:'008032',n:'BRODIN 250MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008033',n:'BRODIN 500MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:230.0},
+  {c:'008034',n:'HIGH-C 1000 SACHETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:200.0},
+  {c:'008035',n:'NUTRITION 6 SYRUP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008036',n:'NUTRITION 12 TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:160.0},
+  {c:'008037',n:'NUTRITION 6 TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:150.0},
+  {c:'008038',n:'OSTEOPOR OW TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008039',n:'OSTEOPOR TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008040',n:'PAINEZE TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:297.0},
+  {c:'008041',n:'HIGH-C D TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:270.0},
+  {c:'008042',n:'SURVIVE AT 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008043',n:'SURVIVE AT 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008044',n:'AWARDIN TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008045',n:'CAPTIL 25MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:105.0},
+  {c:'008046',n:'CAPTIL 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008047',n:'CO-EZIDAY 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008048',n:'EZIDAY 25MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:282.72},
+  {c:'008049',n:'EZIDAY 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:419.0},
+  {c:'008050',n:'FRUSERIDE TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:25.0},
+  {c:'008051',n:'SEQUENCE 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:50.0},
+  {c:'008052',n:'SURVIVE 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008053',n:'SURVIVE 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008054',n:'SURVIVE 40MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008055',n:'SURVIVE PLUS 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:119.0},
+  {c:'008056',n:'SURVIVE PLUS 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:224.0},
+  {c:'008057',n:'CO-EZIDAY 100MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:358.76},
+  {c:'008058',n:'EZIDAY 100MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008059',n:'BETANORM 2.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008060',n:'BETANORM 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:181.0},
+  {c:'008061',n:'SURVIVE AT 40MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008062',n:'PASAGE TABS 10MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008063',n:'PASAGE TABS 20MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008064',n:'PASAGE TABS 5MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008065',n:'NEW DAY 5/160MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008066',n:'NEW DAY 10/160MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008067',n:'NEW DAY 5/80MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:333.0},
+  {c:'008068',n:'GLIMECIDE 1MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008069',n:'GLIMECIDE 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008070',n:'GLIMECIDE 3MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:160.0},
+  {c:'008071',n:'GLIMECIDE 4MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008072',n:'BLUEMET 1MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008073',n:'BLUEMET 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008074',n:'BLUEMET 4MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008075',n:'BLUTAB 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008076',n:'BLUTAB 4MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008077',n:'BLUTAB 8MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008078',n:'REGAIN XR 500MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:90.0},
+  {c:'008079',n:'REGAIN XR TABS 850MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:125.0},
+  {c:'008080',n:'HIGH C PLUS SACHETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008081',n:'SOFTIN P TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008082',n:'FLUEZE SACHETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:150.0},
+  {c:'008083',n:'OFLOXIN 200MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:160.0},
+  {c:'008084',n:'REGULAIR 10MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008085',n:'REGULAIR 5MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:120.0},
+  {c:'008086',n:'RIZE 20MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:195.0},
+  {c:'008087',n:'RIZE LIQUID 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008088',n:'SOFTIN SYRUP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008089',n:'SOFTIN  10S TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:101.34},
+  {c:'008090',n:'DIASTOLIC 8MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:308.0},
+  {c:'008091',n:'DIASTOLIC H TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:630.0},
+  {c:'008092',n:'ESOPRAZOLE CAPS 20MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:145.0},
+  {c:'008093',n:'ESOPRAZOLE CAPS 40MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008094',n:'FLAMEX 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008095',n:'FLUEZE SYRUP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:49.45},
+  {c:'008096',n:'FLUEZE SYRUP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:58.0},
+  {c:'008097',n:'FLUEZE TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008101',n:'BRONKONORM SYPS 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:19.0},
+  {c:'008102',n:'PARACETAMOL 125MG SUSP 60',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008103',n:'PARACETAMOL 250MG SUSP 60',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:28.0},
+  {c:'008104',n:'PEDILIX LINCTUS 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:35.0},
+  {c:'008105',n:'WERIFIT SYRUP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008106',n:'WERIFIT LYSINE SYRUP',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:26.0},
+  {c:'008107',n:'KIDS SYRUP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:40.85},
+  {c:'008108',n:'DOLOGESIC TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:296.46},
+  {c:'008109',n:'HYPERACE 2.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:195.0},
+  {c:'008110',n:'HYPERACE 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:290.0},
+  {c:'008111',n:'METHOTREXATE 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008112',n:'METHOTREXATE 2.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008113',n:'NIZODERM LOTION 90ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:255.0},
+  {c:'008114',n:'PROSYCLIDINE TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008115',n:'URIFLOX TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008116',n:'STOMEZE TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:145.6},
+  {c:'008117',n:'STOMEZE SUSP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:57.2},
+  {c:'008118',n:'WALK AID 100MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:530.0},
+  {c:'008119',n:'WALK AID 50MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:270.0},
+  {c:'008120',n:'CLACIN 250MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:155.0},
+  {c:'008121',n:'CLACIN 500MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:310.0},
+  {c:'008122',n:'CLACIN 125MG GRANULES SUS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:290.0},
+  {c:'008123',n:'INHALERIN 2MG SYP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008124',n:'INHALERIN 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:70.0},
+  {c:'008125',n:'INHALERIN SR 4MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008126',n:'INHALERIN SR 8MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008128',n:'SKELGESIC TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:87.36},
+  {c:'008129',n:'RITE SYRUP 156.25MG/5ML 6',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:65.0},
+  {c:'008130',n:'RITE DS SYRUP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008131',n:'RITE TABS 375MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:75.0},
+  {c:'008132',n:'RITE DS 625MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:120.0},
+  {c:'008133',n:'RITE BD 1000MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:155.0},
+  {c:'008134',n:'SOFTIN-F 60MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:83.0},
+  {c:'008135',n:'SOFTIN-F 120MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:148.75},
+  {c:'008136',n:'SOFTIN-F 180MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:227.0},
+  {c:'008137',n:'CIPRIN 250MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:150.0},
+  {c:'008138',n:'CIPRIN 250MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008139',n:'CIPRIN 500MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:295.0},
+  {c:'008140',n:'CIPRIN 500MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008141',n:'LISPRIL 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008142',n:'LISPRIL 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:350.0},
+  {c:'008143',n:'LISPRIL 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008144',n:'NERVIN 0.25MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008145',n:'NERVIN 0.5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008146',n:'NERVIN 1.0MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008147',n:'PEPTIBAN DISP 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008148',n:'PEPTIBAN TABS 20MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008149',n:'PEPTIBAN DISP 40MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:120.0},
+  {c:'008150',n:'PEPTIBAN TABS 40MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:250.0},
+  {c:'008151',n:'PEPTIBAN AC TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:43.36},
+  {c:'008152',n:'PEPTIBAN  DRY SUSP 60ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008153',n:'WERILLAX SUSP 120ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008154',n:'EYE BATH EYE LOTION 120M',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:50.0},
+  {c:'008155',n:'CIPRIN 125MG SUSP 90ML',co:'WERRICK PHARMACEUTICALS',r:131.8,t:131.8,p:166.12},
+  {c:'008156',n:'CIPRIN 250MG SUSP 90ML',co:'WERRICK PHARMACEUTICALS',r:234.6,t:234.6,p:234.6},
+  {c:'008157',n:'CIPRIN XR 500MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008158',n:'CIPRIN XR 1000MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008159',n:'CIPRIN INFUSION 100ML',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008160',n:'FLAMEX XR TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:381.86},
+  {c:'008161',n:'EPITAB XR 200MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:189.74},
+  {c:'008162',n:'EPITAB XR 400MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008163',n:'MANIPRAM TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008164',n:'OLANZIA 10MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:144.5},
+  {c:'008165',n:'OLANZIA 5MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008166',n:'QUITIN 100MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:500.0},
+  {c:'008167',n:'QUITIN 25MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:300.0},
+  {c:'008168',n:'SENSIBLE TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008169',n:'WIZEN FLASH 1MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:120.0},
+  {c:'008170',n:'WIZEN FLASH 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:195.0},
+  {c:'008171',n:'WIZEN FLASH 3MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:390.0},
+  {c:'008172',n:'WIZEN FLASH 4MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008173',n:'WIZEN 1MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008174',n:'WIZEN 2MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008175',n:'WIZEN 3MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008176',n:'WIZEN 4MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008177',n:'OLANZIA TABS 5MG',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008178',n:'OLANZIA 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:227.0},
+  {c:'008179',n:'RIZE PLUS 5MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:360.0},
+  {c:'008180',n:'RIZE PLUS 10MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:470.0},
+  {c:'008181',n:'RIZE PLUS 20MG TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008182',n:'SOLOGESIC 50MG CAP',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008183',n:'SOLOGESIC SR TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008184',n:'SOLOGESIC EXTRA TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:151.0},
+  {c:'008185',n:'SOFTIN-OD TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:190.0},
+  {c:'008188',n:'WERDEX 30MG CAP',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008189',n:'WERDEX 60MG CAP',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008190',n:'NEWDAY HCT 12.5MG  5/160 TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008191',n:'NEWDAY HCT 12.5MG 10/160 TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008192',n:'NEWDAY HCT 25MG 5/160 TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008193',n:'NEWDAY HCT 25MG 10/160 TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008194',n:'NEWDAY HCT 25MG 10/320 TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008195',n:'EZIDAY-DUO 5/50MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008196',n:'EZIDAY-DUO 5/100MG TAB',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008197',n:'QUITIN  200MG  TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:12000.0},
+  {c:'008198',n:'QUITIN XR  150MG  TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:350.0},
+  {c:'008199',n:'QUITIN XR  200MG  TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:380.0},
+  {c:'008200',n:'QUITIN XR  300MG  TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:410.0},
+  {c:'008201',n:'SOFTIN  30S TABS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008202',n:'WERINTA 60MG TABLET',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:546.0},
+  {c:'008203',n:'WERINTA 90MG TABLET',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:760.2},
+  {c:'008204',n:'EXHIBION 2.5MG TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008205',n:'EXHIBION 5MG TABLETS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:870.0},
+  {c:'008206',n:'OLANZIA PLUS 3/25MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008207',n:'OLANZIA PLUS 6/25MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'008208',n:'OLANZIA PLUS 12/25MG CAPS',co:'WERRICK PHARMACEUTICALS',r:0.0,t:0.0,p:0.0},
+  {c:'009001',n:'ANTI C TABS 400MG',co:'WERRICK BIOTECH',r:0.0,t:0.0,p:0.01},
+  {c:'009002',n:'CELL-AID INJECTION 3MIU/1',co:'WERRICK BIOTECH',r:0.0,t:0.0,p:0.0},
+  {c:'009003',n:'CELL-AID DEPOT INJ 120MCG',co:'WERRICK BIOTECH',r:0.0,t:0.0,p:0.0},
+  {c:'011001',n:'EVO-RIN TABS 400MG',co:'PHARMEVO PVT LTD (BIOTECH)',r:0.0,t:0.0,p:0.0},
+  {c:'011002',n:'INTEF INJECTION 3MIU/1ML',co:'PHARMEVO PVT LTD (BIOTECH)',r:0.0,t:0.0,p:0.0},
+  {c:'011003',n:'EPOSINO 2000IU (C/P)',co:'PHARMEVO PVT LTD (BIOTECH)',r:0.0,t:0.0,p:0.0},
+  {c:'011004',n:'EPOSINO 4000IU (C/P)',co:'PHARMEVO PVT LTD (BIOTECH)',r:0.0,t:0.0,p:1734.0},
+  {c:'011005',n:'TENOVA 300MG TABS',co:'PHARMEVO PVT LTD (BIOTECH)',r:0.0,t:0.0,p:0.0},
+  {c:'012001',n:'TRIDOPS DROPS 15ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012002',n:'AKCID-ULTRA LIQUID GEL 12',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012003',n:'PRECERA SYP 120ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012004',n:'RESCARDIL TABS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012005',n:'FERRALET-27 SYUP 120ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012006',n:'FERRALET-27 TABLETS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012007',n:'CLAVIN-STRONG CAPS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012008',n:'CLARIDYL SYUP 120ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012009',n:'SEPROGIN-F TABS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012010',n:'CARTINOX TABS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012011',n:'ZIX SYUP 90ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'012012',n:'APEONOL SYRUP 120ML',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:160.0},
+  {c:'012013',n:'NVINOR TAB',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:900.0},
+  {c:'012014',n:'CLAVIN ULTRA CAPS',co:'RESOURSE GALEYNICALS',r:0.0,t:0.0,p:0.0},
+  {c:'013001',n:'CITRA-LOCK 30% 5ML',co:'DENOVO PHARMA',r:2200.0,t:1800.0,p:1800.0},
+  {c:'013002',n:'CITRA-LOCK 4% 5ML',co:'DENOVO PHARMA',r:1750.0,t:1550.0,p:1550.0},
+  {c:'013004',n:'VETO-S 360MG 12X10S',co:'DENOVO PHARMA',r:28000.0,t:27000.0,p:31624.0},
+  {c:'014001',n:'STERIBAND-4 GAUZE SWABS 1',co:'BRAINS PHARMA',r:0.0,t:0.0,p:390.0},
+  {c:'014002',n:'STERIBAND-6 GAUZE SWABS 1',co:'BRAINS PHARMA',r:0.0,t:0.0,p:475.0},
+  {c:'014003',n:'STERIBAND-12 GAUZE SPONGE',co:'BRAINS PHARMA',r:0.0,t:0.0,p:375.0},
+  {c:'014004',n:'CREPE 3 BANDAGE 7.5CMX4.5',co:'BRAINS PHARMA',r:0.0,t:0.0,p:40.0},
+  {c:'014005',n:'CREPE 4 BANDAGE 10CMX4.5M',co:'BRAINS PHARMA',r:0.0,t:0.0,p:50.0},
+  {c:'014006',n:'CREPE 6 BANDAGE 15CMX4.5M',co:'BRAINS PHARMA',r:0.0,t:0.0,p:105.0},
+  {c:'014007',n:'STERIPAX EYE PADS 50X75M',co:'BRAINS PHARMA',r:0.0,t:0.0,p:300.0},
+  {c:'014008',n:'STERBAND O.T ROLL GAUZE',co:'BRAINS PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'014009',n:'ABSOLIN MATERNITY PADS',co:'BRAINS PHARMA',r:0.0,t:0.0,p:100.0},
+  {c:'014010',n:'LINOFIN (PARAFIN GAUZE TI',co:'BRAINS PHARMA',r:0.0,t:0.0,p:55.0},
+  {c:'014011',n:'MOSBELL 50ML LOTION',co:'BRAINS PHARMA',r:0.0,t:0.0,p:90.0},
+  {c:'014012',n:'COTTON ROLL 200GM',co:'BRAINS PHARMA',r:115.0,t:97.0,p:97.0},
+  {c:'014013',n:'COTTON ROLL 100GM',co:'BRAINS PHARMA',r:60.0,t:48.0,p:48.0},
+  {c:'014014',n:'COTTON ROLL 400GM',co:'BRAINS PHARMA',r:230.0,t:210.0,p:210.0},
+  {c:'015001',n:'KLIMAX INTENSE',co:'KRESTA CORPORATION',r:1250.0,t:1100.0,p:1100.0},
+  {c:'015002',n:'KLIMAX SENSUAL',co:'KRESTA CORPORATION',r:1450.0,t:1250.0,p:1250.0},
+  {c:'015003',n:'KLIMAX ULTRA',co:'KRESTA CORPORATION',r:1750.0,t:1550.0,p:1550.0},
+  {c:'015004',n:'KLIMAX EXTASY',co:'KRESTA CORPORATION',r:1500.0,t:1250.0,p:1250.0},
+  {c:'015005',n:'KLEAR PREGNANCY TEST-STRI',co:'KRESTA CORPORATION',r:700.0,t:695.0,p:695.0},
+  {c:'015006',n:'KLIMAX XXL',co:'KRESTA CORPORATION',r:900.0,t:850.0,p:1200.0},
+  {c:'015007',n:'KLIMAX STRABERRY & TUTTI',co:'KRESTA CORPORATION',r:900.0,t:700.0,p:700.0},
+  {c:'015008',n:'KLIMAX ORANGE & BANANA',co:'KRESTA CORPORATION',r:900.0,t:750.0,p:750.0},
+  {c:'015009',n:'KLIMAX PERFORMAX',co:'KRESTA CORPORATION',r:1950.0,t:1750.0,p:1750.0},
+  {c:'015010',n:'KLIMAX PURPLE X',co:'KRESTA CORPORATION',r:1450.0,t:1200.0,p:1200.0},
+  {c:'015011',n:'KLIMAX EXTASY PLUS',co:'KRESTA CORPORATION',r:1750.0,t:1500.0,p:1500.0},
+  {c:'015012',n:'PLEASURE MIX',co:'KRESTA CORPORATION',r:1680.0,t:1650.0,p:1650.0},
+  {c:'015013',n:'LITTLE ANGLES NIPPLE',co:'KRESTA CORPORATION',r:55.0,t:40.0,p:45.0},
+  {c:'015014',n:'FEEL - MAX',co:'KRESTA CORPORATION',r:650.0,t:580.0,p:580.0},
+  {c:'015015',n:'FEEL - STUDDED',co:'KRESTA CORPORATION',r:570.0,t:-550.0,p:-550.0},
+  {c:'015016',n:'FEEL - VANILLA',co:'KRESTA CORPORATION',r:510.0,t:500.0,p:500.0},
+  {c:'017001',n:'MOLID 60ML SUSP',co:'CSH PHARMACEUTICALS PVT LTS',r:20.0,t:14.0,p:25.0},
+  {c:'017002',n:'MOLID FORTE 60ML SUSP',co:'CSH PHARMACEUTICALS PVT LTS',r:20.0,t:16.0,p:35.0},
+  {c:'017003',n:'MOLID TABLET',co:'CSH PHARMACEUTICALS PVT LTS',r:125.0,t:110.0,p:110.0},
+  {c:'017004',n:'DECOS COUGH SYRUP',co:'CSH PHARMACEUTICALS PVT LTS',r:25.0,t:18.0,p:38.0},
+  {c:'017005',n:'CEFPOSITIVE 250MG CAP',co:'CSH PHARMACEUTICALS PVT LTS',r:60.0,t:45.0,p:45.0},
+  {c:'017006',n:'CEFPOSITIVE 500MG CAP',co:'CSH PHARMACEUTICALS PVT LTS',r:100.0,t:70.0,p:70.0},
+  {c:'017007',n:'CEFPOSITIVE 250MG SUSP',co:'CSH PHARMACEUTICALS PVT LTS',r:55.0,t:45.0,p:45.0},
+  {c:'018001',n:'5G  3CC  AD SYRINGE',co:'5G HEALTHCARE PVT LIMITED',r:750.0,t:680.0,p:680.0},
+  {c:'018002',n:'5G   5CC  AD SYRINGE',co:'5G HEALTHCARE PVT LIMITED',r:750.0,t:680.0,p:680.0},
+  {c:'018003',n:'5G   10CC   SYRINGE',co:'5G HEALTHCARE PVT LIMITED',r:1150.0,t:1050.0,p:1050.0},
+  {c:'018004',n:'5G IV DRIP SET',co:'5G HEALTHCARE PVT LIMITED',r:26.0,t:25.0,p:25.0},
+  {c:'018005',n:'5G IV Y PORT DRIP SET',co:'5G HEALTHCARE PVT LIMITED',r:32.0,t:30.0,p:30.0},
+  {c:'018007',n:'PEPCIMED 20MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:30.0,t:21.0,p:21.0},
+  {c:'018008',n:'PEPCIMED 40MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:32.0,t:25.0,p:25.0},
+  {c:'018009',n:'ALLERGON 120ML SYRUP 120',co:'5G HEALTHCARE PVT LIMITED',r:30.0,t:20.0,p:20.0},
+  {c:'018010',n:'DYRID P INFUSION 100ML',co:'5G HEALTHCARE PVT LIMITED',r:65.0,t:57.0,p:57.0},
+  {c:'018011',n:'LORKING SYRUP 60ML',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:18.0,p:18.0},
+  {c:'018012',n:'DYRID P SUSP 60ML',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:15.0,p:15.0},
+  {c:'018013',n:'ENZOVIT SYRUP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:35.0,p:35.0},
+  {c:'018014',n:'HOPE TABS',co:'5G HEALTHCARE PVT LIMITED',r:70.0,t:53.0,p:53.0},
+  {c:'018015',n:'KUFRID SYRUP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:27.0,p:27.0},
+  {c:'018016',n:'LOROKING TABS',co:'5G HEALTHCARE PVT LIMITED',r:28.0,t:22.0,p:13.0},
+  {c:'018018',n:'MEDIPLEX L SYRUP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:27.0,p:27.0},
+  {c:'018019',n:'MEDIRON PLUS SYRUP 250ML',co:'5G HEALTHCARE PVT LIMITED',r:60.0,t:53.0,p:53.0},
+  {c:'018020',n:'NSOLOP CAPS',co:'5G HEALTHCARE PVT LIMITED',r:50.0,t:35.0,p:35.0},
+  {c:'018021',n:'OFLOWIN 200MG TABLET',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:22.0,p:22.0},
+  {c:'018022',n:'OFLOWIN 400MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:50.0,t:35.0,p:35.0},
+  {c:'018023',n:'OMED CAPS',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:35.0,p:35.0},
+  {c:'018024',n:'PPPARAMED SUSP 60ML',co:'5G HEALTHCARE PVT LIMITED',r:15.0,t:12.0,p:15.0},
+  {c:'018025',n:'PAYARAM 20MG CAPS',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:18.0,p:18.0},
+  {c:'018026',n:'PHENOMED ELIXIR 60ML',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:26.0,p:26.0},
+  {c:'018027',n:'VENTOMED SOLUTION',co:'5G HEALTHCARE PVT LIMITED',r:30.0,t:18.0,p:18.0},
+  {c:'018028',n:'VENTOMED SYRUP 60ML',co:'5G HEALTHCARE PVT LIMITED',r:20.0,t:14.0,p:14.0},
+  {c:'018029',n:'WORMED SUSP 10ML',co:'5G HEALTHCARE PVT LIMITED',r:20.0,t:14.0,p:14.0},
+  {c:'018030',n:'WORMED TABS',co:'5G HEALTHCARE PVT LIMITED',r:17.0,t:13.5,p:13.5},
+  {c:'018031',n:'DYRID-P 400MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:100.0,t:70.0,p:70.0},
+  {c:'018032',n:'GYNEMED 500MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:17.0,p:17.0},
+  {c:'018033',n:'MICRO RID 500MG/2ML INJ',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:32.0,p:32.0},
+  {c:'018034',n:'DEPCURE CAPS',co:'5G HEALTHCARE PVT LIMITED',r:40.0,t:25.0,p:25.0},
+  {c:'018035',n:'VENTOMED G SUSP 60ML',co:'5G HEALTHCARE PVT LIMITED',r:20.0,t:12.0,p:12.0},
+  {c:'018036',n:'BROMED 3MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:70.0,t:55.0,p:55.0},
+  {c:'018037',n:'DICLOKING LD 75MG/20MG IN',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:25.0,p:25.0},
+  {c:'018038',n:'GASRID SUSP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:16.0,p:16.0},
+  {c:'018039',n:'LINKOWIN INJ 600MG/2ML',co:'5G HEALTHCARE PVT LIMITED',r:20.0,t:13.0,p:13.0},
+  {c:'018040',n:'PEPCIMED SUSP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:35.0,p:35.0},
+  {c:'018041',n:'SARIM SUSP 120ML',co:'5G HEALTHCARE PVT LIMITED',r:50.0,t:35.0,p:35.0},
+  {c:'018042',n:'OFLOMED INFUSION 200MG/10',co:'5G HEALTHCARE PVT LIMITED',r:50.0,t:42.0,p:42.0},
+  {c:'018043',n:'MEDIKORT INJ 1ML',co:'5G HEALTHCARE PVT LIMITED',r:40.0,t:35.0,p:35.0},
+  {c:'018044',n:'MEDISTIN 10MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:35.0,t:25.0,p:25.0},
+  {c:'018045',n:'MICRO-RID 250MG/2ML 5S I',co:'5G HEALTHCARE PVT LIMITED',r:150.0,t:100.0,p:100.0},
+  {c:'018046',n:'MICRO RID 100MG/2ML INJ',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:18.0,p:21.0},
+  {c:'018047',n:'ANXIORID 0.5MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:100.0,t:92.0,p:92.0},
+  {c:'018048',n:'DP MED 100MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:28.0,p:120.0},
+  {c:'018049',n:'ULCERID 150MG TABS',co:'5G HEALTHCARE PVT LIMITED',r:25.0,t:15.0,p:65.0},
+  {c:'018050',n:'MEDITHER 80MG INJACTION',co:'5G HEALTHCARE PVT LIMITED',r:110.0,t:80.0,p:80.0},
+  {c:'018051',n:'MEDITHER DS TAB',co:'5G HEALTHCARE PVT LIMITED',r:110.0,t:85.0,p:85.0},
+  {c:'018052',n:'MEDITHER FORT TABS',co:'5G HEALTHCARE PVT LIMITED',r:110.0,t:85.0,p:85.0},
+  {c:'018053',n:'MICRORID 500MG/2ML 1X5AMP',co:'5G HEALTHCARE PVT LIMITED',r:200.0,t:170.0,p:170.0},
+  {c:'018054',n:'VEENA FORT 250ML SYRUP',co:'5G HEALTHCARE PVT LIMITED',r:110.0,t:95.0,p:95.0},
+  {c:'018055',n:'ESOBEST 20MG CAPS',co:'5G HEALTHCARE PVT LIMITED',r:55.0,t:40.0,p:40.0},
+  {c:'018056',n:'ESOBEST 40MG CAPS',co:'5G HEALTHCARE PVT LIMITED',r:70.0,t:50.0,p:50.0},
+  {c:'018057',n:'DIAPAM 5MG/ML AMP',co:'5G HEALTHCARE PVT LIMITED',r:60.0,t:40.0,p:140.0},
+  {c:'018058',n:'ASTACURE TABS',co:'5G HEALTHCARE PVT LIMITED',r:50.0,t:35.0,p:70.0},
+  {c:'018059',n:'NEVROMED INJECTION',co:'5G HEALTHCARE PVT LIMITED',r:65.0,t:50.0,p:50.0},
+  {c:'018060',n:'VEENA FORTE 120ML SYRUP',co:'5G HEALTHCARE PVT LIMITED',r:40.0,t:35.0,p:70.0},
+  {c:'018061',n:'FBI 100MG TABLET',co:'5G HEALTHCARE PVT LIMITED',r:80.0,t:65.0,p:65.0},
+  {c:'018062',n:'PANAGESTIC 700MG TABS (s.exp sup on chemist order)',co:'5G HEALTHCARE PVT LIMITED',r:45.0,t:38.0,p:38.0},
+  {c:'018063',n:'PARAMED 1GM INFUSION',co:'5G HEALTHCARE PVT LIMITED',r:80.0,t:68.0,p:110.0},
+  {c:'018064',n:'CUSTOMER SAMPLE PACK OF 5G',co:'5G HEALTHCARE PVT LIMITED',r:0.0,t:0.0,p:300.0},
+  {c:'019001',n:'PROTECT-G GUMCARE 40GMS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019002',n:'PROTECT-G GUMCARE 70GMS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019003',n:'PROTECT-G GUMCARE 110GMS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019004',n:'PROTECT WHITEENING 70GM',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019005',n:'PROTECT WHITENING 110GM',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019006',n:'PROTECT-ABC BUBBLE GUM T.PAST',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019007',n:'PROTECT-ABC STRAWBERERY T.PAST',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019008',n:'PROTECT-ABC ORANGE T.PAST',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019009',n:'PROTECT-ABC BANANA T.PAST',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019010',n:'PROTECT-ABC MANGO T.PAST',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019011',n:'PROTECT-FLURIDE 130ML M.W',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019012',n:'PROTECT-FLURIDE 260ML M.W',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019013',n:'PROTECT-ANTIBACTERIAL 130ML M.W',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019014',n:'PROTECT-ANTIBACTRICAL 260ML M.W',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019015',n:'PROTECT-DENTAL FLOSS (MINT)',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019016',n:'PROTECT-DENTAL TAPE (MINT',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019017',n:'PROTECT DENTURE CREAM 40G',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019018',n:'PROTECT DENTURE TABS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019019',n:'PROTECT-G PLUS 70GM',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:270.0},
+  {c:'019020',n:'X-TRACT PRO TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019021',n:'MULTI-CLEAN TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019022',n:'DEEP-CLEAN TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019023',n:'CONTOUR-FLEX TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019024',n:'CATERPILLAR TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019025',n:'PENGUIN TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019026',n:'BEAR TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019027',n:'PANDA TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019028',n:'BUNNY TOOTHBRUSH',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019029',n:'BUZZ SACHET 6ML',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019030',n:'PROTECT SMILE  CAVITY 40GMS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019031',n:'BUZZ LOTION  50ML',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:180.0},
+  {c:'019032',n:'PROTECT 65ML SANITIZER GEL',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019033',n:'PROTECT 20SAC SANITIZER GEL',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019034',n:'PROTECT 10SAC SANITIZER GEL',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:0.0},
+  {c:'019035',n:'PROTECT BABY  NAPPY CREAM',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:140.0},
+  {c:'019036',n:'PROTECT  E  ENAMEL  50 GMS',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:649.0},
+  {c:'019037',n:'PROTECT DAILY 260ML  M.W',co:'ROOMI ENTERPRISES',r:0.0,t:0.0,p:330.0},
+  {c:'021001',n:'HIGH C RAMZAN SCHEME',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021003',n:'GIFT RS.20 TANG SACHETS',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021004',n:'GIFT RS.80 TANG BAG',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021006',n:'GIFT HOT POT 1PCS LARGE',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021007',n:'GIFT HOT POT 2PCS SMALL+M',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021008',n:'GIFT HOT POT 3PSC COMPLET',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021009',n:'GIFT NET CASH DISCOUNT',co:'OPEN BUSINESS',r:20000.0,t:-20000.0,p:-20000.0},
+  {c:'021010',n:'GIFT OF GLASS   ON TRUST',co:'OPEN BUSINESS',r:75.0,t:0.0,p:0.0},
+  {c:'021011',n:'FLUCON I.V SET',co:'OPEN BUSINESS',r:0.0,t:0.0,p:0.0},
+  {c:'021023',n:'PANASET TAB (GREEN)',co:'OPEN BUSINESS',r:200.0,t:185.0,p:185.0},
+  {c:'021024',n:'PIPERAZIN ELIXAR 30ML',co:'OPEN BUSINESS',r:17.0,t:16.0,p:16.0},
+  {c:'021025',n:'EXITRIN 10ML SUSP',co:'OPEN BUSINESS',r:19.5,t:18.0,p:18.0},
+  {c:'021026',n:'ORGANIC  SOAP  GLYCERIN &VITAMIN  E',co:'OPEN BUSINESS',r:190.0,t:160.0,p:160.0},
+  {c:'022001',n:'TRUST AD-3CC SYRINGES',co:'MEDI CARE DISPOSIBLE INDUSTRIES',r:650.0,t:580.0,p:580.0},
+  {c:'022002',n:'TRUST AD-5CC SYRINGES',co:'MEDI CARE DISPOSIBLE INDUSTRIES',r:650.0,t:570.0,p:570.0},
+  {c:'022003',n:'TRUST 10CC SYRINGES',co:'MEDI CARE DISPOSIBLE INDUSTRIES',r:1010.0,t:910.0,p:910.0},
+  {c:'022004',n:'TRUST IV SET BLISTER',co:'MEDI CARE DISPOSIBLE INDUSTRIES',r:37.0,t:23.5,p:23.5},
+  {c:'023001',n:'A-Rox 500mg Capsule',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023002',n:'A-Rox Suspension 125mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023003',n:'A-Rox Suspension 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023004',n:'B-Lex capsules 500mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023005',n:'B LEX 125MG SUSPENSION',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023006',n:'B-Lex Suspension 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023007',n:'Relosef Capsules 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023008',n:'Relosef Capsules 500mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023009',n:'Relosef Suspension 125mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023010',n:'Relosef Susppension 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023011',n:'Refspan 100mg Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023012',n:'CEFICO  100mg Suspension (Twin Pack)',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023013',n:'Refspan 200mg Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023014',n:'Refspan 200mg Suspension (Twin Pack)',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023015',n:'CEFICO-400 Capsule',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023016',n:'FAMTAC  20MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023017',n:'FAMTAC 40MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023018',n:'Amicol Drops',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023019',n:'Atatox Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023020',n:'Consilac Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023021',n:'Dizet DS Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023022',n:'Dizet Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023023',n:'PRISMA 20MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023024',n:'PRISMA 20MG CAPSULES',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023025',n:'Prisma-20 Capsules 20mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023026',n:'Prisma-40 Capsules 40mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023027',n:'Resotac Tab 150mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023028',n:'RESGYL Infusion',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023029',n:'Resgyl Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023030',n:'Resgyl Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023031',n:'Resgyl-200 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023032',n:'Resgyl-400 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023033',n:'Residone Suspension 120ml',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023034',n:'Residone Suspension 60ml',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023035',n:'RESIDONE 10MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023036',n:'Resinate Injection 50mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023037',n:'Rejex MP Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023038',n:'Softlax Drops',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023039',n:'A.Z KO  250MG  Capsules.',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023040',n:'CIP-Rx Infusion',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023041',n:'CIP-RX 250MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023044',n:'CIP-RX  500MG  TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023045',n:'LEVOFLOXA Infusion',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023046',n:'Levofloxa Tablets 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023047',n:'Levofloxa Tablets 500mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023048',n:'Lincoras 500 Capsules',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023049',n:'MOXILINE TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023050',n:'Rascotran DS  Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023051',n:'Rascotran paediatric Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023052',n:'Rascotran paediatric Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023053',n:'Rasthro Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023054',n:'A.Z KO   Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023055',n:'Theracid -250 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023056',n:'Theracid -500 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023057',n:'RE VED 200MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023058',n:'Voxicin Capsules',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023059',n:'LE VIN 5MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023060',n:'Lortec syp',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023061',n:'Lortec Tablets 10mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023062',n:'Resfyl 60ML Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023063',n:'Resfyl 120ML Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023064',n:'Ofenad 60mg Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023065',n:'Ofenad 120mg Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023066',n:'Ofenad 180mg Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023067',n:'Resdryl Cough Syp  60ml',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023068',n:'Resdryl Cough Syp  120ml',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023069',n:'Rescolin Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023070',n:'Rescolin Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023071',n:'Restolin Syrup',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023072',n:'RESTOLIN 2MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023073',n:'Restolin 4 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023074',n:'Rozen syp 5mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023075',n:'Rozen Tablets 10mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023076',n:'Rozen Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023077',n:'Vikast Tablets  5 mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023078',n:'Vikast Tablets 10 mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023079',n:'ANAC 50MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023080',n:'ANAC SR 100MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023081',n:'Anac Injection',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023082',n:'Dicloras 50mg Capsules',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023083',n:'DICLORS SR 100MG CAPSULES',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023084',n:'Rasbid Tablets 100mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023085',n:'Rascodol Drops',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023086',n:'Rascodol 6 Plus Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023087',n:'Rascodol Plus Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023088',n:'Rascodol Infusion',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023089',n:'Rascodol Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023090',n:'Rascodol Tab 500mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023091',n:'Rumadol CF Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023092',n:'Resfen 90ML Paediatric Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023093',n:'Resfen 400ML Paediatric Suspension',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023094',n:'Resfen-200 Tab 200mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023095',n:'Resfen-400 Tab 400mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023096',n:'Rasmic Forte Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023097',n:'Rasmic Forte Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023098',n:'Rasmic Suspension 50mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023099',n:'Rasmic Tablets 250mg ALU PVC',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023100',n:'Rasmic Tablets 250mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023101',n:'Rascam Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023102',n:'Rimzz Tablet 100mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023103',n:'RELSEC 50MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023104',n:'RELSEC 75MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023105',n:'Rotol Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023106',n:'Tomdol Injection',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023107',n:'Vascam Capsules',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023108',n:'Vascam Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023109',n:'Neplox Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023110',n:'Zinad Tablets 2mg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023111',n:'GROBIN F 60ML SYRUP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023112',n:'GROBIN F 120ML SYRUP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023113',n:'GROBIN F TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023114',n:'Polyheam Chewable Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023115',n:'Polyheam Syrup   60ML',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023116',n:'Polyheam Syrup   120ML',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023117',n:'Haemorose Injection',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023118',n:'Megalob Tablets 500mcg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023119',n:'Megalob Tablets 500mcg',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023120',n:'Megalob Injection 500mcg.',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023121',n:'Multex Syrup.',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023122',n:'RAS D3 5MG INJECTION',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023123',n:'Broxonil Tablest',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023124',n:'DIAZEPAM 5MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023125',n:'Phenotone Elixir',co:'RASCO PHARMA',r:81.0,t:78.0,p:80.0},
+  {c:'023126',n:'Rascodol C.F Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023127',n:'Resinac Forte Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023128',n:'Regesic Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023129',n:'Rescotil Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023130',n:'RESTIVAN 2MG TABLETS',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023131',n:'Xenva Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:200.0},
+  {c:'023132',n:'Alfaras Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023133',n:'Rasdipin Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023134',n:'Zyuric - 300 Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023135',n:'TOMDOL P TABLET',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023136',n:'HEAMADRON  60ML SYP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023137',n:'HEAMADRON   120ML SYP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023138',n:'PRISMA 40MG INJ',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023139',n:'BACTIPHIN INJECTION  1GM',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023140',n:'BACTIPHIN  INTECTION  250GM',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023141',n:'BACTIPHIN  INJECTION 500GM',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023142',n:'ELOIS-20  CAPSULES  20MG',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023143',n:'ELOIS-40  CAPSULES  40MG',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023144',n:'A.Z KO  500MG Tablets',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023145',n:'FLUE - MEP  TABLET',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023146',n:'MOXIFIL  125MG SUSP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023147',n:'MOXIFIL  250MG SUSP',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023148',n:'MOXIFIL  250MG CAPSULES',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023149',n:'MOXIFIL  500MG CAPSULES',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023150',n:'MINTI   SYRUP',co:'RASCO PHARMA',r:0.0,t:0.0,p:150.0},
+  {c:'023151',n:'ROSETUM INJECTION  2.0GM',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023152',n:'TROMOL  INJECTION  1CC  (1 X 5 )',co:'RASCO PHARMA',r:0.0,t:0.0,p:0.0},
+  {c:'023153',n:'ELOIS IV INJECTION  40MG',co:'RASCO PHARMA',r:0.0,t:0.0,p:550.0},
+  {c:'024001',n:'OMNIDOL TABLETS',co:'OLIVE LABORATORIES',r:510.0,t:490.0,p:490.0},
+  {c:'024002',n:'OMNIDOL-NU TABLETS',co:'OLIVE LABORATORIES',r:700.0,t:645.0,p:645.0},
+  {c:'025001',n:'CAREALL HAND SANITIZER 60ML',co:'BROOKS-SHIELD',r:160.0,t:145.0,p:220.0},
+  {c:'026001',n:'MEDESET I.V INFUSION SET',co:'SEARLE COMPANY LTD',r:17.5,t:16.3,p:16.3},
+  {c:'026002',n:'MEDCO-18G I.V CANNULA WINGS & INJECTION PORT',co:'SEARLE COMPANY LTD',r:80.0,t:56.0,p:105.0},
+  {c:'026003',n:'MEDCO-20G I.V CANNULA WINGS & INJECTION PORT',co:'SEARLE COMPANY LTD',r:80.0,t:56.0,p:105.0},
+  {c:'026004',n:'MEDCO-22G I.V CANNULA WINGS & INJECTION PORT',co:'SEARLE COMPANY LTD',r:80.0,t:56.0,p:105.0},
+  {c:'026005',n:'MEDCO-24G I.V CANNULA WINGS & INJECTION PORT',co:'SEARLE COMPANY LTD',r:80.0,t:65.0,p:105.0},
+  {c:'026006',n:'PROTIEX SMALL EXAMINATION LATEX  GLOVES',co:'SEARLE COMPANY LTD',r:1250.0,t:900.0,p:900.0},
+  {c:'026007',n:'PROTIEX MEDIUM EXAMINATIO LATEX GLOVES',co:'SEARLE COMPANY LTD',r:1500.0,t:900.0,p:900.0},
+  {c:'026008',n:'PROTIEX LARGE EXAMINATION LATEX GLOVES',co:'SEARLE COMPANY LTD',r:1500.0,t:1100.0,p:1100.0},
+  {c:'026009',n:'PROTEX SURGICAL 7.00 LATEX GLOVES',co:'SEARLE COMPANY LTD',r:4000.0,t:3000.0,p:3000.0},
+  {c:'026010',n:'PROTEX SURGICAL 7.50 LATEX GLOVES',co:'SEARLE COMPANY LTD',r:4000.0,t:3000.0,p:3000.0},
+  {c:'026011',n:'PROTEX SURGICAL 8.00 LATEX GLOVES',co:'SEARLE COMPANY LTD',r:4000.0,t:3000.0,p:3000.0},
+  {c:'027001',n:'HASHMI ISPAGHOL SACHETS 36.PCS - 4GM',co:'M.HASHIM TAJIR SURMA',r:325.0,t:269.2,p:269.2},
+  {c:'027002',n:'HASHMI-ISPAGHOL 25GRAM \ 12.BOX',co:'M.HASHIM TAJIR SURMA',r:705.0,t:640.0,p:640.0},
+  {c:'027003',n:'HASHMI-ISPAGHOL 85GM',co:'M.HASHIM TAJIR SURMA',r:230.0,t:180.0,p:180.0},
+  {c:'027004',n:'HASHMI-ISPAGHOL 140GM',co:'M.HASHIM TAJIR SURMA',r:350.0,t:280.0,p:280.0},
+  {c:'027005',n:'HASHMI-JOSHANDA',co:'M.HASHIM TAJIR SURMA',r:200.0,t:187.7,p:187.7},
+  {c:'027006',n:'HASHMI ARQ-E-GULAB DROPERS',co:'M.HASHIM TAJIR SURMA',r:380.0,t:331.4,p:331.4},
+  {c:'027007',n:'HASHMI ARQ-E-GULAB SPRAY',co:'M.HASHIM TAJIR SURMA',r:95.0,t:82.9,p:82.9},
+  {c:'027008',n:'HASHMI SURMA SPECIAL (BLUE)',co:'M.HASHIM TAJIR SURMA',r:1010.0,t:910.0,p:910.0},
+  {c:'027009',n:'HASHMI SURMI SPECIAL (BROWN)',co:'M.HASHIM TAJIR SURMA',r:1010.0,t:910.0,p:910.0},
+  {c:'027010',n:'HASHMI SURMI KALI',co:'M.HASHIM TAJIR SURMA',r:510.0,t:455.0,p:455.0},
+  {c:'027011',n:'HASHMI SURMA SOUNF 6GM',co:'M.HASHIM TAJIR SURMA',r:305.0,t:273.0,p:273.0},
+  {c:'027012',n:'HASHMI-ISPAGHOL 290GM',co:'M.HASHIM TAJIR SURMA',r:570.0,t:535.0,p:535.0},
+  {c:'027013',n:'HASHMI-ISPAGHOL 50GM',co:'M.HASHIM TAJIR SURMA',r:115.0,t:92.0,p:92.0},
+  {c:'028001',n:'AD WATER 5ML',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:370.0,t:340.0,p:700.0},
+  {c:'028002',n:'ASTEGESIC 120ML SUSP',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:52.0},
+  {c:'028003',n:'ASTEGESI DS 90ML SUSP',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:69.0},
+  {c:'028004',n:'ASTEDYN 125MG SUSP 60ML',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:110.0},
+  {c:'028005',n:'ASTEDYN 250MG SUSP 60ML',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:154.0},
+  {c:'028006',n:'ASTEDYN 500MG CAPSULES',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:228.0},
+  {c:'028007',n:'ASTEDYN 250MG CAPSULES',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:154.0},
+  {c:'028008',n:'FLAST 200/5ML SUSP 60ML',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:45.0},
+  {c:'028009',n:'FLAST I.V INFUSION',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:98.0},
+  {c:'028010',n:'ASTERA I.V  INFUSION 1G/100ML',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:100.0},
+  {c:'028011',n:'ASTEFENAC 75MG INJAECTION',co:'ASTELLAS PHARMACEUTICALS (PVT) LTD',r:0.0,t:0.0,p:74.0},
+  {c:'036001',n:'H370MJX HAND SANITIZER GEL 60ML MAX FRESH WITH JACKET',co:'COOL & COOL',r:0.0,t:0.0,p:349.38},
+  {c:'036002',n:'H370SJX HAND SANITIZER GEL 60ML SENSITIVE WITH JACKET',co:'COOL & COOL',r:0.0,t:0.0,p:349.38},
+  {c:'036003',n:'H370TJX HAND SANITIZER GEL 60ML TRAVELLING WITH JACKET',co:'COOL & COOL',r:0.0,t:0.0,p:349.38},
+  {c:'036004',n:'H370FJX HAND SANITIZER GEL 60ML FLORA FRESH JACKET',co:'COOL & COOL',r:0.0,t:0.0,p:349.38},
+  {c:'036005',n:'H1316-B COOL STUDENT HAND SANITIZER 60ML BLUE',co:'COOL & COOL',r:0.0,t:0.0,p:220.0},
+  {c:'036006',n:'H1316-G COOL STUDENT HAND SANITIZER 60ML GREEN',co:'COOL & COOL',r:0.0,t:0.0,p:220.0},
+  {c:'036007',n:'H1316-R COOL STUDENT HAND SANITIZER 60ML RED',co:'COOL & COOL',r:0.0,t:0.0,p:220.0},
+  {c:'036008',n:'H370AFX HAND SANITIZER GEL 60ML AQUA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036009',n:'H370FFX HAND SANITIZER GEL 60ML FLORA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036010',n:'H370FSX HAND SANITIZER GEL 60ML FRESH SPIRIT',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036011',n:'H370HX HAND SANITIZER GEL 60ML HERBAL',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036012',n:'H370LX HAND SANITIZER GEL 60ML LEMON',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036013',n:'H370MX HANDSANITIZER 60ML MAX FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036014',n:'H370OCX HAND SANITIZER GEL 60ML OCEAN',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036015',n:'H370SX HANDSANITIZER 60ML SENSITIVE',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036016',n:'H370TX HANDSANITIZER 60 ML TRAVELLING',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036017',n:'H370ODX HAND SANITIZER GEL 60ML OUDH',co:'COOL & COOL',r:0.0,t:0.0,p:335.0},
+  {c:'036018',n:'H370BX HAND SANITIZER GEL 60ML BAKHOOR',co:'COOL & COOL',r:0.0,t:0.0,p:335.0},
+  {c:'036019',n:'H1205 DISINFECTANT HAND SANITIZER 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036020',n:'H1241 HAND SANITIZER SENSITIVE 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:385.0},
+  {c:'036021',n:'H1242 HAND SANITIZER TRAVELLING 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:385.0},
+  {c:'036022',n:'H1243 HAND SANITIZER MAX FRESH 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:385.0},
+  {c:'036023',n:'H1197 HAND SANITIZER TUBE SENSITIVE 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:345.0},
+  {c:'036024',n:'H1198 HAND SANITIZER TUBE MAX FRESH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:345.0},
+  {c:'036025',n:'H1199 HAND SANITIZER TUBE TRAVELLING 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:345.0},
+  {c:'036026',n:'H1200 HAND SANITIZER TUBE DISINFECTANT 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:345.0},
+  {c:'036027',n:'H547AF HAND SANITIZER GEL 250ML AQUA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036028',n:'H547FF HAND SANITIZER GEL 250ML FLORA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036029',n:'H547FS HAND SANITIZER GEL 250ML FRESH SPIRIT',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036030',n:'H547H HAND SANITIZER GEL 250ML HERBAL',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036031',n:'H547L HAND SANITIZER GEL 250ML LEMON',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036032',n:'H547M HANDSANITZER 250ML MAX FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036033',n:'H547OC HAND SANITIZER GEL 250ML OCEAN',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036034',n:'H547S HANDSANITZER 250ML SENSITIVE',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036035',n:'H547T HANDSANITZER 250ML TRAVELING',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036036',n:'H1066 HANDSANITZER 250ML OUDH',co:'COOL & COOL',r:0.0,t:0.0,p:730.0},
+  {c:'036037',n:'H1206 DISINFECTANT HAND SANITIZER 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036038',n:'H548AF HAND SANITIZER GEL 500ML AQUA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036039',n:'H548FF HAND SANITIZER GEL 500ML FLORA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036040',n:'H548FS HAND SANITIZER GEL 500ML FRESH SPIRIT',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036041',n:'H548H HAND SANITIZER GEL 500ML HERBAL',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036042',n:'H548L HAND SANITIZER GEL 500ML LEMON',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036043',n:'H548M HANDSANITZER 500ML MAX FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036044',n:'H548OC HAND SANITIZER GEL 500ML OCEAN',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036045',n:'H548S HANDSANITZER 500ML SENSITIVE',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036046',n:'H548T HANDSANITZER 500ML TRAVELING',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036047',n:'H1207 DISINFECTANT HAND SANITIZER 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036048',n:'H1227 HAND SANITIZER SPRAY 200ML MAX FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036049',n:'H1228 HAND SANITIZER SPRAY 200ML SENSITIVE',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036050',n:'H1229 HAND SANITIZER SPRAY 200ML TRAVELLING',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036051',n:'H1230 HAND SANITIZER DISINFECTANT SPRAY 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036052',n:'H1169 HAND SANITIZER POUCH 250ML MAX FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:435.0},
+  {c:'036053',n:'H1170 HAND SANITIZER POUCH 250ML SENSITIVE',co:'COOL & COOL',r:0.0,t:0.0,p:435.0},
+  {c:'036054',n:'H1171 HAND SANITIZER POUCH 250ML TRAVELLING',co:'COOL & COOL',r:0.0,t:0.0,p:435.0},
+  {c:'036055',n:'H565AF HAND SANITIZER 5LTR 1X4CANS AQUA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:0.0},
+  {c:'036056',n:'H565FF HAND SANITIZER 5LTR 1X4CANS FLORA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:0.0},
+  {c:'036057',n:'H1237 DIS INFECTANT HAND SANITIZER 5 LTR',co:'COOL & COOL',r:0.0,t:0.0,p:0.0},
+  {c:'036058',n:'C1775A COTTON BUDS ASSTD COLOURS 100S',co:'COOL & COOL',r:0.0,t:0.0,p:182.75},
+  {c:'036059',n:'C1776 COTTON BUDS ASSTD COLOURS',co:'COOL & COOL',r:0.0,t:0.0,p:301.0},
+  {c:'036060',n:'C1777 COTTON BUDS ASSTD COLOURS 300S',co:'COOL & COOL',r:0.0,t:0.0,p:420.0},
+  {c:'036061',n:'B2062CX BABY WIPES 25S (TRAVEL PACK)',co:'COOL & COOL',r:0.0,t:0.0,p:265.0},
+  {c:'036062',n:'B2382CX BABY WIPES 40S',co:'COOL & COOL',r:0.0,t:0.0,p:462.0},
+  {c:'036063',n:'B1236CX BABY WIPES 80S',co:'COOL & COOL',r:0.0,t:0.0,p:834.75},
+  {c:'036064',n:'B5022C BABY WIPES (64 + 8)S',co:'COOL & COOL',r:0.0,t:0.0,p:530.25},
+  {c:'036065',n:'B5156 BABY SENSITIVE WIPES  PLUS 64S',co:'COOL & COOL',r:0.0,t:0.0,p:505.0},
+  {c:'036066',n:'B7037P BABY WIPES 12S TRAVEL PACK',co:'COOL & COOL',r:0.0,t:0.0,p:180.0},
+  {c:'036067',n:'A322CX ADULT WIPES',co:'COOL & COOL',r:0.0,t:0.0,p:598.5},
+  {c:'036068',n:'A731C ADULT WIPES W/LID 72S 16 PKT',co:'COOL & COOL',r:0.0,t:0.0,p:950.0},
+  {c:'036069',n:'T1141C CLEANSINGS & MAKE UP REMOVER REMOVING WIPES 33S',co:'COOL & COOL',r:0.0,t:0.0,p:450.0},
+  {c:'036070',n:'M1890 MICELLAR CLEANSING WATER 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:595.0},
+  {c:'036071',n:'M1921 MICELLAR CLEANSING WIPES 12S',co:'COOL & COOL',r:0.0,t:0.0,p:375.0},
+  {c:'036072',n:'R1232P REFRESHING BODY WIPES 5S',co:'COOL & COOL',r:0.0,t:0.0,p:99.0},
+  {c:'036073',n:'P1379P REFRESHING WIPES SOFT & GENTLE ALOE 20S',co:'COOL & COOL',r:0.0,t:0.0,p:200.0},
+  {c:'036074',n:'P1379MX MAX FRESH REFRESHING WIPES 20S',co:'COOL & COOL',r:0.0,t:0.0,p:180.0},
+  {c:'036075',n:'P1379SX SENSITIVE REFRSHING WIPES 20S',co:'COOL & COOL',r:0.0,t:0.0,p:180.0},
+  {c:'036076',n:'P1379TX TRAVELING RESFRESHING WIPES 20S',co:'COOL & COOL',r:0.0,t:0.0,p:180.0},
+  {c:'036077',n:'S3409X SENSITIVE WIPES 30S',co:'COOL & COOL',r:0.0,t:0.0,p:300.0},
+  {c:'036078',n:'M1522X MAX FRESH WIPES 30S',co:'COOL & COOL',r:0.0,t:0.0,p:300.0},
+  {c:'036079',n:'W535X TRAVELLING WIPES 10S',co:'COOL & COOL',r:0.0,t:0.0,p:130.0},
+  {c:'036080',n:'W1273 MAX FRESH WIPES 10S',co:'COOL & COOL',r:0.0,t:0.0,p:130.0},
+  {c:'036081',n:'W1274 SENSITIVE WIPES 10S',co:'COOL & COOL',r:0.0,t:0.0,p:130.0},
+  {c:'036082',n:'W529X TRAVELLING WIPES 30S',co:'COOL & COOL',r:0.0,t:0.0,p:300.0},
+  {c:'036083',n:'A515P C&C ABAYA CLEANSING WIPES 12S',co:'COOL & COOL',r:0.0,t:0.0,p:350.0},
+  {c:'036084',n:'W1313 C&C WHITE CLEANSING WIPES 12S',co:'COOL & COOL',r:0.0,t:0.0,p:350.0},
+  {c:'036085',n:'D4835C DISINFECTANT WIPES 40S',co:'COOL & COOL',r:0.0,t:0.0,p:690.0},
+  {c:'036086',n:'D4887C DISINFECTANT TOILET WIPES 48S',co:'COOL & COOL',r:0.0,t:0.0,p:690.0},
+  {c:'036087',n:'S2163 SANITIZING WIPES 15S',co:'COOL & COOL',r:0.0,t:0.0,p:325.0},
+  {c:'036088',n:'S2164CX SANITIZING WIPES 40S',co:'COOL & COOL',r:0.0,t:0.0,p:670.0},
+  {c:'036089',n:'D4860 DIS INFECTED + SANITIZING SPRAY 750ML',co:'COOL & COOL',r:0.0,t:0.0,p:1175.0},
+  {c:'036090',n:'D4903 DISINFACTANT TOILET SPRAY 750 ML',co:'COOL & COOL',r:0.0,t:0.0,p:1060.0},
+  {c:'036091',n:'M1332P MOSQUITO REPELLENT GEL 65ML',co:'COOL & COOL',r:0.0,t:0.0,p:360.0},
+  {c:'036092',n:'M2096 MOSQUITO REP SPRAY 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:672.0},
+  {c:'036093',n:'N070 NURSING PADS HYGIENIC WITH ULTRA ABSORBENT 30S',co:'COOL & COOL',r:0.0,t:0.0,p:1090.0},
+  {c:'036094',n:'N071 NAPPY BAGS 250S',co:'COOL & COOL',r:0.0,t:0.0,p:860.0},
+  {c:'036095',n:'C3968 DEEP CLEANSING CHARCOAL MASK 576 PCS',co:'COOL & COOL',r:0.0,t:0.0,p:290.0},
+  {c:'036096',n:'C1668A CHARCOAL NOSE STRIPS 6S',co:'COOL & COOL',r:0.0,t:0.0,p:1015.0},
+  {c:'036097',n:'T1059 DEEP CLEANSING NOSE STRIPS 6S',co:'COOL & COOL',r:0.0,t:0.0,p:853.0},
+  {c:'036098',n:'H731N HAND & NAIL BALM 100ML WOMEN',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036099',n:'H1434 HAND & NAIL BALM 100ML MEN',co:'COOL & COOL',r:0.0,t:0.0,p:550.0},
+  {c:'036100',n:'B8687P BODY LOTION REVIVE RADIANCE 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:709.5},
+  {c:'036101',n:'B8688P BODY LOTION SILKY COMFORT 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:709.5},
+  {c:'036102',n:'B8690P BODY LOTION COCOA BUTTER 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:709.5},
+  {c:'036103',n:'B8691P BODY LOTION SHEA BUTTER 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:709.5},
+  {c:'036104',n:'B8689P BODY LOTION HYDRA LIFT 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:709.5},
+  {c:'036105',n:'B8682P BODY LOTION REVIVE RADIANCE 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1171.5},
+  {c:'036106',n:'B8683P BODY LOTION SILKY COMFORT 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1171.5},
+  {c:'036107',n:'B8685P BODY LOTION COCOA BUTTER 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1171.5},
+  {c:'036108',n:'B8686P BODY LOTION SHEA BUTTER 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1171.5},
+  {c:'036109',n:'B8684P BODY LOTION HYDRA LIFT 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1171.5},
+  {c:'036110',n:'B9626P BODY LOTION SHEA BUTTER 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036111',n:'B9627P BODY LOTION COCOA BUTTER 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036112',n:'B9628P BODY LOTION SILKY COMFORT 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036113',n:'B9629P BODY LOTION REVIVE RADIANCE 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036114',n:'B9625P BODY LOTION HYDRA LIFT 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036115',n:'M1016A MY BABY TISSUES 6 X 100S',co:'COOL & COOL',r:0.0,t:0.0,p:185.0},
+  {c:'036116',n:'E442LP EMBOSSED FACIAL TISSUES / EMOTIONS (BOUTIQUE) 1X100SX2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:345.0},
+  {c:'036117',n:'E662LP C&C EMBOSSED FACIAL TISSUES 100S (PERFUMED BOUTIQUE BOX)',co:'COOL & COOL',r:0.0,t:0.0,p:425.0},
+  {c:'036118',n:'E413LP EMBOSSED FACIAL TISSUES / EMOTIONS 1X6X100SX2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:330.0},
+  {c:'036119',n:'E374LP EMBOSSED FACIAL TISSUES / EMOTIONS 1X5X150SX2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:465.0},
+  {c:'036120',n:'B2000LP BREEZE FACIAL TISSUES 1 X 6 X 100S X 2 PLY',co:'COOL & COOL',r:0.0,t:0.0,p:300.0},
+  {c:'036121',n:'B1865LP BREEZE FACIAL TISSUES 1X5X150SX2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:395.0},
+  {c:'036122',n:'B1866N BREEZE FACIAL TISSUES POP-UP 150SX2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:260.0},
+  {c:'036123',n:'M798 COMPACT MINI TISSUES 12 PACK',co:'COOL & COOL',r:0.0,t:0.0,p:45.0},
+  {c:'036124',n:'M799 COMPACT MINI TISSUES 6 PACK',co:'COOL & COOL',r:0.0,t:0.0,p:45.0},
+  {c:'036125',n:'M814 COMPACT MINI TISSUES 10S (1X24 BOX)',co:'COOL & COOL',r:0.0,t:0.0,p:45.0},
+  {c:'036126',n:'F1954P C&C SOFT PACK TISSUE (MOMENTS) 300S',co:'COOL & COOL',r:0.0,t:0.0,p:495.0},
+  {c:'036127',n:'H1468 C&C MOMENTS SOFT PACK EMBOSSED 150S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:255.0},
+  {c:'036128',n:'F1978 C&C MOMENTS SOFT PACK EMBOSSED 100S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:170.0},
+  {c:'036129',n:'F1951MS ARABIAN LUXURY FACIAL TISSUES MUSK 150S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:500.0},
+  {c:'036130',n:'F1951MK ARABIAN LUXURY FACIAL TISSUES MUKHALAT 150S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:500.0},
+  {c:'036131',n:'F1951B ARABIAN LUXURY FACIAL TISSUES BAKHOOR 150S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:500.0},
+  {c:'036132',n:'F1951A ARABIAN LUXURY FACIAL TISSUES AMBER 150\'S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:500.0},
+  {c:'036133',n:'F1951O ARABIAN LUXURY FACIAL TISSUES OUDH 150S X 2PLY',co:'COOL & COOL',r:0.0,t:0.0,p:500.0},
+  {c:'036134',n:'L469 LUXURY PAPER NAPKINS WHITE 100S (30 X 30 / 1 PLY)',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036135',n:'L469P LUXURY PAPER NAPKINS PRINTED 100S (30 X 30 / 1 PLY)',co:'COOL & COOL',r:0.0,t:0.0,p:365.0},
+  {c:'036136',n:'K550LP KITCHEN TOWEL EMBOSSED WHITE111\'S X 2 PLY',co:'COOL & COOL',r:0.0,t:0.0,p:1000.0},
+  {c:'036137',n:'M1118LP MAXI ROLL 222MTRS WHITE',co:'COOL & COOL',r:0.0,t:0.0,p:1470.0},
+  {c:'036138',n:'T1873LP TOILET ROLL 1X2X400\'S WHITE',co:'COOL & COOL',r:0.0,t:0.0,p:630.0},
+  {c:'036139',n:'T1874LP TOILET ROLL 400\'S 1X4X400\'S WHITE',co:'COOL & COOL',r:0.0,t:0.0,p:1195.0},
+  {c:'036140',n:'S3795B COOL&COOL SHOWER GEL-BERRY MINT 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:501.39},
+  {c:'036141',n:'S3797F COOL&COOL SHOWER GEL-FRUITY FRESH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:501.39},
+  {c:'036142',n:'S3413B COOL & COOL SHOWER GEL 500ML BERRY MINT',co:'COOL & COOL',r:0.0,t:0.0,p:935.0},
+  {c:'036143',n:'S3414F COOL & COOL SHOWER GEL 500ML FRUITY FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:935.0},
+  {c:'036144',n:'B6954 BODY WASH DELICATE TOUCH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:935.0},
+  {c:'036145',n:'B6955 BODY WASH MAGICAL COMFORT 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:935.0},
+  {c:'036146',n:'B6957 BODY WASH DELICATE TOUCH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:501.39},
+  {c:'036147',n:'B6958 BODY WASH MAGICAL COMFORT 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:501.39},
+  {c:'036148',n:'M1320N COOL & COOL MOISTURIZING SOAP 250ML FLORA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:390.0},
+  {c:'036149',n:'M1321N COOL & COOL MOISTURIZING SOAP 250ML AQUA FRESH',co:'COOL & COOL',r:0.0,t:0.0,p:390.0},
+  {c:'036150',n:'H1060 BERRY MINT HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:749.0},
+  {c:'036151',n:'H1061 FRUITY FRESH HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:749.0},
+  {c:'036152',n:'H1062 DELICATE TOUCH HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:749.0},
+  {c:'036153',n:'H1069 MAGICAL COMFORT HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:749.0},
+  {c:'036154',n:'H1063 C&C BERRY MINT HAND WASH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1100.0},
+  {c:'036155',n:'H1064 C&C FRUITY FRESH HAND WASH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1100.0},
+  {c:'036156',n:'H1065 C&C DELICATE TOUCH HAND WASH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1100.0},
+  {c:'036157',n:'H1070 C&C MAGICAL COMFORT HAND WASH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1100.0},
+  {c:'036158',n:'H1221 HAND WASH ANTI BACTERIAL SENSITIVE 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:645.0},
+  {c:'036159',n:'H1220 HAND WASH ANTI BACTERIAL MAX FRESH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:645.0},
+  {c:'036160',n:'H1219 HAND WASH ANTI BACTERIAL TRAVELLING 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:645.0},
+  {c:'036161',n:'H1222 HAND WASH DIS INFECTED 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:645.0},
+  {c:'036162',n:'H1225 HAND WASH ANTI BACTERIAL SENSITIVE 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:370.0},
+  {c:'036163',n:'H1224 HAND WASH ANTI BACTERIAL MAX FRESH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:370.0},
+  {c:'036164',n:'H1223 HAND WASH ANTI BACTERIAL TRAVELLING 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:370.0},
+  {c:'036165',n:'H1226 DISINFECTANT HAND WASH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:370.0},
+  {c:'036166',n:'F1545 NOURISHING FACE WASH 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:575.0},
+  {c:'036167',n:'F1543 WHITENING FACE WASH 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:560.0},
+  {c:'036168',n:'F1544 REGENERATING FACE WASH 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:605.0},
+  {c:'036169',n:'F1546 ACNE CONTROL FACE WASH 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:620.0},
+  {c:'036170',n:'F1547 PURIFYING FACE WASH 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036171',n:'F1555 NOURISHING FACE SCRUB 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036172',n:'F1553 WHITENING FACE SCRUB 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:575.0},
+  {c:'036173',n:'F1554 REGENERATING FACE SCRUB 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:620.0},
+  {c:'036174',n:'F1556 ACNE CONTROL FACE SCRUB 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:640.0},
+  {c:'036175',n:'F1557 PURIFYING FACE SCRUB 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:600.0},
+  {c:'036176',n:'F1619 NOURISHING FACE WASH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:335.0},
+  {c:'036177',n:'F1617 WHITENING FACE WASH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:325.0},
+  {c:'036178',n:'F1620 ACNE CONTROL FACE WASH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:375.0},
+  {c:'036179',n:'F1618 REGENERATING FACE WASH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:365.0},
+  {c:'036180',n:'F1621 PURIFYING FACE WASH 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:350.0},
+  {c:'036181',n:'F1624 NOURISHING FACE SCRUB 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:350.0},
+  {c:'036182',n:'F1622 WHITENING FACE SCRUB 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:335.0},
+  {c:'036183',n:'F1623 REGENERATING FACE SCRUB 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:375.0},
+  {c:'036184',n:'F1625 ACNE CONTROL FACE SCRUB 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:390.0},
+  {c:'036185',n:'F1626 PURIFYING FACE SCRUB 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:365.0},
+  {c:'036186',n:'F1563 ACNE CONTROL FACE WASH FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:520.0},
+  {c:'036187',n:'F1371P AQUA FACE WASH FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:530.0},
+  {c:'036188',n:'F1562 WHITENING FACE WASH FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:480.0},
+  {c:'036189',n:'F1561P REGNERATING FACE WASH FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:530.0},
+  {c:'036190',n:'F1549 REGNERATING FACE SCRUB FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:515.0},
+  {c:'036191',n:'F1548 WHITENING FACE SCRUB FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:490.0},
+  {c:'036192',n:'F1372U AQUA FACE SCRUB FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:505.0},
+  {c:'036193',n:'F1551 ACNE CONTROL FACE SCRUB FOR MEN 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:530.0},
+  {c:'036194',n:'F1628 FAIRNESS CREAM FOR WOMEN 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:450.0},
+  {c:'036195',n:'F1686 FAIRNESS CREAM FOR MEN 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:450.0},
+  {c:'036196',n:'B7162 BEAUTY CREAM 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:450.0},
+  {c:'036197',n:'F1627 FAIRNESS CREAM FOR WOMEN 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:280.0},
+  {c:'036198',n:'F1687 FAIRNESS CREAM FOR MEN 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:280.0},
+  {c:'036199',n:'F1688 FAIRNESS CREAM FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036200',n:'F1645 FAIRNESS CREAM FOR WOMEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036201',n:'B7161 BEAUTY CREAM 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:280.0},
+  {c:'036202',n:'B7214 BEAUTY CREAM 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036203',n:'M1807B MOISTURIZING CREAM 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:280.0},
+  {c:'036204',n:'M1808B MOISTURIZING CREAM 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:450.0},
+  {c:'036205',n:'F1629 REGNERATING FACE WASH FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:280.0},
+  {c:'036206',n:'F1630 MAX FRESH FACE WASH FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036207',n:'F1631 WHITENING FACE WASH FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:270.0},
+  {c:'036208',n:'F1632 ACNE CONTROL FACE WASH FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:285.0},
+  {c:'036209',n:'F1633 REGNERATING FACE SCRUB FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:290.0},
+  {c:'036210',n:'F1634 MAX FRESH FACE SCRUB FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:285.0},
+  {c:'036211',n:'F1635 WHITENING FACE SCRUB FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036212',n:'F1636 ACNE CONTROL FACE SCRUB FOR MEN 75ML',co:'COOL & COOL',r:0.0,t:0.0,p:300.0},
+  {c:'036213',n:'F1637 REGENERATING FACE WASH FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036214',n:'F1638 MAX FRESH FACE WASH FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036215',n:'F1639 WHITENING FACE WASH FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036216',n:'F1640 ACNE CONTROL MEN FACE WASH 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:155.0},
+  {c:'036217',n:'F1641 REGENERATING FACE SCRUB FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:135.0},
+  {c:'036218',n:'F1642 MAX FRESH FACE SCRUB MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:135.0},
+  {c:'036219',n:'F1643 WHITENING FACE SCRUB FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:135.0},
+  {c:'036220',n:'F1644 ACNE FACE SCRUB FOR MEN 30ML',co:'COOL & COOL',r:0.0,t:0.0,p:135.0},
+  {c:'036221',n:'F1826 FACE WASH NEEM 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036222',n:'F1823 FACE WASH NEEM 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:475.0},
+  {c:'036223',n:'F1820 FACE WASH NEEM 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036224',n:'F1827 FACE WASH HYDRA LIFT 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036225',n:'F1824 FACE WASH HYDRA LIFT 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:475.0},
+  {c:'036226',n:'F1821 FACE WASH HYDRA LIFT 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:630.0},
+  {c:'036227',n:'F1831 FACE WASH PURIFYING MICELLAR 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036228',n:'F1830 FACE WASH PURIFYING MICELLAR 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:475.0},
+  {c:'036229',n:'F1829 FACE WASH PURIFYING MICELLAR 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036230',n:'F1832 FACE WASH KALONJI THERAPY 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:555.0},
+  {c:'036231',n:'F1833 FACE WASH KALONJI THERAPY 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:475.0},
+  {c:'036232',n:'F1834 FACE WASH KALONJI THERAPY 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036233',n:'F1822 FACE WASH WHITENING BRILLIANCE 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:555.0},
+  {c:'036234',n:'F1825 FACE WASH WHITENING BRILLIANCE 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:475.0},
+  {c:'036235',n:'F1828 FACE WASH WHITENING BRILLIANCE 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:315.0},
+  {c:'036236',n:'F1855 FACE & BODY SCRUB WHITENING BRILLIANCE 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036237',n:'F1858 FACE & BODY SCRUB WHITENING BRILLIANCE 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:440.0},
+  {c:'036238',n:'F1861 FACE & BODY SCRUB WHITENING BRILLIANCE 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036239',n:'F1856 FACE & BODY SCRUB NEEM NATURAL 150ML',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036240',n:'F1859 FACE & BODY SCRUB NEEM NATURAL 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:440.0},
+  {c:'036241',n:'F1862 FACE & BODY SCRUB NEEM NATURAL 50ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036242',n:'F1568B WHITENING FACIAL CREAM 100ML FOR WOMEN',co:'COOL & COOL',r:0.0,t:0.0,p:600.0},
+  {c:'036243',n:'F1569B WHITENING FACIAL CREAM 100ML FOR MEN',co:'COOL & COOL',r:0.0,t:0.0,p:600.0},
+  {c:'036244',n:'F1558B WHITENING FACIAL CREAM 50ML FOR WOMEN',co:'COOL & COOL',r:0.0,t:0.0,p:425.0},
+  {c:'036245',n:'F1559B WHITENING FACIAL CREAM 50ML FOR MEN',co:'COOL & COOL',r:0.0,t:0.0,p:425.0},
+  {c:'036246',n:'M1805 BABY COMPACT MINI TISSUES 10\'S (1X24 BOX)',co:'COOL & COOL',r:0.0,t:0.0,p:45.0},
+  {c:'036247',n:'B3545U BABY SHAMPOO 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:539.0},
+  {c:'036248',n:'B6565P BABY SHAMPOO 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036249',n:'B6715 BABY SHAMPOO 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:165.0},
+  {c:'036250',n:'B3544U BABY WASHING GEL 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:539.0},
+  {c:'036251',n:'B6568 BABY WASHING GEL 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:275.0},
+  {c:'036252',n:'B6713 BABY WASHING GEL 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:165.0},
+  {c:'036253',n:'B6569 BABY OIL 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:750.0},
+  {c:'036254',n:'B6570P BABY OIL 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:400.0},
+  {c:'036255',n:'B6716 BABY OIL 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:225.0},
+  {c:'036256',n:'B3543U BABY LOTION 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:605.0},
+  {c:'036257',n:'B6573P BABY LOTION 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:324.5},
+  {c:'036258',n:'B6714 BABY LOTION 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:210.0},
+  {c:'036259',n:'B6577 BABY MOISTURIZING CREAM 1 X 6 X 8 X 200ML',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036260',n:'B6578 BABY MOISTURIZING CREAM 1 X 12 X 8 X 100ML',co:'COOL & COOL',r:0.0,t:0.0,p:530.0},
+  {c:'036261',n:'V1170 BABY TRAVEL KIT 12PKT 60ML',co:'COOL & COOL',r:0.0,t:0.0,p:1185.0},
+  {c:'036262',n:'B3548U BABY SHAMPOO 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:840.0},
+  {c:'036263',n:'B4494U BABY WASHING GEL 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036264',n:'B4495U BABY LOTION 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:952.0},
+  {c:'036265',n:'V1118 BABY CARE ESSENTIAL PACK 30 ML',co:'COOL & COOL',r:0.0,t:0.0,p:750.0},
+  {c:'036266',n:'V1038 BABY CARE ESSENTIAL PACK 100 ML',co:'COOL & COOL',r:0.0,t:0.0,p:2150.0},
+  {c:'036267',n:'B3550P C&C BABY POWDER STERILIZED 125GM',co:'COOL & COOL',r:0.0,t:0.0,p:365.0},
+  {c:'036268',n:'B3551 C&C BABY POWDER STERILIZED 250GM',co:'COOL & COOL',r:0.0,t:0.0,p:600.0},
+  {c:'036269',n:'B9725P BABY POWDER 50GM STERILIZED',co:'COOL & COOL',r:0.0,t:0.0,p:235.0},
+  {c:'036270',n:'B9356P BABY POWDER 100GM NON STERILIZED',co:'COOL & COOL',r:0.0,t:0.0,p:269.5},
+  {c:'036271',n:'B9355P BABY POWDER 200GM NON STERILIZED',co:'COOL & COOL',r:0.0,t:0.0,p:445.5},
+  {c:'036272',n:'B9354P BABY POWDER 500GM NON STERILIZED',co:'COOL & COOL',r:0.0,t:0.0,p:850.0},
+  {c:'036273',n:'B9634P BABY� MIST 100 ML',co:'COOL & COOL',r:0.0,t:0.0,p:485.0},
+  {c:'036274',n:'B3776P BABY� MIST 250 ML',co:'COOL & COOL',r:0.0,t:0.0,p:1000.0},
+  {c:'036275',n:'B9338 BABY CLOTHES CLEANSING WIPES',co:'COOL & COOL',r:0.0,t:0.0,p:200.0},
+  {c:'036276',n:'P4753 NEEM PRICKLY HEAT POWDER 125GM',co:'COOL & COOL',r:0.0,t:0.0,p:313.5},
+  {c:'036277',n:'P4768 NEEM PRICKLY HEAT POWDER 250GM',co:'COOL & COOL',r:0.0,t:0.0,p:511.5},
+  {c:'036278',n:'F1297P FABRIC SOFTNER FLORA FRESH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:759.0},
+  {c:'036279',n:'F1299P FABRIC SOFTNER AQUA FRESH 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:759.0},
+  {c:'036280',n:'A612P ABAYA CLEANSING SHAMPOO 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:957.0},
+  {c:'036281',n:'K944P WHITE CLEANSING  SHAMPOO 1 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:990.0},
+  {c:'036282',n:'F1298P FABRIC SOFTNER FLORA FRESH 2 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1207.5},
+  {c:'036283',n:'F1300P FABRIC SOFTNER AQUA FRESH 2 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1207.5},
+  {c:'036284',n:'A613P ABAYA CLEANSING SHAMPOO 2 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1595.0},
+  {c:'036285',n:'K945P WHITE CLEANSING  SHAMPOO 2 LITRE',co:'COOL & COOL',r:0.0,t:0.0,p:1760.0},
+  {c:'036286',n:'B9022 C&C OUD BODY LOTION 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036287',n:'B9023 C&C MUSK BODY LOTION 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036288',n:'B9025 C&C AMBER BODY LOTION 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036289',n:'B9024 C&C BODY LOTION BAKHOOR 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036290',n:'B9113 C&C BODY LOTION 500ML  MUKHALAT',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036291',n:'B8822 C&C OUD BODY WASH 250ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036292',n:'B9097 C&C BODY WASH 250ML MUSK',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036293',n:'B9110 C&C MUKHALAT BODY WASH 250ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036294',n:'B9098 C&C AMBER BODY WASH 250ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036295',n:'B9099 C&C BODY WASH BAKHOOR 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036296',n:'B9102 C&C BODY WASH BAKHOOR 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036297',n:'B9101 C&C AMBER BODY WASH 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036298',n:'B9111 C&C MUKHALAT BODY WASH 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036299',n:'B9100 C&C MUSK BODY WASH 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036300',n:'B8823 C&C OUD BODY WASH 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036301',n:'H1341 C&C OUD HAND WASH 250ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036302',n:'H1391 C&C HAND WASH 250ML MUKHALAT',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036303',n:'H1381 C&C HAND WASH 250ML MUSK',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036304',n:'H1382 C&C AMBER HAND WASH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036305',n:'H1383 C&C HAND WASH BAKHOOR 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:810.0},
+  {c:'036306',n:'H1385 C&C AMBER HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1185.0},
+  {c:'036307',n:'H1386 C&C HAND WASH BAKHOOR 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1185.0},
+  {c:'036308',n:'H1384 C&C MUSK HAND WASH 500ML 12PCS',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036309',n:'H1395 C&C OUD HAND WASH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036310',n:'H1392 C&C HAND WASH 500ML MUKHALAT',co:'COOL & COOL',r:0.0,t:0.0,p:1355.0},
+  {c:'036311',n:'H1376 C&C AMBER HAND SANITIZER SPRAY 100ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:615.0},
+  {c:'036312',n:'H1336 C&C OUD HAND SANITIZER SPRAY 100ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:615.0},
+  {c:'036313',n:'H1377 C&C BAKHOOR HAND SANITIZER SPRAY 100ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:615.0},
+  {c:'036314',n:'H1375 C&C MUSK HAND SANITIZER SPRAY 100M L 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:615.0},
+  {c:'036315',n:'H1389 C&C MUKHALAT HAND SANITIZER SPRAY 100ML 24PCS',co:'COOL & COOL',r:0.0,t:0.0,p:615.0},
+  {c:'036316',n:'S5575 C&C ANTI DANDRUFF SHAMPOO 185 ML',co:'COOL & COOL',r:0.0,t:0.0,p:485.0},
+  {c:'036317',n:'S5574 C&C HAIR PROTECT SHAMPOO 185 ML',co:'COOL & COOL',r:0.0,t:0.0,p:440.0},
+  {c:'036318',n:'S5243 C&C ANTI DANDRUFF SHAMPOO 370 ML',co:'COOL & COOL',r:0.0,t:0.0,p:870.0},
+  {c:'036319',n:'S5241 C&C HAIR PROTECT SHAMPOO 370 ML',co:'COOL & COOL',r:0.0,t:0.0,p:785.0},
+  {c:'036320',n:'V2241 HAND WASH 500ML BERRY MINT + DELICATE TOUCH 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1150.0},
+  {c:'036321',n:'V2242 HAND WASH 500ML FRUITY FRESH� + MAGICAL COMFORT 500ML',co:'COOL & COOL',r:0.0,t:0.0,p:1150.0},
+  {c:'036322',n:'V2243 SHOWER GEL� 250ML BERRY MINT + DELICATE TOUCH 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:770.0},
+  {c:'036323',n:'V2244 SHOWER GEL 250ML FRUITY FRESH� + MAGICAL COMFORT 250ML',co:'COOL & COOL',r:0.0,t:0.0,p:770.0},
+  {c:'036324',n:'V2247 BABY POWDER 500GM NON STERILIZED + BABY SHAMPOO 100ML (FREE)',co:'COOL & COOL',r:0.0,t:0.0,p:850.0},
+  {c:'036325',n:'V2248 BABY SHAMPOO 500ML + BABY POWDER NON STERILIZED 100GM  (FREE)',co:'COOL & COOL',r:0.0,t:0.0,p:750.0},
+  {c:'036326',n:'V2245 EMOTION 200S PROMO PACK (2PCS SHRINK WRAP)',co:'COOL & COOL',r:0.0,t:0.0,p:850.0},
+  {c:'036327',n:'V2246 BREEZE 200S PROMO PACK (2PCS SHRINK WRAP)',co:'COOL & COOL',r:0.0,t:0.0,p:800.0},
+  {c:'036328',n:'V2250 HAND WASH 250ML BUNDLE PACK',co:'COOL & COOL',r:0.0,t:0.0,p:590.0},
+  {c:'036329',n:'V2313 BREEZE TISSUE 150S POP UP (PROMO PACK SAVE RS.150)',co:'COOL & COOL',r:0.0,t:0.0,p:890.0},
+  {c:'102001',n:'COMPUTER INVOICING RATE ERROR (DETAIL ATTACHED)',co:'STOCKS & INVENTORY ADJUSTMENT',r:25000.0,t:1.0,p:1.0},
+];
+
+const WA_NUMBER = '923117977373';
+let cart = {};
+
+// Populate company filter
+const compFilter = document.getElementById('companyFilter');
+COMPANIES.forEach(c => {
+  if (c === 'STOCKS & INVENTORY ADJUSTMENT') return;
+  const opt = document.createElement('option');
+  opt.value = c;
+  opt.textContent = c;
+  compFilter.appendChild(opt);
+});
+
+function renderProducts(filtered) {
+  const container = document.getElementById('productList');
+  container.innerHTML = '';
+  
+  if (!filtered.length) {
+    container.innerHTML = '<div class="no-results">😔 Koi product nahi mila</div>';
+    return;
+  }
+
+  // Group by company
+  const grouped = {};
+  filtered.forEach(p => {
+    if (!grouped[p.co]) grouped[p.co] = [];
+    grouped[p.co].push(p);
+  });
+
+  const compColors = ['#1F4E79','#833C00','#375623','#4B1C82','#7B0000','#1B5E7B','#4A4A4A'];
+  let ci = 0;
+
+  Object.keys(grouped).forEach(company => {
+    if (company === 'STOCKS & INVENTORY ADJUSTMENT') return;
+    const items = grouped[company];
+    const color = compColors[ci % compColors.length];
+    ci++;
+
+    const section = document.createElement('div');
+    section.className = 'company-section';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'company-header';
+    hdr.style.background = color;
+    hdr.innerHTML = `<span>${company} (${items.length})</span>`;
+    section.appendChild(hdr);
+
+    const table = document.createElement('table');
+    table.className = 'products-table';
+    table.innerHTML = `<thead><tr>
+      <th>Code</th>
+      <th style="text-align:left">Product Name</th>
+      <th>Retail</th>
+      <th>Trade</th>
+      <th>Net</th>
+      <th>Qty</th>
+    </tr></thead>`;
+
+    const tbody = document.createElement('tbody');
+    items.forEach(p => {
+      const tr = document.createElement('tr');
+      const cartQty = cart[p.c] ? cart[p.c].qty : '';
+      tr.innerHTML = `
+        <td class="prod-code">${p.c}</td>
+        <td class="prod-name">${p.n}</td>
+        <td class="price-cell">${p.r > 0 ? 'Rs.'+p.r.toFixed(0) : '-'}</td>
+        <td class="price-cell">${p.t > 0 ? 'Rs.'+p.t.toFixed(0) : '-'}</td>
+        <td class="price-cell net-price">${p.p > 0 ? 'Rs.'+p.p.toFixed(0) : '-'}</td>
+        <td><input type="number" class="qty-input ${cartQty ? 'has-value' : ''}" 
+          id="qty_${p.c}" value="${cartQty}" min="0" 
+          placeholder="0"
+          onchange="updateCart('${p.c}', '${p.n.replace(/'/g,"\\'")}', ${p.p}, this.value)"
+          oninput="this.classList.toggle('has-value', this.value > 0)"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    section.appendChild(table);
+    container.appendChild(section);
+  });
+}
+
+function filterProducts() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const company = document.getElementById('companyFilter').value;
+  
+  const filtered = PRODUCTS.filter(p => {
+    const matchSearch = !search || p.n.toLowerCase().includes(search) || p.c.includes(search);
+    const matchCompany = !company || p.co === company;
+    return matchSearch && matchCompany;
+  });
+  
+  renderProducts(filtered);
+}
+
+function updateCart(code, name, price, qty) {
+  qty = parseInt(qty) || 0;
+  if (qty > 0) {
+    cart[code] = { name, price, qty };
+  } else {
+    delete cart[code];
+  }
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = Object.keys(cart).length;
+  const total = Object.values(cart).reduce((s, i) => s + (i.price * i.qty), 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = 'Rs. ' + total.toFixed(2);
+}
+
+function openCart() {
+  const items = Object.entries(cart);
+  const cartDiv = document.getElementById('cartItems');
+  
+  if (!items.length) {
+    cartDiv.innerHTML = '<div class="empty-cart">🛒 Cart khali hai!<br>Products mein quantity daalo</div>';
+  } else {
+    let html = '';
+    let total = 0;
+    items.forEach(([code, item]) => {
+      const subtotal = item.price * item.qty;
+      total += subtotal;
+      html += `<div class="cart-item">
+        <div>
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-detail">Qty: ${item.qty} × Rs.${item.price.toFixed(0)} = Rs.${subtotal.toFixed(0)}</div>
+        </div>
+      </div>`;
+    });
+    cartDiv.innerHTML = html;
+    document.getElementById('cartTotalDisplay').textContent = 'Total: Rs. ' + total.toFixed(2);
+  }
+  
+  document.getElementById('cartModal').style.display = 'block';
+}
+
+function closeCart() {
+  document.getElementById('cartModal').style.display = 'none';
+}
+
+function sendWhatsApp() {
+  const name = document.getElementById('custName').value.trim();
+  const shop = document.getElementById('custShop').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const remarks = document.getElementById('custRemarks').value.trim();
+  
+  if (!name) { alert('Apna naam zaroor likhein!'); return; }
+  if (!shop) { alert('Dukan ya clinic ka naam likhein!'); return; }
+  
+  const items = Object.entries(cart);
+  if (!items.length) { alert('Koi item select nahi kiya!'); return; }
+  
+  let total = 0;
+  let msg = `🏥 *ELAHI ENTERPRISES - NEW ORDER*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `👤 *Naam:* ${name}\n`;
+  msg += `🏪 *Dukan:* ${shop}\n`;
+  if (address) msg += `📍 *Pata:* ${address}\n`;
+  if (phone) msg += `📞 *Phone:* ${phone}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📦 *ORDER ITEMS:*\n\n`;
+  
+  items.forEach(([code, item], idx) => {
+    const subtotal = item.price * item.qty;
+    total += subtotal;
+    msg += `${idx+1}. ${item.name}\n`;
+    msg += `   Qty: ${item.qty} | Price: Rs.${item.price.toFixed(0)} | Total: Rs.${subtotal.toFixed(0)}\n\n`;
+  });
+  
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `💰 *GRAND TOTAL: Rs.${total.toFixed(2)}*\n`;
+  if (remarks) msg += `\n📝 *Notes:* ${remarks}\n`;
+  msg += `\n_Order via Elahi Enterprises App_`;
+  
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+// Initial render
+renderProducts(PRODUCTS.filter(p => p.co !== 'STOCKS & INVENTORY ADJUSTMENT'));
+</script>
+</body>
+</html>
