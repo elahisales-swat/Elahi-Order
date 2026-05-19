@@ -100,16 +100,20 @@
     margin-top: 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0px;
+    justify-content: space-between;
+    width: 100%;
   }
   .live-dot-static {
-    font-size: 0.55rem;
+    font-size: 0.82rem;
     font-weight: 900;
-    color: white;
-    background: #e53935;
-    border-radius: 4px;
-    padding: 2px 5px;
+    color: #e53935;
+    background: #FFFFFF;
+    border-radius: 4px 0 0 4px;
+    padding: 2px 8px;
     letter-spacing: 1px;
+    border: 1.5px solid #111111;
+    border-right: none;
     animation: livePulse 1.4s ease-in-out infinite;
   }
   @keyframes livePulse {
@@ -120,11 +124,33 @@
   .active-company-tag {
     font-size: 0.82rem;
     font-weight: 900;
-    color: #000000;
     text-transform: uppercase;
     letter-spacing: 1px;
-    animation: companyBlink 2s step-start infinite;
+    color: #FFFFFF;
+    background: #e53935;
+    border-radius: 0 4px 4px 0;
+    padding: 2px 8px;
+    border: 1.5px solid #111111;
+    animation: livePulse 1.4s ease-in-out infinite;
   }
+  @keyframes companyBlinkGold {
+    0%   { 
+      color: #FFFFFF; 
+      background: linear-gradient(135deg, #8B0000, #B22222); 
+      box-shadow: 0 0 12px rgba(139,0,0,0.8), 0 0 24px rgba(178,34,34,0.4);
+    }
+    50%  { 
+      color: #FFFFFF; 
+      background: linear-gradient(135deg, #007A00, #00CC44); 
+      box-shadow: 0 0 12px rgba(0,122,0,0.8), 0 0 24px rgba(0,204,68,0.4);
+    }
+    100% { 
+      color: #FFFFFF; 
+      background: linear-gradient(135deg, #8B0000, #B22222); 
+      box-shadow: 0 0 12px rgba(139,0,0,0.8), 0 0 24px rgba(178,34,34,0.4);
+    }
+  }
+  
   
   @keyframes companyBlink {
     0%, 100% { opacity: 1; }
@@ -135,21 +161,28 @@
   .sab-row {
     display: flex;
     justify-content: center;
-    padding: 3px 0 0;
+    padding: 2px 0 3px;
+    border-top: none;
+    border-bottom: 1.5px dashed #d0d0d0;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
   /* TICKER */
-  .company-scroll-wrapper { width:100%; padding:2px 0 2px; }
+  .company-scroll-wrapper { width:100%; padding:1px 0 1px; }
   .ticker-outer { 
     overflow: hidden;
     width: 100%;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
     mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   }
   .ticker-inner {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     white-space: nowrap;
-    padding: 4px;
+    padding: 2px;
     width: max-content;
   }
   .ticker-inner .company-pill { flex-shrink:0; }
@@ -158,7 +191,7 @@
     background: #FFFFFF;
     border: 1.5px solid #ccc;
     border-radius: 50px;
-    padding: 4px 12px;
+    padding: 2px 10px;
     font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
@@ -376,14 +409,14 @@
     background: #111111;
     color: white;
     border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 0.88rem;
+    padding: 5px 12px;
+    font-size: 0.82rem;
     font-weight: 800;
     z-index: 600;
     box-shadow: 0 4px 16px rgba(0,0,0,0.55);
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
     cursor: grab;
     border: none;
     touch-action: none;
@@ -391,20 +424,28 @@
   }
   .mini-cart-bar.show { display: flex; }
   .mini-cart-bar.dragging { cursor: grabbing; box-shadow: 0 8px 24px rgba(0,0,0,0.65); opacity: 0.96; transform: translateX(-50%) scale(1.01); }
-  .mcb-left { display: flex; align-items: center; gap: 7px; }
-  .mcb-icon { font-size: 1.1rem; }
-  .mcb-label { font-size: 0.6rem; opacity: 0.75; font-weight: 600; }
-  .mcb-count { font-size: 0.88rem; font-weight: 900; line-height: 1.2; }
-  .mcb-right { display: flex; align-items: center; gap: 8px; }
-  .mcb-total { font-size: 0.95rem; font-weight: 900; font-family: 'IBM Plex Mono', monospace; }
+  .mcb-left { display: flex; align-items: center; gap: 5px; }
+  .mcb-icon { font-size: 0.95rem; }
+  .mcb-label { font-size: 0.55rem; opacity: 0.75; font-weight: 600; }
+  .mcb-count { font-size: 0.78rem; font-weight: 900; line-height: 1.2; }
+  .mcb-right { display: flex; align-items: center; gap: 6px; }
+  .mcb-total { font-size: 1rem; font-weight: 900; font-family: 'IBM Plex Mono', monospace; color: #ffffff; letter-spacing: 0.5px; }
   .mcb-action {
-    background: rgba(255,255,255,0.18);
+    background: #FF3B00;
     border-radius: 14px;
-    padding: 3px 10px;
-    font-size: 0.64rem;
-    font-weight: 800;
-    letter-spacing: 0.4px;
+    padding: 5px 13px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.8px;
     white-space: nowrap;
+    color: #FFFFFF;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 10px rgba(255,59,0,0.6);
+    animation: borderBlink 1.8s step-start infinite;
+  }
+  @keyframes borderBlink {
+    0%, 100% { border-color: #FFD700; box-shadow: 0 0 10px rgba(255,215,0,0.8), 0 0 20px rgba(255,215,0,0.4); }
+    50%       { border-color: #FFFFFF; box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4); }
   }
 
   /* PRODUCT ROW enhancements */
@@ -417,57 +458,75 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 300;
+    background: rgba(0,0,0,0.6);
+    z-index: 9000;
   }
   .cart-overlay.open { display: block; }
   .cart-panel {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: white;
-    border-radius: 20px 20px 0 0;
-    max-height: 85vh;
+    inset: 0;
+    background: #F4F5F7;
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
     overflow-y: auto;
-    z-index: 400;
+    z-index: 9999;
     transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-    padding-bottom: 20px;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
   }
   .cart-panel.open { transform: translateY(0); }
-  .cart-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 12px auto 0;
-  }
+  .cart-handle { display: none; }
   .cart-header {
-    padding: 16px 20px 10px;
-    border-bottom: 1.5px solid var(--border);
+    padding: 10px 14px 9px;
+    background: #111111;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
-  .cart-title { font-size: 1.1rem; font-weight: 700; }
+  .cart-title { 
+    font-size: 1rem; 
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.5px;
+  }
   .cart-close {
-    background: none; border: none; font-size: 1.4rem;
-    cursor: pointer; color: var(--text-muted); padding: 4px;
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: white;
+    padding: 3px 9px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-family: 'Inter','Segoe UI',sans-serif;
   }
-  
+  .cart-close:active { background: rgba(255,255,255,0.35); }
+
   .cart-empty {
     text-align: center;
-    padding: 40px 20px;
+    padding: 30px 20px;
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   /* CART ITEMS */
-  .cart-items { padding: 6px 14px; }
+  .cart-items { padding: 4px 10px 0px; }
   .cart-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 4px;
-    border-bottom: 1px solid var(--border);
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: white;
+    margin-bottom: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     animation: slideIn 0.2s ease;
   }
   @keyframes slideIn {
@@ -487,88 +546,113 @@
     margin-bottom: 2px;
   }
   .ci-name {
-    font-size: 0.95rem;
+    font-size: 0.82rem;
     font-weight: 700;
     color: #111;
     display: block;
     white-space: normal;
-    line-height: 1.25;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.2;
   }
   .ci-line {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-top: 2px;
+    margin-top: 1px;
     font-weight: 500;
   }
-  .ci-line b { color: var(--green-dark); font-size: 0.88rem; }
+  .ci-line b { color: var(--green-dark); font-size: 0.8rem; }
   .ci-remove {
     background: var(--danger-light);
     border: none;
-    width: 30px; height: 30px;
-    border-radius: 8px;
+    width: 26px; height: 26px;
+    border-radius: 6px;
     cursor: pointer;
     color: var(--danger);
-    font-size: 1rem;
+    font-size: 0.85rem;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
 
   /* CART TOTAL */
   .cart-total-box {
-    margin: 12px 16px 0;
-    background: var(--green-light);
+    margin: 4px 10px 8px;
+    background: white;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    display: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--green);
+    box-shadow: 0 2px 8px rgba(0,135,90,0.1);
+    overflow: hidden;
+  }
+  .cart-total-box-x {
+    margin: 8px 14px 0;
+    background: white;
     border-radius: var(--radius);
     padding: 14px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 2px solid var(--green);
+    box-shadow: 0 2px 8px rgba(0,135,90,0.1);
   }
-  .cart-total-label { font-size: 0.9rem; color: var(--green-dark); font-weight: 600; }
-  .cart-total-amt { font-size: 1.3rem; font-weight: 700; color: var(--green-dark); font-family: 'IBM Plex Mono', monospace; }
+  .cart-total-label { font-size: 1rem; color: var(--green-dark); font-weight: 900; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; white-space: nowrap; }
+  .cart-total-amt { font-size: 1rem; font-weight: 900; color: var(--green-dark); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; white-space: nowrap; }
 
   /* ORDER FORM */
-  .order-form { padding: 16px; border-top: 1.5px solid var(--border); margin-top: 12px; }
-  .form-group { margin-bottom: 12px; }
-  .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+  .order-form { 
+    padding: 8px 10px 6px; 
+    margin-top: 4px;
+  }
+  .form-group { margin-bottom: 8px; }
+  .form-group label { 
+    font-size: 0.78rem; 
+    font-weight: 700; 
+    color: var(--text); 
+    display: block; 
+    margin-bottom: 4px; 
+  }
   .form-group input, .form-group textarea {
     width: 100%;
-    padding: 11px 14px;
+    padding: 9px 12px;
     border: 2px solid var(--border);
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-family: 'Inter', 'Segoe UI', sans-serif;
     color: var(--text);
     direction: ltr;
     transition: border 0.15s;
-    background: var(--bg);
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   }
   .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--green);
     background: white;
   }
-  .form-group textarea { resize: none; height: 70px; }
+  .form-group textarea { resize: none; height: 60px; }
 
   .btn-submit {
     width: 100%;
-    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     color: white;
     border: none;
     border-radius: var(--radius);
-    padding: 15px;
-    font-size: 1rem;
-    font-weight: 700;
+    padding: 13px;
+    font-size: 0.95rem;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
-    box-shadow: 0 4px 16px rgba(0,135,90,0.3);
+    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
     transition: all 0.2s;
-    margin-top: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
   }
   .btn-submit:active { transform: scale(0.98); }
   .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -628,7 +712,7 @@
     border-radius: 50px;
     font-size: 0.9rem;
     font-weight: 600;
-    z-index: 999;
+    z-index: 999999;
     opacity: 0;
     transition: all 0.3s;
     white-space: nowrap;
@@ -638,6 +722,16 @@
   .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+  .toast.warning {
+    background: #E53935;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(229,57,53,0.45);
+    white-space: pre-line;
+    text-align: center;
+    line-height: 1.5;
   }
 
   /* ---- FIXED TOP WRAPPER ---- */
@@ -660,8 +754,8 @@
     font-weight: 900;
     letter-spacing: 2px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
-    animation: colorBlink 6s ease-in-out infinite;
-    text-shadow: 0 0 12px rgba(255,255,255,0.5);
+    color: #FFFFFF;
+    text-shadow: none;
   }
   @keyframes colorBlink {
     0%    { color: #FFD700; text-shadow: 0 0 14px #FFD700, 0 0 30px #FFD700; }
@@ -692,7 +786,7 @@
   /* FILTERS BAR */
   .filters-bar {
     background: var(--bg);
-    padding: 0 14px 4px;
+    padding: 1px 14px 2px;
     border-bottom: 1.5px solid var(--border);
   }
 
@@ -757,13 +851,13 @@
     <p class="contact-num">📞 Contact: 0946-725027</p>
   </div>
   <div class="filters-bar">
-    <div class="sab-row" id="sabRow"></div>
     <div class="company-scroll-wrapper">
       <div class="ticker-outer">
         <div class="ticker-inner" id="companyFilter"></div>
       </div>
     </div>
-    <div class="section-label" id="productCount" style="margin-top:3px;margin-bottom:1px;"></div>
+    <div class="sab-row" id="sabRow"></div>
+    <div class="section-label" id="productCount" style="margin-top:3px;margin-bottom:1px;justify-content:space-between;width:100%;box-sizing:border-box;"></div>
   </div>
 </div>
 
@@ -820,17 +914,21 @@
 <!-- Cart Overlay + Panel -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cartPanel">
-  <div class="cart-handle"></div>
-  <div class="cart-header">
-    <div class="cart-title">🛒 My Order</div>
-    <button class="cart-close" onclick="closeCart()">✕</button>
-  </div>
-  <div id="cartBody">
-    <div class="cart-empty">No products selected yet 📋</div>
-  </div>
-  <div id="cartTotalBox" style="display:none;" class="cart-total-box">
-    <div class="cart-total-label">Total Amount</div>
-    <div class="cart-total-amt" id="cartTotalAmt">Rs. 0</div>
+  <div class="cart-header" style="background:#111111;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:10px 10px;">
+    <button onclick="closeCart()" style="padding:8px 7px;background:#EF5350;color:#FFFFFF;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:4px;width:85%;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      BACK TO ORDER
+    </button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;">
+      <span style="font-size:1.3rem;line-height:1;">🛒</span>
+      <span style="font-size:0.75rem;font-weight:700;color:white;letter-spacing:0.3px;">My Order</span>
+    </div>
+    <div style="display:flex;justify-content:flex-end;width:100%;">
+      <button onclick="sendOrder()" style="padding:8px 7px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 2px 8px rgba(37,211,102,0.4);letter-spacing:0.3px;width:85%;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.857L.057 23.882a.5.5 0 0 0 .606.63l6.198-1.437A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.655-.51-5.17-1.395l-.371-.219-3.838.89.937-3.719-.242-.386A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        SEND ORDER
+      </button>
+    </div>
   </div>
   <div class="order-form" id="orderFormSection" style="display:none;">
     <div class="form-group">
@@ -838,20 +936,33 @@
       <input type="text" id="shopName" placeholder="Enter shop or clinic name">
     </div>
     <div class="form-group">
-      <label>🪪 Customer Code <span style="color:var(--text-muted);font-weight:400;">(if known)</span></label>
-      <input type="text" id="customerCode" placeholder="Enter your customer code">
+      <label>📍 Address <span style="color:var(--text-muted);font-weight:500;">(if known)</span></label>
+      <input type="text" id="customerCode" placeholder="Enter delivery address">
     </div>
     <div class="form-group">
-      <label>📝 Remarks / Notes / Address</label>
-      <textarea id="notes" placeholder="Special instructions, address, phone, or any remarks..."></textarea>
+      <label>📝 Remarks / Notes</label>
+      <textarea id="notes" placeholder="Special instructions, phone, or any remarks..."></textarea>
     </div>
-    <button class="btn-submit" onclick="sendOrder()">
-      📲 Send Order via WhatsApp
-    </button>
+  </div>
+  <div id="cartBody">
+    <div class="cart-empty">No products selected yet 📋</div>
+  </div>
+  <div id="cartTotalBox" style="display:none;" class="cart-total-box">
+    <span class="cart-total-label">Total Approximately</span><span class="cart-total-amt" id="cartTotalAmt">Rs. 0</span>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Warning Popup -->
+<div id="warnPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);">
+  <div style="background:#fff;border-radius:18px;padding:28px 24px 20px;max-width:300px;width:88%;margin:0 auto;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.35);">
+    <div style="font-size:2.2rem;margin-bottom:8px;">&#9888;&#65039;</div>
+    <div style="font-size:1.05rem;font-weight:800;color:#C62828;margin-bottom:8px;">Enter Shop or Clinic Name</div>
+    <div style="font-size:0.88rem;color:#444;line-height:1.5;margin-bottom:18px;">Order send karne se pehle<br><b>Shop / Clinic Name</b> zaroor bharein</div>
+    <button onclick="closeWarnPopup()" style="background:#E53935;color:white;border:none;border-radius:10px;padding:10px 32px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:inherit;">OK, Bharein</button>
+  </div>
+</div>
 
 <script>
 // ===================== DATA =====================
@@ -2055,7 +2166,7 @@ function renderProducts() {
   const filtered = getFiltered();
   const companyLabel = activeCompany === "SUB COMPANIES" ? "ALL COMPANIES" : activeCompany;
   document.getElementById('productCount').innerHTML =
-    `<span>${filtered.length} products</span>&nbsp;&nbsp;<span class="live-dot-static">ITEM</span><span class="active-company-tag">${companyLabel}</span>`;
+    `<span style="display:flex;align-items:center;gap:0;"><span class="live-dot-static">ITEMS</span><span class="active-company-tag">${companyLabel}</span></span><span style="color:var(--text-muted);font-size:0.78rem;font-weight:700;letter-spacing:0.5px;">${filtered.length} Products</span>`;
 
   // Update live filter bar
   const liveCompany = document.getElementById('liveCompanyName');
@@ -2104,7 +2215,6 @@ function changeQty(code, delta) {
   updateProductRow(code);
   updateCart();
   if (delta > 0 && current === 0) {
-    showToast('✅ ' + products.find(p=>p.code===code).name.split(' ')[0] + ' added to cart');
     trackView(code);
   }
 }
@@ -2233,8 +2343,10 @@ function renderCartPanel(items, total) {
 
   if (items.length === 0) {
     body.innerHTML = '<div class="cart-empty">No products selected yet 📋</div>';
-    totalBox.style.display = 'none';
+    if (totalBox) totalBox.style.display = 'none';
     formSection.style.display = 'none';
+    const hBtns = document.getElementById('cartHeaderButtons');
+    if (hBtns) hBtns.style.display = 'none';
     return;
   }
 
@@ -2255,9 +2367,13 @@ function renderCartPanel(items, total) {
   });
   html += '</div>';
   body.innerHTML = html;
-  totalBox.style.display = 'flex';
+  if (totalBox) {
+    totalBox.style.display = 'flex';
+    document.getElementById('cartTotalAmt').textContent = 'Rs. ' + total.toLocaleString();
+  }
   formSection.style.display = 'block';
-  document.getElementById('cartTotalAmt').textContent = 'Rs. ' + total.toLocaleString();
+  const hBtns = document.getElementById('cartHeaderButtons');
+  if (hBtns) hBtns.style.display = 'flex';
 }
 
 function removeItem(code) {
@@ -2269,17 +2385,46 @@ function removeItem(code) {
 function openCart() {
   document.getElementById('cartOverlay').classList.add('open');
   document.getElementById('cartPanel').classList.add('open');
+  const fab = document.getElementById('cartFab');
+  if (fab) fab.style.display = 'none';
+  const mcb = document.querySelector('.mcb');
+  if (mcb) mcb.style.display = 'none';
+  const miniBar = document.querySelector('.mini-cart-bar');
+  if (miniBar) miniBar.style.display = 'none';
+  const fixedTop = document.getElementById('fixedTop');
+  if (fixedTop) fixedTop.style.zIndex = '1';
 }
 function closeCart() {
   document.getElementById('cartOverlay').classList.remove('open');
   document.getElementById('cartPanel').classList.remove('open');
+  const fab = document.getElementById('cartFab');
+  if (fab) fab.style.display = '';
+  const mcb = document.querySelector('.mcb');
+  if (mcb) mcb.style.display = '';
+  const miniBar = document.querySelector('.mini-cart-bar');
+  if (miniBar) miniBar.style.display = '';
+  const fixedTop = document.getElementById('fixedTop');
+  if (fixedTop) fixedTop.style.zIndex = '';
 }
 
-function showToast(msg) {
+function showToast(msg, isWarning = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
+  t.classList.remove('warning');
+  if (isWarning) t.classList.add('warning');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1800);
+  setTimeout(() => { t.classList.remove('show'); t.classList.remove('warning'); }, isWarning ? 3000 : 1800);
+}
+
+function showWarnPopup() {
+  const p = document.getElementById('warnPopup');
+  p.style.display = 'flex';
+}
+
+function closeWarnPopup() {
+  const p = document.getElementById('warnPopup');
+  p.style.display = 'none';
+  setTimeout(() => { document.getElementById('shopName').focus(); }, 100);
 }
 
 function generateOMF(items, total, orderNum, orderDatetime) {
@@ -2316,10 +2461,15 @@ function sendOrder() {
   const shop = document.getElementById('shopName').value.trim();
   const notes = document.getElementById('notes').value.trim();
 
-  if (!shop) { showToast('⚠️ Shop name is required'); return; }
+  if (!shop) { 
+    showWarnPopup();
+    return; 
+  }
 
   const items = Object.entries(cart).filter(([,q]) => q > 0);
   if (items.length === 0) { showToast('⚠️ Please add at least one product'); return; }
+
+  // Confirmation popup before sending
 
   const now = new Date();
   const pad2 = n => String(n).padStart(2,'0');
@@ -2343,7 +2493,7 @@ function sendOrder() {
   msg += `ITEMS ORDER FORM\n`;
   msg += `${LINE}\n`;
   msg += `SO# ${soNum}    Date: ${dateStr} ${timeStr}    Booker: Online\n`;
-  msg += `Customer: ${custCode ? custCode+'/' : '1/'}${shop}\n`;
+  msg += `Customer: 1 / ${shop}${custCode ? ' / ' + custCode : ''}\n`;
   msg += `Remarks : ${notes || ''}\n`;
   msg += `${LINE}\n`;
   msg += `Sr#   Item Description\n`;
@@ -2550,75 +2700,90 @@ window.addEventListener('resize', adjustPadding);
       inner.appendChild(clone);
     });
 
-    const origWidth = inner.scrollWidth / 2; // half = one set width
-    const speed = 0.5; // px per frame auto-scroll
-
-    let pos = 0;
-    let dragging = false;
-    let dragStartX = 0;
-    let dragStartPos = 0;
-    let lastDragX = 0;
-    let velocity = 0;
-    let autoResumeTimer = null;
-    let isAutoScrolling = true;
-
     const outer = inner.parentElement;
 
-    function clampPos(p) {
-      // Keep looping seamlessly
+    // Measure after render
+    let origWidth = 0;
+    function measureWidth() {
+      const w = inner.scrollWidth / 2;
+      if (w > 10) { origWidth = w; startLoop(); }
+      else requestAnimationFrame(measureWidth);
+    }
+
+    const AUTO_SPEED = 0.6;
+    let pos = 0;
+    let touching = false;
+    let lastX = 0;
+    let velocity = 0;   // px per frame — updated every touchmove
+    let prevX = 0;
+    let prevTime = 0;
+
+    function wrap(p) {
       p = p % origWidth;
       if (p < 0) p += origWidth;
       return p;
     }
 
-    // ---- TOUCH EVENTS ----
-    outer.addEventListener('touchstart', (e) => {
-      dragging = true;
-      isAutoScrolling = false;
-      clearTimeout(autoResumeTimer);
-      dragStartX = e.touches[0].clientX;
-      dragStartPos = pos;
-      lastDragX = dragStartX;
-      velocity = 0;
-    }, { passive: true });
-
-    outer.addEventListener('touchmove', (e) => {
-      if (!dragging) return;
-      const dx = e.touches[0].clientX - lastDragX;
-      velocity = dx;
-      lastDragX = e.touches[0].clientX;
-      const totalDx = e.touches[0].clientX - dragStartX;
-      pos = clampPos(dragStartPos - totalDx);
+    function applyPos() {
       inner.style.transform = `translateX(-${pos}px)`;
-    }, { passive: true });
+    }
 
-    outer.addEventListener('touchend', () => {
-      dragging = false;
-      // Resume auto-scroll after 1.5s
-      autoResumeTimer = setTimeout(() => { isAutoScrolling = true; }, 1500);
-    }, { passive: true });
-
-    // ---- MOUSE EVENTS (desktop) ----
-    outer.addEventListener('mouseenter', () => { isAutoScrolling = false; clearTimeout(autoResumeTimer); });
-    outer.addEventListener('mouseleave', () => { autoResumeTimer = setTimeout(() => { isAutoScrolling = true; }, 500); });
-
-    // ---- ANIMATION LOOP ----
     function tick() {
-      if (!dragging) {
-        if (isAutoScrolling) {
-          pos = clampPos(pos + speed);
-          inner.style.transform = `translateX(-${pos}px)`;
-        } else if (Math.abs(velocity) > 0.3) {
-          // momentum coast after finger lift
-          pos = clampPos(pos - velocity);
+      if (!touching) {
+        if (Math.abs(velocity) > 0.3) {
+          // momentum coast
+          pos = wrap(pos + velocity);
           velocity *= 0.92;
-          inner.style.transform = `translateX(-${pos}px)`;
+        } else {
+          // auto scroll
+          velocity = 0;
+          pos = wrap(pos + AUTO_SPEED);
         }
+        applyPos();
       }
       requestAnimationFrame(tick);
     }
-    requestAnimationFrame(tick);
-  }, 100);
+
+    function startLoop() { requestAnimationFrame(tick); }
+
+    outer.addEventListener('touchstart', (e) => {
+      touching = true;
+      velocity = 0;
+      lastX = e.touches[0].clientX;
+      prevX = lastX;
+      prevTime = Date.now();
+    }, { passive: true });
+
+    outer.addEventListener('touchmove', (e) => {
+      if (!touching) return;
+      e.preventDefault();
+      const x = e.touches[0].clientX;
+      const now = Date.now();
+      const dt = Math.max(now - prevTime, 1);
+
+      // Move pos by how much finger moved — incremental, no snapshot
+      const delta = lastX - x;
+      pos = wrap(pos + delta);
+      applyPos();
+
+      // Track velocity for momentum (px per ms * 16ms frame)
+      velocity = (prevX - x) / dt * 16;
+      prevX = x;
+      prevTime = now;
+      lastX = x;
+    }, { passive: false });
+
+    outer.addEventListener('touchend', () => {
+      touching = false;
+    }, { passive: true });
+
+    outer.addEventListener('touchcancel', () => {
+      touching = false;
+      velocity = 0;
+    }, { passive: true });
+
+    measureWidth();
+  }, 120);
 })();
 </script>
 </body>
