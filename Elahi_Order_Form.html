@@ -160,12 +160,15 @@
   /* SAB COMPANIES - full width centered row */
   .sab-row {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
     padding: 2px 0 3px;
     border-top: none;
     border-bottom: 1.5px dashed #d0d0d0;
     margin-top: 2px;
     margin-bottom: 2px;
+    gap: 8px;
   }
   /* TICKER */
   .company-scroll-wrapper { width:100%; padding:1px 0 1px; }
@@ -189,7 +192,7 @@
   .company-pill {
     flex-shrink: 0;
     background: #FFFFFF;
-    border: 1.5px solid #ccc;
+    border: 1.8px solid #222;
     border-radius: 50px;
     padding: 2px 10px;
     font-size: 0.78rem;
@@ -217,7 +220,7 @@
   }
   .search-wrap input {
     width: 100%;
-    padding: 8px 48px 8px 38px;
+    padding: 8px 84px 8px 38px;
     border: 2px solid var(--border);
     border-radius: var(--radius);
     font-size: 1rem;
@@ -268,18 +271,19 @@
   .products-grid {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 0;
     margin-top: 6px;
   }
 
   .product-row {
     background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 8px;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 2px 6px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     transition: all 0.15s;
     cursor: pointer;
     position: relative;
@@ -294,14 +298,14 @@
   .prod-info { flex: 1; min-width: 0; }
   .prod-code {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     color: var(--green-dark);
     font-weight: 600;
     background: var(--green-light);
-    padding: 1px 5px;
+    padding: 0px 4px;
     border-radius: 3px;
     display: inline-block;
-    margin-bottom: 1px;
+    margin-bottom: 0px;
   }
   .product-row.in-cart .prod-code {
     background: var(--green);
@@ -317,7 +321,7 @@
     text-overflow: ellipsis;
   }
   .prod-price {
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     font-weight: 500;
     margin-top: 0;
@@ -325,7 +329,7 @@
   .prod-price span {
     color: var(--green-dark);
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: 0.70rem;
   }
 
   /* QTY CONTROLS */
@@ -346,8 +350,8 @@
   .qty-btn {
     background: none;
     border: none;
-    width: 34px; height: 34px;
-    font-size: 1.3rem;
+    width: 28px; height: 28px;
+    font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -358,7 +362,7 @@
   .qty-btn:active { background: var(--green-light); transform: scale(0.9); }
   .qty-btn.minus { color: var(--danger); }
   .qty-num {
-    width: 36px;
+    width: 52px;
     text-align: center;
     font-size: 0.95rem;
     font-weight: 800;
@@ -368,7 +372,7 @@
     background: white;
     color: var(--text);
     padding: 0;
-    height: 34px;
+    height: 28px;
     font-family: 'IBM Plex Mono', monospace;
   }
   .qty-num:focus { outline: none; background: #f0fff8; }
@@ -376,72 +380,77 @@
   /* SEARCH HIGHLIGHT */
   .highlight { background: #fff176; border-radius: 2px; padding: 0 1px; font-weight: 700; }
 
-  /* SCROLL TO TOP */
-  .scroll-top-btn {
-    position: fixed;
-    bottom: 160px;
-    left: 16px;
-    width: 38px; height: 38px;
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    cursor: pointer;
-    z-index: 199;
-    box-shadow: var(--shadow);
-    transition: all 0.2s;
-  }
-  .scroll-top-btn.show { display: flex; }
-  .scroll-top-btn:active { transform: scale(0.9); }
+  /* SCROLL TO TOP - now inside search bar */
 
   /* SMART CART BAR - draggable, compact, black */
   .mini-cart-bar {
     display: none;
     position: fixed;
-    top: 30px;
+    top: 28px;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
     max-width: 600px;
     background: #111111;
     color: white;
-    border-radius: 8px;
-    padding: 5px 12px;
-    font-size: 0.82rem;
+    border-radius: 0;
+    padding: 0 10px;
+    height: var(--header-height, 54px);
+    font-size: 0.78rem;
     font-weight: 800;
     z-index: 600;
     box-shadow: 0 4px 16px rgba(0,0,0,0.55);
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 6px;
     cursor: grab;
     border: none;
     touch-action: none;
     user-select: none;
+    overflow: hidden;
   }
   .mini-cart-bar.show { display: flex; }
   .mini-cart-bar.dragging { cursor: grabbing; box-shadow: 0 8px 24px rgba(0,0,0,0.65); opacity: 0.96; transform: translateX(-50%) scale(1.01); }
   .mcb-left { display: flex; align-items: center; gap: 5px; }
-  .mcb-icon { font-size: 0.95rem; }
+  .mcb-icon { font-size: 1rem; }
   .mcb-label { font-size: 0.55rem; opacity: 0.75; font-weight: 600; }
   .mcb-count { font-size: 0.78rem; font-weight: 900; line-height: 1.2; }
   .mcb-right { display: flex; align-items: center; gap: 6px; }
-  .mcb-total { font-size: 1rem; font-weight: 900; font-family: 'IBM Plex Mono', monospace; color: #ffffff; letter-spacing: 0.5px; }
+  .mcb-total {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #FFD700;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    gap: 0px;
+  }
+  .mcb-total .mcb-rs-label {
+    font-size: 0.82rem;
+    font-weight: 900;
+    opacity: 1;
+    letter-spacing: 1px;
+  }
+  .mcb-total .mcb-amt {
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
   .mcb-action {
     background: #FF3B00;
-    border-radius: 14px;
-    padding: 5px 13px;
-    font-size: 0.75rem;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.74rem;
     font-weight: 900;
     letter-spacing: 0.8px;
     white-space: nowrap;
     color: #FFFFFF;
     border: 2px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255,59,0,0.6);
+    box-shadow: 0 0 8px rgba(255,59,0,0.6);
     animation: borderBlink 1.8s step-start infinite;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
   @keyframes borderBlink {
     0%, 100% { border-color: #FFD700; box-shadow: 0 0 10px rgba(255,215,0,0.8), 0 0 20px rgba(255,215,0,0.4); }
@@ -449,8 +458,8 @@
   }
 
   /* PRODUCT ROW enhancements */
-  .product-row { min-height: 56px; }
-  .prod-name { font-size: 0.86rem; white-space: normal; line-height: 1.3; }
+  .product-row { min-height: 42px; }
+  .prod-name { font-size: 0.78rem; white-space: normal; line-height: 1.2; }
   .prod-name .highlight { background: #ffe57a; }
 
   /* CART PANEL */
@@ -517,16 +526,17 @@
   }
 
   /* CART ITEMS */
-  .cart-items { padding: 4px 10px 0px; }
+  .cart-items { padding: 0 10px 0px; }
   .cart-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 4px 8px;
-    border-radius: 8px;
+    gap: 6px;
+    padding: 2px 6px;
+    border-radius: 0;
     background: white;
-    margin-bottom: 2px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border);
+    box-shadow: none;
     animation: slideIn 0.2s ease;
   }
   @keyframes slideIn {
@@ -536,41 +546,105 @@
   .ci-info { flex: 1; min-width: 0; }
   .ci-code {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     color: var(--green-dark);
     font-weight: 700;
     background: var(--green-light);
-    padding: 1px 5px;
+    padding: 1px 4px;
     border-radius: 3px;
     display: inline-block;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
+  }
+  .ci-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 0px;
   }
   .ci-name {
     font-size: 0.82rem;
-    font-weight: 700;
-    color: #111;
-    display: block;
-    white-space: normal;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     line-height: 1.2;
+    flex: 1;
   }
+  /* Cart inline qty control - colorful professional */
+  .ci-qty-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #f4f5f7;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #00875A;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,135,90,0.25);
+  }
+  .ci-qty-btn {
+    background: none;
+    border: none;
+    width: 28px; height: 28px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.1s;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    padding: 0;
+  }
+  .ci-qty-btn:active { transform: scale(0.88); }
+  .ci-qty-btn.minus { 
+    color: #ffffff;
+    background: #9e9e9e;
+  }
+  .ci-qty-btn.minus:active { background: #757575; }
+  .ci-qty-btn.minus:active { background: #cce5f6; }
+  .ci-qty-btn.plus {
+    color: #ff0000;
+    background: #e8f4fd;
+  }
+  .ci-qty-btn.plus:active { background: #cce5f6; }
+  .ci-qty-num {
+    width: 52px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: none;
+    border-right: 2px solid #00875A;
+    border-left: 2px solid #00875A;
+    background: #ffffff;
+    color: #111111;
+    padding: 0;
+    height: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .ci-qty-num:focus { outline: none; background: #f0fff8; color: #111111; }
   .ci-line {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
-    margin-top: 1px;
+    margin-top: 0px;
     font-weight: 500;
   }
-  .ci-line b { color: var(--green-dark); font-size: 0.8rem; }
+  .ci-line b { color: var(--green-dark); font-size: 0.72rem; }
   .ci-remove {
-    background: var(--danger-light);
-    border: none;
-    width: 26px; height: 26px;
-    border-radius: 6px;
+    background: linear-gradient(135deg, #c62828, #e53935);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    width: 28px; height: 28px;
+    border-radius: 7px;
     cursor: pointer;
-    color: var(--danger);
-    font-size: 0.85rem;
+    color: white;
+    font-size: 0.8rem;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(197,40,40,0.45);
+    transition: transform 0.15s;
   }
+  .ci-remove:active { transform: scale(0.9); }
 
   /* CART TOTAL */
   .cart-total-box {
@@ -599,7 +673,7 @@
     box-shadow: 0 2px 8px rgba(0,135,90,0.1);
   }
   .cart-total-label { font-size: 1rem; color: var(--green-dark); font-weight: 900; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; white-space: nowrap; }
-  .cart-total-amt { font-size: 1rem; font-weight: 900; color: var(--green-dark); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; white-space: nowrap; }
+  .cart-total-amt { font-size: 1.25rem; font-weight: 900; color: var(--green-dark); font-family: 'IBM Plex Mono', monospace; letter-spacing: 1px; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,100,68,0.15); }
 
   /* ORDER FORM */
   .order-form { 
@@ -796,6 +870,7 @@
     flex-wrap: wrap;
     gap: 3px;
     margin-top: 4px;
+    justify-content: center;
   }
   .az-btn {
     background: white;
@@ -836,24 +911,6 @@
     width: auto;
     padding: 0 8px;
   }
-  /* INFO PANEL */
-  .info-panel-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px); }
-  .info-panel-overlay.open { display:block; }
-  .info-panel { position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:white;border-radius:20px 20px 0 0;max-height:87vh;overflow-y:auto;z-index:8001;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
-  .info-panel.open { transform:translateY(0); }
-  .ip-header { position:sticky;top:0;background:linear-gradient(135deg,#B71C1C,#CC0000);padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-radius:20px 20px 0 0; }
-  .ip-title { color:white;font-size:0.9rem;font-weight:900;letter-spacing:0.3px; }
-  .ip-sub { color:rgba(255,255,255,0.8);font-size:0.68rem;margin-top:2px; }
-  .ip-close { background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);color:white;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700; }
-  .ip-body { padding:16px 16px 30px;direction:rtl;text-align:right;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq','Segoe UI',serif;line-height:2.1;color:#1a1a1a;font-size:0.88rem; }
-  .ip-section { font-size:0.88rem;font-weight:900;color:#CC0000;margin:16px 0 8px;padding-bottom:4px;border-bottom:2.5px solid #CC0000; }
-  .ip-step { background:#f9f9f9;border-right:3px solid #00875A;border-radius:6px;padding:8px 10px;margin-bottom:7px;font-size:0.82rem; }
-  .ip-scheme { background:#fff8e1;border:1.5px solid #FFD700;border-radius:10px;padding:12px;margin:8px 0;font-size:0.82rem; }
-  .ip-scheme ul { margin:6px 0 0;padding:0;list-style:none; }
-  .ip-scheme ul li { padding:4px 0;border-bottom:1px dashed #e0c000; }
-  .ip-scheme ul li:last-child { border-bottom:none; }
-  .ip-footer { background:#111;color:#aaa;font-size:0.68rem;text-align:center;padding:10px;margin:14px 0 0;border-radius:8px;direction:ltr; }
-  .ip-footer a { color:#FFD700;text-decoration:none; }
 </style>
 </head>
 <body>
@@ -874,20 +931,6 @@
         <div class="ticker-inner" id="companyFilter"></div>
       </div>
     </div>
-    <div style="display:flex;gap:6px;padding:5px 8px 4px;justify-content:center;">
-      <button onclick="openInfoPanel()" style="flex:1;padding:7px 4px;background:#CC0000;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        INFO<br>BON / SCHEM
-      </button>
-      <button onclick="selectCompany('SUB COMPANIES')" style="flex:1;padding:7px 4px;background:#111111;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        CLICK FOR ITEMS<br><b>ALL COMPANIES</b>
-      </button>
-      <button onclick="openHistory()" style="flex:1;padding:7px 4px;background:#1a237e;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v3l4-4-4-4v3z"/></svg>
-        ↺ CLICK<br>HISTORY
-      </button>
-    </div>
     <div class="sab-row" id="sabRow"></div>
     <div class="section-label" id="productCount" style="margin-top:3px;margin-bottom:1px;justify-content:space-between;width:100%;box-sizing:border-box;"></div>
   </div>
@@ -895,19 +938,21 @@
 
 <!-- SCROLLABLE PRODUCTS -->
 <div class="main">
-  <div class="recent-section" id="recentSection" style="display:none;">
-    <div class="recent-label">
-      🕐 Recently Viewed
-      <button class="recent-clear" onclick="clearRecent()">Clear</button>
-    </div>
-    <div class="recent-chips" id="recentChips"></div>
-  </div>
+
   <div class="products-grid" id="productsGrid"></div>
 </div>
 
 <!-- FIXED BOTTOM: Search + A-Z -->
+<button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Scroll to Top" style="display:none;position:fixed;bottom:108px;left:calc(50% + 16px);transform:translateX(-50%);background:#111111;border:2.5px solid #FFD700;border-radius:50px;height:34px;padding:0 14px;cursor:pointer;z-index:200;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 12px rgba(0,0,0,0.4);">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+    <polyline points="4,16 12,5 20,16" stroke="#FFD700" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <span style="color:white;font-size:0.75rem;font-weight:900;letter-spacing:1.5px;font-family:'Inter','Segoe UI',sans-serif;">TOP</span>
+</button>
+
 <div class="bottom-search-bar">
-  <div class="quick-chips" id="quickChips"></div>
+  <div class="quick-chips" id="quickChips" style="display:none;"></div>
+  <div class="az-bar" id="azBar"></div>
   <div class="search-wrap" style="margin-top:4px;">
     <span class="search-icon">🔍</span>
     <input type="text" id="searchInput" placeholder="Search by product name or code..." oninput="onSearchInput()">
@@ -917,23 +962,21 @@
       </svg>
     </button>
   </div>
-  <div class="az-bar" id="azBar"></div>
 </div>
-
-<!-- Scroll to top -->
-<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
 
 <!-- Smart Cart Bar - freely draggable, starts below red banner -->
 <div class="mini-cart-bar" id="miniCartBar">
-  <div class="mcb-left">
+  <div class="mcb-left" style="flex:1;">
     <span class="mcb-icon">🛒</span>
     <div>
       <div class="mcb-count" id="miniCartText">0 items</div>
       <div class="mcb-label">Tap to view • drag to move</div>
     </div>
   </div>
-  <div class="mcb-right">
-    <div class="mcb-total" id="miniCartTotal">Rs. 0</div>
+  <div class="mcb-right" style="flex:1;justify-content:center;">
+    <div class="mcb-total" id="miniCartTotal"><span class="mcb-rs-label">Rs.</span><span class="mcb-amt">0.00</span></div>
+  </div>
+  <div style="flex:1;display:flex;justify-content:flex-end;">
     <div class="mcb-action">VIEW ORDER ›</div>
   </div>
 </div>
@@ -947,7 +990,7 @@
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cartPanel">
   <div class="cart-header" style="background:#111111;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:10px 10px;">
-    <button onclick="closeCart()" style="padding:8px 7px;background:#EF5350;color:#FFFFFF;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:4px;width:85%;">
+    <button onclick="closeCart()" style="padding:8px 7px;background:#EF5350;color:#FFFFFF;border:2px solid rgba(255,255,255,0.85);border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:4px;width:85%;box-shadow:0 0 0 1px rgba(255,100,100,0.4),0 3px 10px rgba(239,83,80,0.35);">
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       BACK TO ORDER
     </button>
@@ -956,7 +999,7 @@
       <span style="font-size:0.75rem;font-weight:700;color:white;letter-spacing:0.3px;">My Order</span>
     </div>
     <div style="display:flex;justify-content:flex-end;width:100%;">
-      <button onclick="sendOrder()" style="padding:8px 7px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 2px 8px rgba(37,211,102,0.4);letter-spacing:0.3px;width:85%;">
+      <button onclick="sendOrder()" style="padding:8px 7px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:2px solid rgba(255,255,255,0.90);border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 0 1px rgba(37,211,102,0.5),0 3px 12px rgba(18,140,126,0.45);letter-spacing:0.3px;width:85%;">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.857L.057 23.882a.5.5 0 0 0 .606.63l6.198-1.437A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.655-.51-5.17-1.395l-.371-.219-3.838.89.937-3.719-.242-.386A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         SEND ORDER
       </button>
@@ -966,6 +1009,7 @@
     <div class="form-group">
       <label>🏪 Shop / Clinic Name *</label>
       <input type="text" id="shopName" placeholder="Enter shop or clinic name">
+      <div id="shopNameWarnToast"><span class="warn-icon">⚠️</span> Please Enter Your Shop / Clinic Name<div class="warn-bar"></div></div>
     </div>
     <div class="form-group">
       <label>📍 Address <span style="color:var(--text-muted);font-weight:500;">(if known)</span></label>
@@ -986,15 +1030,73 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Warning Popup -->
-<div id="warnPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);">
-  <div style="background:#fff;border-radius:18px;padding:28px 24px 20px;max-width:300px;width:88%;margin:0 auto;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.35);">
-    <div style="font-size:2.2rem;margin-bottom:8px;">&#9888;&#65039;</div>
-    <div style="font-size:1.05rem;font-weight:800;color:#C62828;margin-bottom:8px;">Enter Shop or Clinic Name</div>
-    <div style="font-size:0.88rem;color:#444;line-height:1.5;margin-bottom:18px;">Order send karne se pehle<br><b>Shop / Clinic Name</b> zaroor bharein</div>
-    <button onclick="closeWarnPopup()" style="background:#E53935;color:white;border:none;border-radius:10px;padding:10px 32px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:inherit;">OK, Bharein</button>
-  </div>
-</div>
+<!-- Warning Banner -->
+<!-- Stylish inline field toast - shown below shopName input -->
+<div id="warnPopup" style="display:none;"></div>
+
+<style>
+#shopNameWarnToast {
+  display: none;
+  position: relative;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #ff4e4e, #c0392b);
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 14px 9px 42px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 18px rgba(192,57,43,0.38), 0 1px 4px rgba(0,0,0,0.15);
+  animation: warnSlideIn 0.28s cubic-bezier(.4,1.5,.6,1) forwards;
+  overflow: hidden;
+  pointer-events: none;
+}
+#shopNameWarnToast .warn-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.15rem;
+  animation: warnShake 0.5s ease 0.1s;
+}
+#shopNameWarnToast .warn-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.55);
+  border-radius: 0 0 8px 8px;
+  animation: warnTimerBar 3s linear forwards;
+}
+@keyframes warnSlideIn {
+  from { opacity:0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+@keyframes warnShake {
+  0%,100%{transform:translateY(-50%) rotate(0)}
+  20%{transform:translateY(-50%) rotate(-14deg)}
+  40%{transform:translateY(-50%) rotate(12deg)}
+  60%{transform:translateY(-50%) rotate(-9deg)}
+  80%{transform:translateY(-50%) rotate(6deg)}
+}
+@keyframes warnTimerBar {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+/* Red glowing border on shopName field */
+#shopName.warn-focus {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 0 3px rgba(229,57,53,0.25) !important;
+  animation: warnFieldPulse 0.6s ease 2;
+}
+@keyframes warnFieldPulse {
+  0%,100%{ box-shadow: 0 0 0 3px rgba(229,57,53,0.25); }
+  50%    { box-shadow: 0 0 0 6px rgba(229,57,53,0.45); }
+}
+@keyframes warnFadeOut {
+  from { opacity:1; transform: scale(1); }
+  to   { opacity:0; transform: scale(0.96); }
+}
+</style>
 
 <script>
 // ===================== DATA =====================
@@ -2068,10 +2170,26 @@ function init() {
   // Sab Companies pill - centered row
   const sabPill = document.createElement('button');
   sabPill.className = 'company-pill active';
-  sabPill.textContent = 'ALL COMPANIES';
+  sabPill.style.cssText += 'white-space:nowrap;text-align:center;line-height:1.1;padding:3px 14px;position:absolute;left:50%;transform:translateX(-50%);border:2px solid #FFD700 !important;';
+  sabPill.innerHTML = '<span style="display:block;font-size:0.6rem;font-weight:700;opacity:0.85;letter-spacing:0.5px;">CLICK FOR ITEMS</span><span style="display:block;font-size:0.82rem;font-weight:900;letter-spacing:0.6px;">ALL COMPANIES</span>';
   sabPill.setAttribute('data-company', 'SUB COMPANIES');
   sabPill.onclick = () => selectCompany('SUB COMPANIES');
   sabRow.appendChild(sabPill);
+
+  // INFO / BON SCHEM button - left side
+  const infoBtn = document.createElement('button');
+  infoBtn.onclick = () => openInfo();
+  infoBtn.style.cssText = 'flex-shrink:0;background:linear-gradient(135deg,#B71C1C,#c62828);color:white;border:2px solid #FFD700;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(183,28,28,0.45);white-space:nowrap;line-height:1.25;text-align:center;';
+  infoBtn.innerHTML = '<span style="font-size:0.75rem;font-weight:900;letter-spacing:0.5px;">INFO</span><span style="font-size:0.72rem;font-weight:900;letter-spacing:0.4px;">BON / SCHEM</span>';
+  sabRow.insertBefore(infoBtn, sabPill);
+
+  // Order History button - right side of sab-row
+  const histBtn = document.createElement('button');
+  histBtn.onclick = () => openHistory();
+  histBtn.style.cssText = 'flex-shrink:0;background:linear-gradient(135deg,#1a237e,#283593);color:white;border:2px solid #FFD700;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(26,35,126,0.4);white-space:nowrap;';
+  histBtn.style.cssText = histBtn.style.cssText + 'flex-direction:column;line-height:1.25;text-align:center;gap:2px;white-space:normal;padding:4px 10px;margin-left:auto;';
+  histBtn.innerHTML = '<span style="display:flex;align-items:center;gap:3px;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v3l4-4-4-4v3zm1 9l-4-4v7l4-3z"/></svg><span style="font-size:0.75rem;font-weight:900;letter-spacing:0.5px;">CLICK</span></span><span style="font-size:0.72rem;font-weight:900;letter-spacing:0.4px;">HISTORY</span>';
+  sabRow.appendChild(histBtn);
 
   // ── build pills ──────────────────────────────────────────────────────────
   // Scrolling company pills - single set, JS will clone for seamless loop
@@ -2224,7 +2342,7 @@ function renderProducts() {
       <div class="prod-info">
         <span class="prod-code">${p.code}</span>
         <span class="prod-name">${displayName}</span>
-        <div class="prod-price">Net: <span>Rs. ${p.net.toLocaleString()}</span></div>
+        <div class="prod-price">Net: <span>Rs. ${p.net.toFixed(2)}</span></div>
       </div>
       <div class="qty-ctrl${inCart ? ' in-cart-ctrl' : ''}" onclick="event.stopPropagation()">
         <button class="qty-btn minus" onclick="changeQty('${p.code}', -1)">−</button>
@@ -2303,14 +2421,19 @@ function updateCart() {
   if (items.length > 0) {
     const totalQty = items.reduce((s,[,q])=>s+q,0);
     miniText.textContent = items.length + ' item' + (items.length>1?'s':'');
-    miniTotal.textContent = 'Rs. ' + total.toLocaleString();
+    const amtEl = miniTotal.querySelector(".mcb-amt"); if(amtEl) amtEl.textContent = total.toFixed(2); else miniTotal.innerHTML = '<span class="mcb-rs-label">Rs.</span><span class="mcb-amt">' + total.toFixed(2) + '</span>';
     if (!miniBar.classList.contains('show')) {
-      // First time: position below red banner
+      // First time: position over green header, same height
       const banner = document.querySelector('.online-banner');
       const bannerH = banner ? banner.offsetHeight : 28;
-      miniBar.style.top = bannerH + 2 + 'px';
+      miniBar.style.top = bannerH + 'px';
       miniBar.style.left = '50%';
       miniBar.style.transform = 'translateX(-50%)';
+    }
+    // Match height to green header exactly
+    const greenHeader = document.querySelector('.header');
+    if (greenHeader) {
+      miniBar.style.height = greenHeader.offsetHeight + 'px';
     }
     miniBar.classList.add('show');
   } else {
@@ -2391,17 +2514,25 @@ function renderCartPanel(items, total) {
       <div class="cart-item">
         <div class="ci-info">
           <span class="ci-code">${p.code}</span>
-          <span class="ci-name">${p.name}</span>
-          <div class="ci-line">${qty} × Rs.${p.net} = <b>Rs.${lineTotal.toLocaleString()}</b></div>
+          <div class="ci-name-row">
+            <span class="ci-name">${p.name}</span>
+          </div>
+          <div class="ci-line">Rs.${p.net.toFixed(2)} × ${qty} = <b>Rs.${lineTotal.toFixed(2)}</b></div>
         </div>
-        <button class="ci-remove" onclick="removeItem('${code}')">🗑</button>
+        <div class="ci-qty-ctrl" onclick="event.stopPropagation()">
+          <button class="ci-qty-btn minus" onclick="cartChangeQty('${code}', -1)">−</button>
+          <input class="ci-qty-num" type="number" min="0" value="${qty}" id="ci-qty-${code}"
+            onchange="cartSetQty('${code}', this.value)" onclick="this.select()">
+          <button class="ci-qty-btn plus" onclick="cartChangeQty('${code}', 1)">+</button>
+        </div>
+        <button class="ci-remove" onclick="removeItem('${code}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
       </div>`;
   });
   html += '</div>';
   body.innerHTML = html;
   if (totalBox) {
     totalBox.style.display = 'flex';
-    document.getElementById('cartTotalAmt').textContent = 'Rs. ' + total.toLocaleString();
+    document.getElementById('cartTotalAmt').textContent = 'Rs. ' + total.toFixed(2);
   }
   formSection.style.display = 'block';
   const hBtns = document.getElementById('cartHeaderButtons');
@@ -2412,6 +2543,66 @@ function removeItem(code) {
   cart[code] = 0;
   updateProductRow(code);
   updateCart();
+}
+
+function cartChangeQty(code, delta) {
+  const current = cart[code] || 0;
+  const next = Math.max(0, current + delta);
+  cart[code] = next;
+  // Update main product row qty
+  updateProductRow(code);
+  // Update the cart panel input live
+  const ciInput = document.getElementById('ci-qty-' + code);
+  if (ciInput) ciInput.value = next;
+  // Update line total in cart item
+  const p = products.find(x => x.code === code);
+  if (p) {
+    const cartItem = ciInput ? ciInput.closest('.cart-item') : null;
+    if (cartItem) {
+      const line = cartItem.querySelector('.ci-line');
+      if (line) line.innerHTML = `Rs.${p.net.toFixed(2)} × ${next} = <b>Rs.${(p.net * next).toFixed(2)}</b>`;
+    }
+  }
+  // If qty became 0, re-render full cart
+  if (next === 0) {
+    updateCart();
+  } else {
+    // Just update totals without full re-render
+    updateCartTotalsOnly();
+    localStorage.setItem('ee_cart', JSON.stringify(cart));
+    // Update mini bar
+    const items = Object.entries(cart).filter(([,q]) => q > 0);
+    const total = items.reduce((sum, [c, qty]) => {
+      const pr = products.find(x => x.code === c);
+      return sum + (pr ? pr.net * qty : 0);
+    }, 0);
+    const miniTotal = document.getElementById('miniCartTotal');
+    if (miniTotal) { const amtEl2 = miniTotal.querySelector(".mcb-amt"); if(amtEl2) amtEl2.textContent = total.toFixed(2); else miniTotal.innerHTML = '<span class="mcb-rs-label">Rs.</span><span class="mcb-amt">' + total.toFixed(2) + '</span>'; }
+    const miniText = document.getElementById('miniCartText');
+    if (miniText) miniText.textContent = items.length + ' item' + (items.length>1?'s':'');
+  }
+}
+
+function cartSetQty(code, val) {
+  const qty = Math.max(0, parseInt(val) || 0);
+  cart[code] = qty;
+  updateProductRow(code);
+  if (qty === 0) {
+    updateCart();
+  } else {
+    updateCartTotalsOnly();
+    localStorage.setItem('ee_cart', JSON.stringify(cart));
+  }
+}
+
+function updateCartTotalsOnly() {
+  const items = Object.entries(cart).filter(([,q]) => q > 0);
+  const total = items.reduce((sum, [code, qty]) => {
+    const p = products.find(x => x.code === code);
+    return sum + (p ? p.net * qty : 0);
+  }, 0);
+  const el = document.getElementById('cartTotalAmt');
+  if (el) el.textContent = 'Rs. ' + total.toFixed(2);
 }
 
 function openCart() {
@@ -2449,14 +2640,30 @@ function showToast(msg, isWarning = false) {
 }
 
 function showWarnPopup() {
-  const p = document.getElementById('warnPopup');
-  p.style.display = 'flex';
-}
+  const toast = document.getElementById('shopNameWarnToast');
+  const field = document.getElementById('shopName');
 
-function closeWarnPopup() {
-  const p = document.getElementById('warnPopup');
-  p.style.display = 'none';
-  setTimeout(() => { document.getElementById('shopName').focus(); }, 100);
+  // Reset animation by re-inserting bar element
+  toast.style.display = 'block';
+  const oldBar = toast.querySelector('.warn-bar');
+  if (oldBar) oldBar.remove();
+  const bar = document.createElement('div');
+  bar.className = 'warn-bar';
+  toast.appendChild(bar);
+
+  // Glow the field
+  field.classList.add('warn-focus');
+  field.focus();
+
+  // Auto hide after 2 seconds
+  setTimeout(() => {
+    toast.style.animation = 'warnFadeOut 0.25s ease forwards';
+    setTimeout(() => {
+      toast.style.display = 'none';
+      toast.style.animation = '';
+      field.classList.remove('warn-focus');
+    }, 250);
+  }, 3000);
 }
 
 function generateOMF(items, total, orderNum, orderDatetime) {
@@ -2526,7 +2733,6 @@ function sendOrder() {
   msg += `${LINE}\n`;
   msg += `SO# ${soNum}    Date: ${dateStr} ${timeStr}    Booker: Online\n`;
   msg += `Customer: 1 / ${shop}${custCode ? ' / ' + custCode : ''}\n`;
-  msg += `Remarks : ${notes || ''}\n`;
   msg += `${LINE}\n`;
   msg += `Sr#   Item Description\n`;
   msg += `${LINE}\n`;
@@ -2543,10 +2749,14 @@ function sendOrder() {
 
   msg += `${LINE}\n`;
   msg += `           Total:              *${totalQty}*\n`;
-  msg += `${LINE}`;
+  msg += `${LINE}\n`;
+  msg += `Remarks : ${notes || ''}`;
 
   const encoded = encodeURIComponent(msg);
   window.open(`https://wa.me/923078022031?text=${encoded}`, '_blank');
+
+  // ✅ Save to Order History
+  saveOrderToHistory(soNum, shop, custCode, notes, items, totalQty, total, dateStr, timeStr);
 
   // Clear cart after sending
   Object.keys(cart).forEach(k => cart[k] = 0);
@@ -2628,7 +2838,13 @@ init();
 // Scroll-to-top button show/hide
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('scrollTopBtn');
-  if (btn) btn.classList.toggle('show', window.scrollY > 200);
+  if (btn) {
+    if (window.scrollY > 200) {
+      btn.style.display = 'flex';
+    } else {
+      btn.style.display = 'none';
+    }
+  }
 }, {passive: true});
 
 // ===================== DRAGGABLE CART BAR =====================
@@ -2817,91 +3033,463 @@ window.addEventListener('resize', adjustPadding);
     measureWidth();
   }, 120);
 })();
+
+
+// ===================== ORDER HISTORY =====================
+function saveOrderToHistory(orderNum, shop, address, notes, items, totalQty, totalAmt, dateStr, timeStr) {
+  const history = JSON.parse(localStorage.getItem('ee_order_history') || '[]');
+  const record = {
+    id: orderNum,
+    shop: shop,
+    address: address || '',
+    notes: notes || '',
+    date: dateStr,
+    time: timeStr,
+    totalQty: totalQty,
+    totalAmt: totalAmt,
+    items: items.map(([code, qty]) => {
+      const p = products.find(x => x.code === code);
+      return { code, qty, name: p ? p.name : code, net: p ? p.net : 0 };
+    })
+  };
+  history.unshift(record); // newest first
+  // Keep max 50 orders
+  if (history.length > 50) history.splice(50);
+  localStorage.setItem('ee_order_history', JSON.stringify(history));
+}
+
+function openHistory() {
+  const overlay = document.getElementById('historyOverlay');
+  const panel = document.getElementById('historyPanel');
+  const clearBar = document.getElementById('historyClearBar');
+  overlay.style.display = 'block';
+  panel.classList.add('open');
+  clearBar.style.display = 'none';
+  renderHistory();
+}
+
+function closeHistory() {
+  document.getElementById('historyOverlay').style.display = 'none';
+  document.getElementById('historyPanel').classList.remove('open');
+}
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('ee_order_history') || '[]');
+  const body = document.getElementById('historyBody');
+  const subtitle = document.getElementById('historySubtitle');
+  const clearBar = document.getElementById('historyClearBar');
+
+  subtitle.textContent = history.length === 0 ? 'No orders yet' : `${history.length} order${history.length > 1 ? 's' : ''} saved on this device`;
+  clearBar.style.display = history.length > 0 ? 'flex' : 'none';
+
+  if (history.length === 0) {
+    body.innerHTML = `<div class="h-empty">
+      <span class="h-empty-icon">📋</span>
+      <div class="h-empty-txt">No Order History Yet</div>
+      <div class="h-empty-sub">Your sent orders will appear here</div>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = history.map((rec, idx) => `
+    <div class="h-card" id="hcard-${idx}">
+      <div class="h-card-header">
+        <span class="h-order-num">📦 Order #${rec.id}</span>
+        <span class="h-date">🕐 ${rec.date} ${rec.time}</span>
+      </div>
+      <div class="h-shop">
+        🏪 ${rec.shop}${rec.address ? ' &nbsp;|&nbsp; 📍 ' + rec.address : ''}
+      </div>
+      <div class="h-items">
+        ${rec.items.map(item => `
+          <div class="h-item-row">
+            <span class="h-item-code">${item.code}</span>
+            <span class="h-item-name">${item.name}</span>
+            <span class="h-item-qty">×${item.qty}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="h-footer">
+        <span class="h-total-label">Total Items: ${rec.totalQty}</span>
+        <span class="h-total-amt">Rs. ${rec.totalAmt ? rec.totalAmt.toFixed(0) : '—'}</span>
+      </div>
+      ${rec.notes ? `<div style="padding:4px 13px 6px;font-size:0.7rem;color:#6B778C;font-style:italic;">📝 ${rec.notes}</div>` : ''}
+      <div class="h-actions">
+        <button class="h-btn-repeat" onclick="repeatOrder(${idx})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          Order Re_Call
+        </button>
+        <button class="h-btn-delete" onclick="confirmDeleteHistory(${idx})" title="Delete">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="#e53935" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4h10l1 2H6L7 4z" fill="#e53935"/>
+            <path d="M3 6h18v2H3V6z" fill="#e53935"/>
+            <path d="M5 9h14l-1.5 11a1 1 0 0 1-1 .9H7.5a1 1 0 0 1-1-.9L5 9z" fill="#e53935" opacity="0.85"/>
+            <line x1="10" y1="12" x2="10" y2="18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="12" x2="14" y2="18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function repeatOrder(idx) {
+  const history = JSON.parse(localStorage.getItem('ee_order_history') || '[]');
+  const rec = history[idx];
+  if (!rec) return;
+
+  // Load items into cart
+  Object.keys(cart).forEach(k => cart[k] = 0);
+  rec.items.forEach(item => {
+    if (cart.hasOwnProperty(item.code)) {
+      cart[item.code] = item.qty;
+    } else {
+      cart[item.code] = item.qty;
+    }
+  });
+
+  // Fill shop name & address
+  document.getElementById('shopName').value = rec.shop;
+  document.getElementById('customerCode').value = rec.address || '';
+  document.getElementById('notes').value = rec.notes || '';
+
+  updateCart();
+  renderProducts();
+  closeHistory();
+  openCart();
+  showToast('✅ Order #' + rec.id + ' loaded into cart!');
+}
+
+function confirmDeleteHistory(idx) {
+  // Show confirm popup
+  const overlay = document.getElementById('deleteConfirmOverlay');
+  const popup = document.getElementById('deleteConfirmPopup');
+  overlay.style.display = 'block';
+  popup.style.display = 'flex';
+  // Store idx for yes button
+  document.getElementById('deleteYesBtn').setAttribute('data-idx', idx);
+}
+
+function deleteHistoryItem(idx) {
+  const history = JSON.parse(localStorage.getItem('ee_order_history') || '[]');
+  history.splice(idx, 1);
+  localStorage.setItem('ee_order_history', JSON.stringify(history));
+  renderHistory();
+  // Hide popup
+  document.getElementById('deleteConfirmOverlay').style.display = 'none';
+  document.getElementById('deleteConfirmPopup').style.display = 'none';
+}
+
+function confirmClearAll() {
+  document.getElementById('clearAllOverlay').style.display = 'block';
+  document.getElementById('clearAllPopup').style.display = 'flex';
+}
+
+function clearAllHistory() {
+  localStorage.removeItem('ee_order_history');
+  renderHistory();
+  document.getElementById('clearAllOverlay').style.display = 'none';
+  document.getElementById('clearAllPopup').style.display = 'none';
+  showToast('🗑️ All history deleted.');
+}
+
+
+// ===================== INFO / BON SCHEM =====================
+function openInfo() {
+  document.getElementById('infoOverlay').style.display = 'block';
+  document.getElementById('infoPanel').classList.add('open');
+}
+function closeInfo() {
+  document.getElementById('infoOverlay').style.display = 'none';
+  document.getElementById('infoPanel').classList.remove('open');
+}
+
 </script>
-<!-- ===== INFO BON/SCHEM PANEL ===== -->
-<div class="info-panel-overlay" id="infoPanelOverlay" onclick="closeInfoPanel()"></div>
-<div class="info-panel" id="infoPanel">
-  <div class="ip-header">
-    <div>
-      <div class="ip-title">📋 INFO — BON / SCHEME</div>
-      <div class="ip-sub">آرڈر کرنے کا طریقہ اور اسکیم</div>
+
+<!-- ===================== ORDER HISTORY MODAL ===================== -->
+<div id="historyOverlay" onclick="closeHistory()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
+<div id="historyPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#F4F5F7;border-radius:18px 18px 0 0;z-index:8001;max-height:90vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
+  
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg,#1a237e,#283593);padding:14px 16px 12px;border-radius:18px 18px 0 0;flex-shrink:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:1.3rem;">📦</span>
+        <div>
+          <div style="color:white;font-size:0.95rem;font-weight:800;letter-spacing:0.3px;">My Order History</div>
+          <div style="color:rgba(255,255,255,0.7);font-size:0.7rem;font-weight:500;" id="historySubtitle">Loading...</div>
+        </div>
+      </div>
+      <button onclick="closeHistory()" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);color:white;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;">✕</button>
     </div>
-    <button class="ip-close" onclick="closeInfoPanel()">✕</button>
   </div>
-  <div class="ip-body">
 
-    <div class="ip-section">① عمومی معلومات</div>
-    <p>السلام علیکم! 🌟<br>الٰہی انٹرپرائزز میں آپ کا خیر مقدم ہے!</p>
-    <p>📋 آرڈر کرنے کے لیے نیچے دیے گئے آسان اقدامات اپنائیں:</p>
-    <div class="ip-step">۱. فارم میں پہلے آرڈر کی مقدار (Qty) درج کریں۔</div>
-    <div class="ip-step">۲. پھر <b>"View Order"</b> کا بٹن دبائیں — آپ کا مکمل آرڈر سامنے آ جائے گا۔ (اگر آرڈر میں مزید کوئی آئٹمز شامل کرنے ہوں تو <b>"Back to Order"</b> کا بٹن دبا کر دوبارہ آرڈر پر آ جائیں۔)</div>
-    <div class="ip-step">۳. آخر میں <b>"Send Order"</b> دبائیں — آرڈر خود بخود واٹس ایپ پر آ جائے گا۔ بس وہاں سے بھیج دیں۔</div>
-    <p>🔧 ہم آن لائن آرڈر فارم کو مزید آسان اور بہتر بنانے پر مسلسل کام کر رہے ہیں، تاکہ آپ بغیر کسی دشواری کے انتہائی آسانی اور تیزی کے ساتھ اپنا آرڈر آن لائن تیار کر کے بھیج سکیں۔</p>
-    <p>💬 اگر کسی کو کوئی مشکل پیش ہو یا رہنمائی درکار ہو تو ہم سے رابطہ کریں — ہم آپ کی خدمت میں حاضر ہیں۔ شکریہ! 😊</p>
-    <p style="text-align:center;font-weight:800;">جزاک اللہ خیراً 🙏</p>
+  <!-- Clear All bar -->
+  <div id="historyClearBar" style="display:none;background:#fff3e0;border-bottom:1px solid #ffe0b2;padding:7px 16px;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <span style="font-size:0.75rem;color:#e65100;font-weight:600;">⚠️ This will delete all history from this device</span>
+    <button onclick="confirmClearAll()" style="background:#e53935;color:white;border:none;border-radius:6px;padding:4px 12px;font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;">CLEAR ALL RECORDS</button>
+  </div>
 
-    <div class="ip-section">② SHIFA SYRINGES — EID SCHEME</div>
-    <p>محترم کیمسٹ! 👋<br>شفاء سرنجز — بڑی عید اسپیشل اسکیم 🎁</p>
-    <p>جیسا کہ آپ جانتے ہیں، موجودہ حالات کی وجہ سے مارکیٹ میں سرنجز کی قیمتیں کافی بڑھ چکی ہیں — لیکن شفاء سرنجز نے ابھی تک اپنی قیمتوں میں کوئی اضافہ نہیں کیا۔ وہی پرانی قیمت، وہی اعلیٰ معیار! ✅</p>
-    <p>پوری پاکستان میں دستیاب مصنوعات:</p>
+  <!-- Body -->
+  <div id="historyBody" style="overflow-y:auto;flex:1;padding:12px 12px 20px;"></div>
+</div>
 
-    <div class="ip-scheme">
-      <b>🩺 سرنجز کی مکمل رینج:</b>
-      <ul>
-        <li>انسولین سرنج</li>
-        <li>1cc سے لے کر 60cc تک تمام سائز</li>
-      </ul>
-      <b>🏥 دیگر میڈیکل آئٹمز:</b>
-      <ul>
-        <li>100cc Burette IV Set</li>
-        <li>Y-Port IV Set</li>
-        <li>Basic Blister Drip Set</li>
-        <li>Urine Bag</li>
-        <li>Gloves — ہر سائز</li>
-        <li>Wings IV Cannula — 18G / 20G / 22G / 24G</li>
-      </ul>
+<style>
+#historyPanel { display:none; }
+#historyPanel.open { display:flex !important; }
+
+.h-card {
+  background:white;
+  border-radius:10px;
+  margin-bottom:10px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  border:1px solid #e0e0e0;
+}
+.h-card-header {
+  background:linear-gradient(135deg,#1a237e,#283593);
+  padding:9px 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.h-order-num {
+  color:white;
+  font-size:0.8rem;
+  font-weight:800;
+  letter-spacing:0.5px;
+}
+.h-date {
+  color:rgba(255,255,255,0.8);
+  font-size:0.68rem;
+  font-weight:500;
+}
+.h-shop {
+  padding:7px 13px 4px;
+  font-size:0.78rem;
+  font-weight:700;
+  color:#172B4D;
+  border-bottom:1px dashed #e0e0e0;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.h-items {
+  padding:6px 13px;
+}
+.h-item-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:3px 0;
+  border-bottom:1px solid #f5f5f5;
+  gap:8px;
+}
+.h-item-row:last-child { border-bottom:none; }
+.h-item-name {
+  font-size:0.74rem;
+  color:#333;
+  font-weight:600;
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.h-item-code {
+  font-size:0.65rem;
+  color:#00875A;
+  font-weight:700;
+  background:#E3FCEF;
+  padding:1px 5px;
+  border-radius:3px;
+  flex-shrink:0;
+}
+.h-item-qty {
+  font-size:0.75rem;
+  font-weight:800;
+  color:#1a237e;
+  background:#e8eaf6;
+  padding:2px 8px;
+  border-radius:5px;
+  flex-shrink:0;
+}
+.h-footer {
+  padding:7px 13px;
+  background:#f8f9ff;
+  border-top:1px solid #e8eaf6;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.h-total-label {
+  font-size:0.72rem;
+  color:#6B778C;
+  font-weight:600;
+}
+.h-total-amt {
+  font-size:0.82rem;
+  font-weight:800;
+  color:#00875A;
+}
+.h-actions {
+  display:flex;
+  gap:7px;
+  padding:8px 13px 10px;
+  background:#fafafa;
+  border-top:1px solid #f0f0f0;
+}
+.h-btn-repeat {
+  flex:1;
+  background:linear-gradient(135deg,#1565C0,#0D47A1);
+  color:white;
+  border:none;
+  border-radius:7px;
+  padding:7px;
+  font-size:0.73rem;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  letter-spacing:0.3px;
+  box-shadow:0 3px 10px rgba(13,71,161,0.4);
+}
+.h-btn-repeat:active { transform:scale(0.97); }
+.h-btn-delete {
+  background:#ffebee;
+  color:#e53935;
+  border:1.5px solid #ef9a9a;
+  border-radius:7px;
+  padding:7px 12px;
+  font-size:0.73rem;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.h-btn-delete:active { transform:scale(0.97); }
+.h-empty {
+  text-align:center;
+  padding:50px 20px;
+  color:#6B778C;
+}
+.h-empty-icon { font-size:3rem; display:block; margin-bottom:10px; }
+.h-empty-txt { font-size:0.85rem; font-weight:600; }
+.h-empty-sub { font-size:0.75rem; margin-top:5px; color:#aaa; }
+
+/* Slide up animation */
+@keyframes histSlideUp {
+  from { transform:translateY(100%); opacity:0; }
+  to   { transform:translateY(0); opacity:1; }
+}
+#historyPanel.open { animation:histSlideUp 0.32s cubic-bezier(.4,1.2,.6,1) forwards; }
+</style>
+
+<!-- ===================== INFO / BON SCHEM MODAL ===================== -->
+<div id="infoOverlay" onclick="closeInfo()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
+<div id="infoPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#fff;border-radius:18px 18px 0 0;z-index:8001;max-height:85vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
+
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg,#B71C1C,#c62828);padding:13px 16px 11px;border-radius:18px 18px 0 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:1.25rem;">📋</span>
+      <div>
+        <div style="color:white;font-size:0.92rem;font-weight:800;letter-spacing:0.3px;">BON / SCHEME INFO</div>
+        <div style="color:rgba(255,255,255,0.75);font-size:0.68rem;">آرڈر کرنے کا طریقہ</div>
+      </div>
+    </div>
+    <button onclick="closeInfo()" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);color:white;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;">✕</button>
+  </div>
+
+  <!-- Body -->
+  <div style="overflow-y:auto;flex:1;padding:18px 16px 28px;direction:rtl;text-align:right;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq','Segoe UI',serif;line-height:2.1;color:#1a1a1a;background:linear-gradient(180deg,#fff9f0,#fff);">
+
+    <p style="font-size:0.95rem;font-weight:800;color:#B71C1C;margin:0 0 6px;">① عمومی معلومات</p>
+    <p style="font-size:0.9rem;margin:0 0 6px;">السلام علیکم! 🌟<br>الٰہی انٹرپرائزز میں آپ کا خیر مقدم ہے!</p>
+    <p style="font-size:0.85rem;margin:0 0 8px;">📋 آرڈر کرنے کے لیے نیچے دیے گئے آسان اقدامات اپنائیں:</p>
+
+    <div style="background:#fff3e0;border-right:4px solid #e65100;border-radius:8px;padding:10px 13px;margin-bottom:8px;">
+      <p style="font-size:0.85rem;margin:0;"><strong style="color:#e65100;">۱.</strong> فارم میں پہلے آرڈر کی مقدار <strong>(Qty)</strong> درج کریں۔</p>
+    </div>
+    <div style="background:#e8f5e9;border-right:4px solid #2e7d32;border-radius:8px;padding:10px 13px;margin-bottom:8px;">
+      <p style="font-size:0.85rem;margin:0;"><strong style="color:#2e7d32;">۲.</strong> پھر <strong>"View Order"</strong> کا بٹن دبائیں — آپ کا مکمل آرڈر سامنے آ جائے گا۔ (اگر آرڈر میں مزید کوئی آئٹمز شامل کرنے ہوں تو <strong>"Back to Order"</strong> کا بٹن دبا کر دوبارہ آرڈر پر آ جائیں۔)</p>
+    </div>
+    <div style="background:#e3f2fd;border-right:4px solid #1565c0;border-radius:8px;padding:10px 13px;margin-bottom:12px;">
+      <p style="font-size:0.85rem;margin:0;"><strong style="color:#1565c0;">۳.</strong> آخر میں <strong>"Send Order"</strong> دبائیں — آرڈر خود بخود واٹس ایپ پر آ جائے گا۔ بس وہاں سے بھیج دیں۔</p>
     </div>
 
-    <p>🎊 بڑی عید کی خوشی — فری گفٹ آفر! (صرف عید کے مہینوں کے لیے — پرانی قیمت پر)</p>
+    <p style="font-size:0.83rem;color:#444;margin:0 0 6px;">🔧 ہم آن لائن آرڈر فارم کو مزید آسان اور بہتر بنانے پر مسلسل کام کر رہے ہیں، تاکہ آپ بغیر کسی دشواری کے انتہائی آسانی اور تیزی کے ساتھ اپنا آرڈر آن لائن تیار کر کے بھیج سکیں۔</p>
+    <p style="font-size:0.83rem;color:#444;margin:0 0 6px;">💬 اگر کسی کو کوئی مشکل پیش ہو یا رہنمائی درکار ہو تو ہم سے رابطہ کریں — ہم آپ کی خدمت میں حاضر ہیں۔ شکریہ! 😊</p>
+    <p style="font-size:0.88rem;font-weight:800;color:#B71C1C;margin:0 0 16px;">جزاک اللہ خیراً 🙏</p>
 
-    <div class="ip-scheme">
-      <b>🎁 3cc / 5cc سرنجز اسکیم:</b>
-      <ul>
-        <li>2 باکس خریدیں ← 1 شیشے کا باؤل بالکل مفت</li>
-        <li>4 باکس خریدیں ← 3 شیشے کے باؤل بالکل مفت</li>
-      </ul>
-    </div>
-
-    <div class="ip-scheme">
-      <b>🎁 انسولین 1cc سرنجز اسکیم:</b>
-      <ul>
-        <li>1 باکس خریدیں ← 3 اسٹیل ٹیبل اسپون بالکل مفت</li>
-      </ul>
-    </div>
-
-    <p style="color:#CC0000;font-weight:800;text-align:center;">⚠️ یہ آفر محدود وقت کے لیے ہے — آج ہی آرڈر بک کروائیں! 📦</p>
-
-    <div class="ip-footer">
+    <div style="background:#111;color:#aaa;font-size:0.68rem;text-align:center;padding:10px;border-radius:8px;direction:ltr;margin-bottom:16px;">
       ⚡ Powered by: <b style="color:#FFD700;">4M Technologies</b><br>
-      📧 <a href="mailto:info@4MTechnologies.com">info@4MTechnologies.com</a><br>
+      📧 <a href="mailto:info@4MTechnologies.com" style="color:#FFD700;text-decoration:none;">info@4MTechnologies.com</a><br>
       📞 +92 335 4303313 | +92 42 36544445-8
     </div>
+
+    <p style="font-size:0.95rem;font-weight:800;color:#B71C1C;margin:0 0 6px;border-top:2px solid #CC0000;padding-top:12px;">② SHIFA SYRINGES — EID SCHEME</p>
+    <p style="font-size:0.85rem;margin:0 0 6px;">محترم کیمسٹ! 👋<br>شفاء سرنجز — بڑی عید اسپیشل اسکیم 🎁</p>
+    <p style="font-size:0.83rem;margin:0 0 10px;">جیسا کہ آپ جانتے ہیں، موجودہ حالات کی وجہ سے مارکیٹ میں سرنجز کی قیمتیں کافی بڑھ چکی ہیں — لیکن شفاء سرنجز نے ابھی تک اپنی قیمتوں میں کوئی اضافہ نہیں کیا۔ وہی پرانی قیمت، وہی اعلیٰ معیار! ✅</p>
+    <p style="font-size:0.83rem;margin:0 0 6px;">پوری پاکستان میں دستیاب مصنوعات:</p>
+
+    <div style="background:#fff8e1;border:1.5px solid #FFD700;border-radius:10px;padding:12px;margin-bottom:8px;">
+      <p style="font-size:0.83rem;font-weight:800;margin:0 0 4px;">🩺 سرنجز کی مکمل رینج:</p>
+      <p style="font-size:0.8rem;margin:0 0 8px;">انسولین سرنج • 1cc سے لے کر 60cc تک تمام سائز</p>
+      <p style="font-size:0.83rem;font-weight:800;margin:0 0 4px;">🏥 دیگر میڈیکل آئٹمز:</p>
+      <p style="font-size:0.8rem;margin:0;line-height:1.9;">
+        100cc Burette IV Set &nbsp;•&nbsp; Y-Port IV Set &nbsp;•&nbsp; Basic Blister Drip Set<br>
+        Urine Bag &nbsp;•&nbsp; Gloves — ہر سائز<br>
+        Wings IV Cannula — 18G / 20G / 22G / 24G
+      </p>
+    </div>
+
+    <p style="font-size:0.83rem;margin:0 0 8px;">🎊 بڑی عید کی خوشی — فری گفٹ آفر! (صرف عید کے مہینوں کے لیے — پرانی قیمت پر)</p>
+
+    <div style="background:#fff8e1;border:1.5px solid #FFD700;border-radius:10px;padding:12px;margin-bottom:8px;">
+      <p style="font-size:0.83rem;font-weight:800;margin:0 0 6px;">🎁 3cc / 5cc سرنجز اسکیم:</p>
+      <p style="font-size:0.8rem;margin:0 0 4px;border-bottom:1px dashed #e0c000;padding-bottom:4px;">2 باکس خریدیں ← 1 شیشے کا باؤل بالکل مفت</p>
+      <p style="font-size:0.8rem;margin:4px 0 0;">4 باکس خریدیں ← 3 شیشے کے باؤل بالکل مفت</p>
+    </div>
+
+    <div style="background:#fff8e1;border:1.5px solid #FFD700;border-radius:10px;padding:12px;margin-bottom:12px;">
+      <p style="font-size:0.83rem;font-weight:800;margin:0 0 6px;">🎁 انسولین 1cc سرنجز اسکیم:</p>
+      <p style="font-size:0.8rem;margin:0;">1 باکس خریدیں ← 3 اسٹیل ٹیبل اسپون بالکل مفت</p>
+    </div>
+
+    <p style="font-size:0.85rem;font-weight:800;color:#CC0000;text-align:center;margin:0;">⚠️ یہ آفر محدود وقت کے لیے ہے — آج ہی آرڈر بک کروائیں! 📦</p>
+
   </div>
 </div>
 
-<script>
-function openInfoPanel() {
-  document.getElementById('infoPanelOverlay').classList.add('open');
-  document.getElementById('infoPanel').classList.add('open');
-}
-function closeInfoPanel() {
-  document.getElementById('infoPanelOverlay').classList.remove('open');
-  document.getElementById('infoPanel').classList.remove('open');
-}
-function openHistory() {
-  showToast('History feature coming soon!');
-}
-</script>
+<style>
+#infoPanel.open { display:flex !important; animation:histSlideUp 0.32s cubic-bezier(.4,1.2,.6,1) forwards; }
+</style>
+<!-- ====== CLEAR ALL CONFIRM POPUP ====== -->
+<div id="clearAllOverlay" onclick="document.getElementById('clearAllOverlay').style.display='none';document.getElementById('clearAllPopup').style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
+<div id="clearAllPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:white;border-radius:16px;padding:24px 22px 18px;max-width:290px;width:88%;flex-direction:column;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.28);text-align:center;">
+  <div style="font-size:2rem;">⚠️</div>
+  <div style="font-size:0.95rem;font-weight:800;color:#172B4D;line-height:1.4;">Sure Clear All<br>Orders Record?</div>
+  <div style="font-size:0.76rem;color:#6B778C;font-weight:500;">تمام آرڈر ہسٹری مستقل ختم ہو جائے گی</div>
+  <div style="display:flex;gap:10px;width:100%;margin-top:4px;">
+    <button onclick="document.getElementById('clearAllOverlay').style.display='none';document.getElementById('clearAllPopup').style.display='none';" style="flex:1;padding:10px;background:#f5f5f5;border:1.5px solid #ddd;border-radius:10px;font-size:0.88rem;font-weight:800;cursor:pointer;color:#333;letter-spacing:0.5px;">No</button>
+    <button onclick="clearAllHistory()" style="flex:1;padding:10px;background:#e53935;border:none;border-radius:10px;font-size:0.88rem;font-weight:800;cursor:pointer;color:white;letter-spacing:0.5px;">Yes</button>
+  </div>
+</div>
+
+<!-- ====== DELETE CONFIRM POPUP ====== -->
+<div id="deleteConfirmOverlay" onclick="document.getElementById('deleteConfirmOverlay').style.display='none';document.getElementById('deleteConfirmPopup').style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
+<div id="deleteConfirmPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:white;border-radius:16px;padding:24px 22px 18px;max-width:280px;width:88%;flex-direction:column;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,0.28);text-align:center;">
+  <div style="font-size:2rem;">🗑️</div>
+  <div style="font-size:0.95rem;font-weight:800;color:#172B4D;">Delete the History?</div>
+  <div style="font-size:0.78rem;color:#6B778C;font-weight:500;">یہ آرڈر ہسٹری سے ہمیشہ کے لیے ختم ہو جائے گا</div>
+  <div style="display:flex;gap:10px;width:100%;margin-top:4px;">
+    <button onclick="document.getElementById('deleteConfirmOverlay').style.display='none';document.getElementById('deleteConfirmPopup').style.display='none';" style="flex:1;padding:10px;background:#f5f5f5;border:1.5px solid #ddd;border-radius:10px;font-size:0.88rem;font-weight:800;cursor:pointer;color:#333;letter-spacing:0.5px;">No</button>
+    <button id="deleteYesBtn" onclick="deleteHistoryItem(parseInt(this.getAttribute('data-idx')))" style="flex:1;padding:10px;background:#e53935;border:none;border-radius:10px;font-size:0.88rem;font-weight:800;cursor:pointer;color:white;letter-spacing:0.5px;">Yes</button>
+  </div>
+</div>
 
 </body>
 </html>
