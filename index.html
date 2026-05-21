@@ -836,6 +836,24 @@
     width: auto;
     padding: 0 8px;
   }
+  /* INFO PANEL */
+  .info-panel-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px); }
+  .info-panel-overlay.open { display:block; }
+  .info-panel { position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:white;border-radius:20px 20px 0 0;max-height:87vh;overflow-y:auto;z-index:8001;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1); }
+  .info-panel.open { transform:translateY(0); }
+  .ip-header { position:sticky;top:0;background:linear-gradient(135deg,#B71C1C,#CC0000);padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-radius:20px 20px 0 0; }
+  .ip-title { color:white;font-size:0.9rem;font-weight:900;letter-spacing:0.3px; }
+  .ip-sub { color:rgba(255,255,255,0.8);font-size:0.68rem;margin-top:2px; }
+  .ip-close { background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);color:white;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700; }
+  .ip-body { padding:16px 16px 30px;direction:rtl;text-align:right;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq','Segoe UI',serif;line-height:2.1;color:#1a1a1a;font-size:0.88rem; }
+  .ip-section { font-size:0.88rem;font-weight:900;color:#CC0000;margin:16px 0 8px;padding-bottom:4px;border-bottom:2.5px solid #CC0000; }
+  .ip-step { background:#f9f9f9;border-right:3px solid #00875A;border-radius:6px;padding:8px 10px;margin-bottom:7px;font-size:0.82rem; }
+  .ip-scheme { background:#fff8e1;border:1.5px solid #FFD700;border-radius:10px;padding:12px;margin:8px 0;font-size:0.82rem; }
+  .ip-scheme ul { margin:6px 0 0;padding:0;list-style:none; }
+  .ip-scheme ul li { padding:4px 0;border-bottom:1px dashed #e0c000; }
+  .ip-scheme ul li:last-child { border-bottom:none; }
+  .ip-footer { background:#111;color:#aaa;font-size:0.68rem;text-align:center;padding:10px;margin:14px 0 0;border-radius:8px;direction:ltr; }
+  .ip-footer a { color:#FFD700;text-decoration:none; }
 </style>
 </head>
 <body>
@@ -855,6 +873,20 @@
       <div class="ticker-outer">
         <div class="ticker-inner" id="companyFilter"></div>
       </div>
+    </div>
+    <div style="display:flex;gap:6px;padding:5px 8px 4px;justify-content:center;">
+      <button onclick="openInfoPanel()" style="flex:1;padding:7px 4px;background:#CC0000;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        INFO<br>BON / SCHEM
+      </button>
+      <button onclick="selectCompany('SUB COMPANIES')" style="flex:1;padding:7px 4px;background:#111111;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        CLICK FOR ITEMS<br><b>ALL COMPANIES</b>
+      </button>
+      <button onclick="openHistory()" style="flex:1;padding:7px 4px;background:#1a237e;color:white;border:none;border-radius:9px;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.4px;display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.2;text-align:center;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v3l4-4-4-4v3z"/></svg>
+        ↺ CLICK<br>HISTORY
+      </button>
     </div>
     <div class="sab-row" id="sabRow"></div>
     <div class="section-label" id="productCount" style="margin-top:3px;margin-bottom:1px;justify-content:space-between;width:100%;box-sizing:border-box;"></div>
@@ -915,7 +947,7 @@
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cartPanel">
   <div class="cart-header" style="background:#111111;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:10px 10px;">
-    <button onclick="closeCart()" style="padding:8px 7px;background:#EF5350;color:#FFFFFF;border:2px solid rgba(255,255,255,0.85);border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:4px;width:85%;box-shadow:0 0 0 1px rgba(255,100,100,0.4),0 3px 10px rgba(239,83,80,0.35);">
+    <button onclick="closeCart()" style="padding:8px 7px;background:#EF5350;color:#FFFFFF;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:4px;width:85%;">
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       BACK TO ORDER
     </button>
@@ -924,7 +956,7 @@
       <span style="font-size:0.75rem;font-weight:700;color:white;letter-spacing:0.3px;">My Order</span>
     </div>
     <div style="display:flex;justify-content:flex-end;width:100%;">
-      <button onclick="sendOrder()" style="padding:8px 7px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:2px solid rgba(255,255,255,0.90);border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 0 1px rgba(37,211,102,0.5),0 3px 12px rgba(18,140,126,0.45);letter-spacing:0.3px;width:85%;">
+      <button onclick="sendOrder()" style="padding:8px 7px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:7px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 2px 8px rgba(37,211,102,0.4);letter-spacing:0.3px;width:85%;">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.857L.057 23.882a.5.5 0 0 0 .606.63l6.198-1.437A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.655-.51-5.17-1.395l-.371-.219-3.838.89.937-3.719-.242-.386A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         SEND ORDER
       </button>
@@ -934,7 +966,6 @@
     <div class="form-group">
       <label>🏪 Shop / Clinic Name *</label>
       <input type="text" id="shopName" placeholder="Enter shop or clinic name">
-      <div id="shopNameWarnToast"><span class="warn-icon">⚠️</span> Please Enter Your Shop / Clinic Name<div class="warn-bar"></div></div>
     </div>
     <div class="form-group">
       <label>📍 Address <span style="color:var(--text-muted);font-weight:500;">(if known)</span></label>
@@ -955,73 +986,15 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Warning Banner -->
-<!-- Stylish inline field toast - shown below shopName input -->
-<div id="warnPopup" style="display:none;"></div>
-
-<style>
-#shopNameWarnToast {
-  display: none;
-  position: relative;
-  margin-top: 6px;
-  background: linear-gradient(135deg, #ff4e4e, #c0392b);
-  color: #fff;
-  border-radius: 8px;
-  padding: 9px 14px 9px 42px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  box-shadow: 0 4px 18px rgba(192,57,43,0.38), 0 1px 4px rgba(0,0,0,0.15);
-  animation: warnSlideIn 0.28s cubic-bezier(.4,1.5,.6,1) forwards;
-  overflow: hidden;
-  pointer-events: none;
-}
-#shopNameWarnToast .warn-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.15rem;
-  animation: warnShake 0.5s ease 0.1s;
-}
-#shopNameWarnToast .warn-bar {
-  position: absolute;
-  bottom: 0; left: 0;
-  height: 3px;
-  background: rgba(255,255,255,0.55);
-  border-radius: 0 0 8px 8px;
-  animation: warnTimerBar 3s linear forwards;
-}
-@keyframes warnSlideIn {
-  from { opacity:0; transform: translateY(-8px) scale(0.97); }
-  to   { opacity:1; transform: translateY(0) scale(1); }
-}
-@keyframes warnShake {
-  0%,100%{transform:translateY(-50%) rotate(0)}
-  20%{transform:translateY(-50%) rotate(-14deg)}
-  40%{transform:translateY(-50%) rotate(12deg)}
-  60%{transform:translateY(-50%) rotate(-9deg)}
-  80%{transform:translateY(-50%) rotate(6deg)}
-}
-@keyframes warnTimerBar {
-  from { width: 100%; }
-  to   { width: 0%; }
-}
-/* Red glowing border on shopName field */
-#shopName.warn-focus {
-  border-color: #e53935 !important;
-  box-shadow: 0 0 0 3px rgba(229,57,53,0.25) !important;
-  animation: warnFieldPulse 0.6s ease 2;
-}
-@keyframes warnFieldPulse {
-  0%,100%{ box-shadow: 0 0 0 3px rgba(229,57,53,0.25); }
-  50%    { box-shadow: 0 0 0 6px rgba(229,57,53,0.45); }
-}
-@keyframes warnFadeOut {
-  from { opacity:1; transform: scale(1); }
-  to   { opacity:0; transform: scale(0.96); }
-}
-</style>
+<!-- Warning Popup -->
+<div id="warnPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);">
+  <div style="background:#fff;border-radius:18px;padding:28px 24px 20px;max-width:300px;width:88%;margin:0 auto;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.35);">
+    <div style="font-size:2.2rem;margin-bottom:8px;">&#9888;&#65039;</div>
+    <div style="font-size:1.05rem;font-weight:800;color:#C62828;margin-bottom:8px;">Enter Shop or Clinic Name</div>
+    <div style="font-size:0.88rem;color:#444;line-height:1.5;margin-bottom:18px;">Order send karne se pehle<br><b>Shop / Clinic Name</b> zaroor bharein</div>
+    <button onclick="closeWarnPopup()" style="background:#E53935;color:white;border:none;border-radius:10px;padding:10px 32px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:inherit;">OK, Bharein</button>
+  </div>
+</div>
 
 <script>
 // ===================== DATA =====================
@@ -2476,30 +2449,14 @@ function showToast(msg, isWarning = false) {
 }
 
 function showWarnPopup() {
-  const toast = document.getElementById('shopNameWarnToast');
-  const field = document.getElementById('shopName');
+  const p = document.getElementById('warnPopup');
+  p.style.display = 'flex';
+}
 
-  // Reset animation by re-inserting bar element
-  toast.style.display = 'block';
-  const oldBar = toast.querySelector('.warn-bar');
-  if (oldBar) oldBar.remove();
-  const bar = document.createElement('div');
-  bar.className = 'warn-bar';
-  toast.appendChild(bar);
-
-  // Glow the field
-  field.classList.add('warn-focus');
-  field.focus();
-
-  // Auto hide after 2 seconds
-  setTimeout(() => {
-    toast.style.animation = 'warnFadeOut 0.25s ease forwards';
-    setTimeout(() => {
-      toast.style.display = 'none';
-      toast.style.animation = '';
-      field.classList.remove('warn-focus');
-    }, 250);
-  }, 3000);
+function closeWarnPopup() {
+  const p = document.getElementById('warnPopup');
+  p.style.display = 'none';
+  setTimeout(() => { document.getElementById('shopName').focus(); }, 100);
 }
 
 function generateOMF(items, total, orderNum, orderDatetime) {
@@ -2861,5 +2818,90 @@ window.addEventListener('resize', adjustPadding);
   }, 120);
 })();
 </script>
+<!-- ===== INFO BON/SCHEM PANEL ===== -->
+<div class="info-panel-overlay" id="infoPanelOverlay" onclick="closeInfoPanel()"></div>
+<div class="info-panel" id="infoPanel">
+  <div class="ip-header">
+    <div>
+      <div class="ip-title">📋 INFO — BON / SCHEME</div>
+      <div class="ip-sub">آرڈر کرنے کا طریقہ اور اسکیم</div>
+    </div>
+    <button class="ip-close" onclick="closeInfoPanel()">✕</button>
+  </div>
+  <div class="ip-body">
+
+    <div class="ip-section">① عمومی معلومات</div>
+    <p>السلام علیکم! 🌟<br>الٰہی انٹرپرائزز میں آپ کا خیر مقدم ہے!</p>
+    <p>📋 آرڈر کرنے کے لیے نیچے دیے گئے آسان اقدامات اپنائیں:</p>
+    <div class="ip-step">۱. فارم میں پہلے آرڈر کی مقدار (Qty) درج کریں۔</div>
+    <div class="ip-step">۲. پھر <b>"View Order"</b> کا بٹن دبائیں — آپ کا مکمل آرڈر سامنے آ جائے گا۔ (اگر آرڈر میں مزید کوئی آئٹمز شامل کرنے ہوں تو <b>"Back to Order"</b> کا بٹن دبا کر دوبارہ آرڈر پر آ جائیں۔)</div>
+    <div class="ip-step">۳. آخر میں <b>"Send Order"</b> دبائیں — آرڈر خود بخود واٹس ایپ پر آ جائے گا۔ بس وہاں سے بھیج دیں۔</div>
+    <p>🔧 ہم آن لائن آرڈر فارم کو مزید آسان اور بہتر بنانے پر مسلسل کام کر رہے ہیں، تاکہ آپ بغیر کسی دشواری کے انتہائی آسانی اور تیزی کے ساتھ اپنا آرڈر آن لائن تیار کر کے بھیج سکیں۔</p>
+    <p>💬 اگر کسی کو کوئی مشکل پیش ہو یا رہنمائی درکار ہو تو ہم سے رابطہ کریں — ہم آپ کی خدمت میں حاضر ہیں۔ شکریہ! 😊</p>
+    <p style="text-align:center;font-weight:800;">جزاک اللہ خیراً 🙏</p>
+
+    <div class="ip-section">② SHIFA SYRINGES — EID SCHEME</div>
+    <p>محترم کیمسٹ! 👋<br>شفاء سرنجز — بڑی عید اسپیشل اسکیم 🎁</p>
+    <p>جیسا کہ آپ جانتے ہیں، موجودہ حالات کی وجہ سے مارکیٹ میں سرنجز کی قیمتیں کافی بڑھ چکی ہیں — لیکن شفاء سرنجز نے ابھی تک اپنی قیمتوں میں کوئی اضافہ نہیں کیا۔ وہی پرانی قیمت، وہی اعلیٰ معیار! ✅</p>
+    <p>پوری پاکستان میں دستیاب مصنوعات:</p>
+
+    <div class="ip-scheme">
+      <b>🩺 سرنجز کی مکمل رینج:</b>
+      <ul>
+        <li>انسولین سرنج</li>
+        <li>1cc سے لے کر 60cc تک تمام سائز</li>
+      </ul>
+      <b>🏥 دیگر میڈیکل آئٹمز:</b>
+      <ul>
+        <li>100cc Burette IV Set</li>
+        <li>Y-Port IV Set</li>
+        <li>Basic Blister Drip Set</li>
+        <li>Urine Bag</li>
+        <li>Gloves — ہر سائز</li>
+        <li>Wings IV Cannula — 18G / 20G / 22G / 24G</li>
+      </ul>
+    </div>
+
+    <p>🎊 بڑی عید کی خوشی — فری گفٹ آفر! (صرف عید کے مہینوں کے لیے — پرانی قیمت پر)</p>
+
+    <div class="ip-scheme">
+      <b>🎁 3cc / 5cc سرنجز اسکیم:</b>
+      <ul>
+        <li>2 باکس خریدیں ← 1 شیشے کا باؤل بالکل مفت</li>
+        <li>4 باکس خریدیں ← 3 شیشے کے باؤل بالکل مفت</li>
+      </ul>
+    </div>
+
+    <div class="ip-scheme">
+      <b>🎁 انسولین 1cc سرنجز اسکیم:</b>
+      <ul>
+        <li>1 باکس خریدیں ← 3 اسٹیل ٹیبل اسپون بالکل مفت</li>
+      </ul>
+    </div>
+
+    <p style="color:#CC0000;font-weight:800;text-align:center;">⚠️ یہ آفر محدود وقت کے لیے ہے — آج ہی آرڈر بک کروائیں! 📦</p>
+
+    <div class="ip-footer">
+      ⚡ Powered by: <b style="color:#FFD700;">4M Technologies</b><br>
+      📧 <a href="mailto:info@4MTechnologies.com">info@4MTechnologies.com</a><br>
+      📞 +92 335 4303313 | +92 42 36544445-8
+    </div>
+  </div>
+</div>
+
+<script>
+function openInfoPanel() {
+  document.getElementById('infoPanelOverlay').classList.add('open');
+  document.getElementById('infoPanel').classList.add('open');
+}
+function closeInfoPanel() {
+  document.getElementById('infoPanelOverlay').classList.remove('open');
+  document.getElementById('infoPanel').classList.remove('open');
+}
+function openHistory() {
+  showToast('History feature coming soon!');
+}
+</script>
+
 </body>
 </html>
