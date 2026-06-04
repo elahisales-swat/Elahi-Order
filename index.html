@@ -42,7 +42,7 @@
 
   /* MAIN - scrollable area below fixed top */
   .main {
-    padding: 8px 12px 130px;
+    padding: 8px 12px 170px;
     max-width: 600px;
     margin: 0 auto;
     padding-top: 0;
@@ -51,12 +51,15 @@
 
   .bottom-search-bar {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
+    bottom: 64px; /* Stack directly above the 64px tall bottom bar */
+    left: 0; right: 0;
+    max-width: 600px;
+    margin: 0 auto;
     background: white;
     border-top: 2px solid var(--border);
-    padding: 4px 14px 6px;
+    padding: 6px 14px 8px;
     z-index: 150;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.10);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
   }
 
   /* QUICK CATEGORY CHIPS */
@@ -3499,18 +3502,18 @@ function closeInfo() {
 })();
 </script>
 
-<!-- ====== 2-BUTTON BOTTOM BAR ====== -->
+<!-- ====== WHATSAPP STYLE BOTTOM BAR ====== -->
 <style>
 .elahi-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   max-width: 600px;
   margin: 0 auto;
-  background: #fff;
-  border-top: 1.5px solid #e0e0e0;
+  background: #ffffff;
+  border-top: 1px solid #f2f2f2;
   display: flex;
   z-index: 200;
-  box-shadow: 0 -3px 18px rgba(0,0,0,0.13);
+  box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
   height: 64px;
 }
 .elahi-bar-btn {
@@ -3519,38 +3522,63 @@ function closeInfo() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   border: none;
+  background: transparent;
   cursor: pointer;
-  padding: 8px 4px 10px;
+  padding: 6px 0 8px;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s;
+  transition: all 0.2s ease;
   position: relative;
+  color: #54656f;
 }
-.elahi-bar-btn:active { background: #f0f0f0; }
-.elahi-bar-btn:first-child {
-  background: linear-gradient(180deg, #fff 60%, #f0f7ff);
-  border-right: 1.5px solid #e0e0e0;
+.elahi-bar-btn:active { background: transparent; }
+.elahi-bar-btn .icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 30px;
+  border-radius: 15px;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #54656f;
+  margin-bottom: 2px;
 }
-.elahi-bar-btn:last-child {
-  background: linear-gradient(180deg, #fff 60%, #f0fff5);
+.elahi-bar-btn.active .icon-wrapper {
+  background: #d9fdd3;
+  color: #008069;
 }
-.elahi-bar-icon { font-size: 1.5rem; line-height: 1; }
+.elahi-bar-icon-svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s;
+}
+.elahi-bar-btn:active .elahi-bar-icon-svg {
+  transform: scale(0.9);
+}
 .elahi-bar-label {
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   font-family: 'Inter','Segoe UI',sans-serif;
+  color: #54656f;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
 }
-.elahi-bar-btn:first-child .elahi-bar-icon { color: #1565C0; }
-.elahi-bar-btn:first-child .elahi-bar-label { color: #1565C0; }
-.elahi-bar-btn:last-child .elahi-bar-icon { color: #00875A; }
-.elahi-bar-btn:last-child .elahi-bar-label { color: #00875A; }
-
-/* installed: save btn becomes green tick */
-.elahi-bar-btn.saved .elahi-bar-icon { color: #aaa; }
-.elahi-bar-btn.saved .elahi-bar-label { color: #aaa; }
+.elahi-bar-btn.active .elahi-bar-label {
+  color: #008069;
+  font-weight: 800;
+}
+/* Installed check state styling */
+.elahi-bar-btn.saved {
+  color: #008069;
+}
+.elahi-bar-btn.saved .icon-wrapper {
+  color: #008069;
+}
+.elahi-bar-btn.saved .elahi-bar-label {
+  color: #008069;
+}
 
 /* Slide-up popup panel */
 .elahi-popup {
@@ -3631,19 +3659,31 @@ function closeInfo() {
   <!-- BTN 1: REFRESH DATA -->
   <button class="elahi-bar-btn" id="eBtnRefresh" onclick="eToggle('refresh')">
     <span class="e-dot" id="eRefreshDot"></span>
-    <span class="elahi-bar-icon">🔃</span>
+    <span class="icon-wrapper">
+      <svg class="elahi-bar-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/>
+      </svg>
+    </span>
     <span class="elahi-bar-label">Refresh Data</span>
   </button>
 
   <!-- BTN 3: IMPORTANT INFO (Urdu disclaimer) -->
   <button class="elahi-bar-btn" id="eBtnWarning" onclick="eToggle('warning_info')">
-    <span class="elahi-bar-icon" style="color: #DE350B;">⚠️</span>
+    <span class="icon-wrapper">
+      <svg class="elahi-bar-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+    </span>
     <span class="elahi-bar-label">Notice</span>
   </button>
 
   <!-- BTN 2: INSTALL APP -->
   <button class="elahi-bar-btn" id="eBtnSave" onclick="eToggle('save')">
-    <span class="elahi-bar-icon" id="eSaveIcon">📲</span>
+    <span class="icon-wrapper" id="eSaveIcon">
+      <svg class="elahi-bar-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+      </svg>
+    </span>
     <span class="elahi-bar-label" id="eSaveLabel">Install App</span>
   </button>
 
@@ -3683,6 +3723,39 @@ function closeInfo() {
     </div>
     <div class="ep-hint">
       <span>📱 ایک بار Install کریں — پھر آئیکن سے بغیر انٹرنیٹ کھولیں</span>
+    </div>
+    
+    <!-- Custom Manual Install Instructions when PWA prompt is not supported natively -->
+    <div class="ep-instructions" id="eInstallInstructions" style="display: none; margin-top: 12px; background: rgba(255,255,255,0.98); color: #1a1a1a; border-radius: 10px; padding: 15px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);">
+      <!-- Tabs -->
+      <div style="display: flex; gap: 8px; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 12px;">
+        <button onclick="setInstallTab('android')" id="tab-android" style="flex: 1; border: none; background: none; font-size: 0.8rem; font-weight: 700; color: #00875A; border-bottom: 2px solid #00875A; cursor: pointer; padding: 4px 0; outline: none;">Android</button>
+        <button onclick="setInstallTab('ios')" id="tab-ios" style="flex: 1; border: none; background: none; font-size: 0.8rem; font-weight: 700; color: #54656f; cursor: pointer; padding: 4px 0; outline: none;">iPhone / iOS</button>
+        <button onclick="setInstallTab('desktop')" id="tab-desktop" style="flex: 1; border: none; background: none; font-size: 0.8rem; font-weight: 700; color: #54656f; cursor: pointer; padding: 4px 0; outline: none;">Desktop / PC</button>
+      </div>
+      
+      <!-- Android Guide -->
+      <div id="guide-android" class="install-guide-content" style="text-align: right; direction: rtl; font-family: 'Noto Nastaliq Urdu', 'Segoe UI', serif; font-size: 0.82rem; line-height: 1.8;">
+        <strong style="color: #00875A; display: block; margin-bottom: 6px;">اینڈرائیڈ (Chrome) کے لیے طریقہ:</strong>
+        1. اوپر دائیں کونے میں <b>تین نقطوں (⋮)</b> پر کلک کریں۔<br>
+        2. مینو میں سے <b>"Install app"</b> یا <b>"Add to Home screen"</b> تلاش کریں اور دبائیں۔<br>
+        3. تصدیقی پاپ اپ میں <b>Install</b> پر کلک کریں اور ایپ ہوم اسکرین پر آ جائے گی! ✅
+      </div>
+      
+      <!-- iOS Guide -->
+      <div id="guide-ios" class="install-guide-content" style="text-align: right; direction: rtl; font-family: 'Noto Nastaliq Urdu', 'Segoe UI', serif; font-size: 0.82rem; line-height: 1.8; display: none;">
+        <strong style="color: #00875A; display: block; margin-bottom: 6px;">آئی فون / آئی پیڈ (Safari) کے لیے طریقہ:</strong>
+        1. سفاری براؤزر کے نیچے موجود <b>Share (شیئر)</b> بٹن پر کلک کریں۔<br>
+        2. مینو کو اوپر کی طرف اسکرول کریں اور <b>"Add to Home Screen"</b> منتخب کریں۔<br>
+        3. اوپر دائیں جانب <b>Add</b> کا بٹن دبائیں اور ایپ آئیکن اسکرین پر محفوظ ہو جائے گا! ✅
+      </div>
+      
+      <!-- Desktop Guide -->
+      <div id="guide-desktop" class="install-guide-content" style="text-align: right; direction: rtl; font-family: 'Noto Nastaliq Urdu', 'Segoe UI', serif; font-size: 0.82rem; line-height: 1.8; display: none;">
+        <strong style="color: #00875A; display: block; margin-bottom: 6px;">کمپیوٹر / لیپ ٹاپ (Chrome/Edge) کے لیے طریقہ:</strong>
+        1. براؤزر کی ایڈریس بار کے دائیں جانب <b>Install</b> آئیکن (مانیٹر اور تیر کا نشان) پر کلک کریں۔<br>
+        2. پاپ اپ میں <b>Install</b> پر کلک کریں، ایپ ڈیسک ٹاپ پر محفوظ ہو جائے گی! ✅
+      </div>
     </div>
   </div>
 </div>
@@ -3736,7 +3809,11 @@ window.addEventListener('appinstalled', function(){
 });
 
 function setSaved() {
-  document.getElementById('eSaveIcon').textContent = '✅';
+  document.getElementById('eSaveIcon').innerHTML = `
+    <svg class="elahi-bar-icon-svg" viewBox="0 0 24 24" fill="currentColor" style="color: #008069;">
+      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+    </svg>
+  `;
   document.getElementById('eSaveLabel').textContent = 'Installed ✓';
   document.getElementById('eBtnSave').classList.add('saved');
 }
@@ -3750,10 +3827,13 @@ function eToggle(panel) {
   eOpenPanel = panel;
   if (panel === 'refresh') {
     document.getElementById('ePopRefresh').classList.add('open');
+    document.getElementById('eBtnRefresh').classList.add('active');
   } else if (panel === 'save') {
     document.getElementById('ePopSave').classList.add('open');
+    document.getElementById('eBtnSave').classList.add('active');
   } else if (panel === 'warning_info') {
     document.getElementById('ePopWarning').classList.add('open');
+    document.getElementById('eBtnWarning').classList.add('active');
   }
 }
 
@@ -3762,6 +3842,14 @@ function closeAll() {
   document.getElementById('ePopSave').classList.remove('open');
   var pw = document.getElementById('ePopWarning');
   if (pw) pw.classList.remove('open');
+  document.getElementById('eBtnRefresh').classList.remove('active');
+  document.getElementById('eBtnSave').classList.remove('active');
+  document.getElementById('eBtnWarning').classList.remove('active');
+  
+  // Hide instructions on close
+  var inst = document.getElementById('eInstallInstructions');
+  if (inst) inst.style.display = 'none';
+  
   eOpenPanel = null;
 }
 
@@ -3798,7 +3886,22 @@ function doRefresh() {
   spinner.style.display = 'block';
   msg.textContent = 'GitHub سے تازہ ڈیٹا آ رہا ہے...';
 
-  fetch(GITHUB_RAW + '?t=' + Date.now())
+  // Check if GITHUB_RAW is still placeholder, use current URL if hosted
+  var targetUrl = GITHUB_RAW;
+  if (targetUrl.includes('YOUR_USER/YOUR_REPO')) {
+    if (window.location.protocol.startsWith('http')) {
+      targetUrl = window.location.href.split('?')[0];
+    } else {
+      spinner.style.display = 'none';
+      msg.textContent = '⚠️ یہ فائل کمپیوٹر پر لوکل کھلی ہوئی ہے، اس لیے اپڈیٹ نہیں ہو سکتی۔ اپڈیٹ کرنے کے لیے اسے ہوسٹڈ لنک سے چلائیں۔';
+      btn.disabled = false;
+      btn.textContent = '🔃 UPDATE';
+      setTimeout(function(){ statusDiv.classList.remove('show'); }, 6000);
+      return;
+    }
+  }
+
+  fetch(targetUrl + '?t=' + Date.now())
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
     .then(function(html){
       // Cache in localStorage for offline use
@@ -3835,9 +3938,39 @@ function doSave() {
       }
     });
   } else {
-    // iOS / unsupported: show manual guide
-    alert('iOS Safari:\n1. نیچے Share بٹن دبائیں\n2. "Add to Home Screen" منتخب کریں\n3. Add دبائیں ✅\n\nDesktop Chrome:\nایڈریس بار کے دائیں جانب انسٹال آئیکن دبائیں');
+    // Show custom step-by-step install guide
+    var inst = document.getElementById('eInstallInstructions');
+    if (inst) {
+      inst.style.display = 'block';
+      var os = detectOS();
+      setInstallTab(os);
+    }
   }
+}
+
+// Manual install helper functions
+function setInstallTab(tab) {
+  var guides = ['android', 'ios', 'desktop'];
+  guides.forEach(function(g) {
+    var guideEl = document.getElementById('guide-' + g);
+    if (guideEl) guideEl.style.display = (g === tab) ? 'block' : 'none';
+    var tabBtn = document.getElementById('tab-' + g);
+    if (tabBtn) {
+      tabBtn.style.color = (g === tab) ? '#00875A' : '#54656f';
+      tabBtn.style.borderBottom = (g === tab) ? '2px solid #00875A' : 'none';
+    }
+  });
+}
+
+function detectOS() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'ios';
+  }
+  if (/android/i.test(userAgent)) {
+    return 'android';
+  }
+  return 'desktop';
 }
 </script>
 
