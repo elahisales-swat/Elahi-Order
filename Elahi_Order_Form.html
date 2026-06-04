@@ -3466,4 +3466,379 @@ function closeInfo() {
   </div>
 </div>
 
+<!-- ====== PWA META ====== -->
+<script>
+(function(){
+  function m(n,v){var t=document.createElement('meta');t.name=n;t.content=v;document.head.appendChild(t);}
+  m('apple-mobile-web-app-capable','yes');
+  m('apple-mobile-web-app-title','ELAHI ORDER');
+  m('mobile-web-app-capable','yes');
+  m('theme-color','#00875A');
+  
+  // Dynamically use the "E" logo from the header image as the app icon
+  var headerImg = document.querySelector('.header img');
+  var ico = headerImg ? headerImg.src : "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='28' fill='#00875A'/><text x='96' y='112' font-size='90' text-anchor='middle' font-family='serif'>🛒</text><text x='96' y='152' font-size='26' text-anchor='middle' fill='white' font-family='Arial' font-weight='900'>ELAHI</text></svg>");
+  var icoType = ico.startsWith('data:image/jpeg') ? 'image/jpeg' : 'image/svg+xml';
+  
+  // Set apple-touch-icon link for iOS Safari compatibility
+  var linkApple = document.createElement('link');
+  linkApple.rel = 'apple-touch-icon';
+  linkApple.href = ico;
+  document.head.appendChild(linkApple);
+
+  var mf = {
+    name: "ELAHI ORDER",
+    short_name: "ELAHI ORDER",
+    start_url: location.href,
+    display: "standalone",
+    background_color: "#00875A",
+    theme_color: "#00875A",
+    icons: [{src: ico, sizes: "192x192", type: icoType, purpose: "any maskable"}]
+  };
+  try{var b=new Blob([JSON.stringify(mf)],{type:'application/json'});var u=URL.createObjectURL(b);var l=document.createElement('link');l.rel='manifest';l.href=u;document.head.appendChild(l);}catch(e){}
+})();
+</script>
+
+<!-- ====== 2-BUTTON BOTTOM BAR ====== -->
+<style>
+.elahi-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-top: 1.5px solid #e0e0e0;
+  display: flex;
+  z-index: 200;
+  box-shadow: 0 -3px 18px rgba(0,0,0,0.13);
+  height: 64px;
+}
+.elahi-bar-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px 10px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s;
+  position: relative;
+}
+.elahi-bar-btn:active { background: #f0f0f0; }
+.elahi-bar-btn:first-child {
+  background: linear-gradient(180deg, #fff 60%, #f0f7ff);
+  border-right: 1.5px solid #e0e0e0;
+}
+.elahi-bar-btn:last-child {
+  background: linear-gradient(180deg, #fff 60%, #f0fff5);
+}
+.elahi-bar-icon { font-size: 1.5rem; line-height: 1; }
+.elahi-bar-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-family: 'Inter','Segoe UI',sans-serif;
+}
+.elahi-bar-btn:first-child .elahi-bar-icon { color: #1565C0; }
+.elahi-bar-btn:first-child .elahi-bar-label { color: #1565C0; }
+.elahi-bar-btn:last-child .elahi-bar-icon { color: #00875A; }
+.elahi-bar-btn:last-child .elahi-bar-label { color: #00875A; }
+
+/* installed: save btn becomes green tick */
+.elahi-bar-btn.saved .elahi-bar-icon { color: #aaa; }
+.elahi-bar-btn.saved .elahi-bar-label { color: #aaa; }
+
+/* Slide-up popup panel */
+.elahi-popup {
+  display: none;
+  position: fixed;
+  bottom: 64px; left: 0; right: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  z-index: 199;
+  animation: ePopUp 0.22s ease;
+}
+@keyframes ePopUp {
+  from { transform: translateY(20px); opacity:0; }
+  to   { transform: translateY(0);    opacity:1; }
+}
+.elahi-popup.open { display: block; }
+
+/* Refresh panel */
+.ep-refresh {
+  background: linear-gradient(135deg,#0d47a1,#1565C0);
+  border-top: 2px solid #1976D2;
+  padding: 13px 15px 15px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.22);
+}
+/* Save panel */
+.ep-save {
+  background: linear-gradient(135deg,#004d2e,#00875A);
+  border-top: 2px solid #00a86b;
+  padding: 13px 15px 15px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.22);
+}
+
+.ep-row { display:flex; align-items:center; gap:11px; }
+.ep-ico { border-radius:12px; width:46px; height:46px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.4rem; }
+.ep-ico-refresh { background:rgba(255,255,255,0.15); }
+.ep-ico-save    { background:rgba(255,255,255,0.15); }
+.ep-info { flex:1; min-width:0; }
+.ep-title { color:#fff; font-size:0.87rem; font-weight:900; letter-spacing:0.3px; }
+.ep-sub { color:rgba(255,255,255,0.68); font-size:0.69rem; font-family:'Noto Nastaliq Urdu',serif; direction:rtl; line-height:1.5; margin-top:1px; }
+.ep-btn {
+  border:none; border-radius:10px; padding:10px 15px;
+  color:#fff; font-size:0.77rem; font-weight:900;
+  cursor:pointer; white-space:nowrap; flex-shrink:0;
+  letter-spacing:0.3px;
+}
+.ep-btn-refresh { background:linear-gradient(135deg,#42a5f5,#1976D2); box-shadow:0 3px 10px rgba(25,118,210,0.5); }
+.ep-btn-save    { background:linear-gradient(135deg,#00e676,#00875A); box-shadow:0 3px 10px rgba(0,135,90,0.5); }
+.ep-btn:active  { transform:scale(0.96); }
+.ep-btn:disabled { opacity:0.6; }
+
+.ep-status {
+  display:none; margin-top:9px;
+  background:rgba(255,255,255,0.12); border-radius:8px;
+  padding:7px 11px; align-items:center; gap:8px;
+}
+.ep-status.show { display:flex; }
+.ep-spinner { width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top:2px solid #fff;border-radius:50%;animation:eSpin 0.75s linear infinite;flex-shrink:0; }
+.ep-msg { color:rgba(255,255,255,0.88); font-size:0.7rem; font-family:'Noto Nastaliq Urdu',serif; direction:rtl; }
+@keyframes eSpin { to{transform:rotate(360deg);} }
+
+/* hint strip */
+.ep-hint { margin-top:8px; background:rgba(255,255,255,0.1); border-radius:7px; padding:6px 11px; }
+.ep-hint span { color:rgba(255,255,255,0.75); font-size:0.69rem; font-family:'Noto Nastaliq Urdu',serif; direction:rtl; line-height:1.6; display:block; text-align:right; }
+
+/* red dot on refresh when update available */
+.e-dot {
+  position:absolute; top:7px; right:calc(50% - 18px);
+  width:8px;height:8px;background:#e53935;border-radius:50%;
+  display:none;
+  animation:eDotPulse 1.4s ease-in-out infinite;
+}
+@keyframes eDotPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.6);}}
+</style>
+
+<!-- BAR HTML -->
+<div class="elahi-bar">
+
+  <!-- BTN 1: REFRESH DATA -->
+  <button class="elahi-bar-btn" id="eBtnRefresh" onclick="eToggle('refresh')">
+    <span class="e-dot" id="eRefreshDot"></span>
+    <span class="elahi-bar-icon">🔃</span>
+    <span class="elahi-bar-label">Refresh Data</span>
+  </button>
+
+  <!-- BTN 3: IMPORTANT INFO (Urdu disclaimer) -->
+  <button class="elahi-bar-btn" id="eBtnWarning" onclick="eToggle('warning_info')">
+    <span class="elahi-bar-icon" style="color: #DE350B;">⚠️</span>
+    <span class="elahi-bar-label">Notice</span>
+  </button>
+
+  <!-- BTN 2: INSTALL APP -->
+  <button class="elahi-bar-btn" id="eBtnSave" onclick="eToggle('save')">
+    <span class="elahi-bar-icon" id="eSaveIcon">📲</span>
+    <span class="elahi-bar-label" id="eSaveLabel">Install App</span>
+  </button>
+
+</div>
+
+<!-- REFRESH POPUP -->
+<div class="elahi-popup" id="ePopRefresh">
+  <div class="ep-refresh">
+    <div class="ep-row">
+      <div class="ep-ico ep-ico-refresh">🔃</div>
+      <div class="ep-info">
+        <div class="ep-title">REFRESH DATA</div>
+        <div class="ep-sub">انٹرنیٹ سے تازہ ڈیٹا لے کر خود بخود محفوظ ہو جائے گا</div>
+      </div>
+      <button class="ep-btn ep-btn-refresh" id="eRefreshBtn" onclick="doRefresh()">🔃 UPDATE</button>
+    </div>
+    <div class="ep-status" id="eRefreshStatus">
+      <div class="ep-spinner" id="eRefreshSpinner"></div>
+      <span class="ep-msg" id="eRefreshMsg"></span>
+    </div>
+    <div class="ep-hint">
+      <span>✅ انٹرنیٹ ہو تو لنک سے تازہ فائل آئے گی اور خودبخود سیو ہو جائے گی</span>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE POPUP -->
+<div class="elahi-popup" id="ePopSave">
+  <div class="ep-save">
+    <div class="ep-row">
+      <div class="ep-ico ep-ico-save">🛒</div>
+      <div class="ep-info">
+        <div class="ep-title">ELAHI ORDER — INSTALL APP</div>
+        <div class="ep-sub">موبائل / کمپیوٹر میں محفوظ کریں — بغیر انٹرنیٹ چلائیں</div>
+      </div>
+      <button class="ep-btn ep-btn-save" id="eSaveBtn" onclick="doSave()">📲 INSTALL</button>
+    </div>
+    <div class="ep-hint">
+      <span>📱 ایک بار Install کریں — پھر آئیکن سے بغیر انٹرنیٹ کھولیں</span>
+    </div>
+  </div>
+</div>
+
+<!-- WARNING INFO POPUP -->
+<div class="elahi-popup" id="ePopWarning">
+  <div style="background: linear-gradient(135deg, #d32f2f, #f44336); border-top: 2px solid #ff5252; padding: 13px 15px 15px; box-shadow: 0 -4px 20px rgba(0,0,0,0.22); color: white;">
+    <div class="ep-row" style="display: flex; align-items: center; gap: 11px;">
+      <div class="ep-ico" style="background: rgba(255,255,255,0.15); border-radius: 12px; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.4rem;">⚠️</div>
+      <div class="ep-info" style="flex: 1; min-width: 0;">
+        <div class="ep-title" style="color: #fff; font-weight: 900; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase;">Important Notice</div>
+      </div>
+      <button onclick="closeAll()" style="background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: white; border-radius: 50%; width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; outline: none;">✕</button>
+    </div>
+    <div style="margin-top: 12px; background: rgba(255,255,255,0.98); color: #1a1a1a; border-radius: 10px; padding: 15px; font-size: 0.95rem; line-height: 1.8; text-align: right; direction: rtl; font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Segoe UI', serif; font-weight: 600; box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);">
+      <strong style="color: #d32f2f; font-size: 1.05rem; display: block; margin-bottom: 8px;">ضروری انتباہ:</strong>
+      برائے مہربانی ایکسپائری (Expiry) کو 4 سے 3 ماہ پہلے واپس کرنا لازمی ہے۔ اس کے علاوہ اپنی ایکسپائری کا کریڈٹ نوٹ (Credit Note) یا دیگر کوئی بھی بقایا رقم، سیلز مین سے 7 دن کے اندر وصول کرنا لازمی ہے۔ 7 دن گزرنے کے بعد ادارہ کسی بھی قسم کا ذمہ دار نہیں ہوگا۔
+      <br>
+      <span style="display: block; margin-top: 8px; text-align: left; font-weight: 700; color: #444;">شکریہ</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- CONFIG: apna GitHub raw URL yahan daalein ----
+var GITHUB_RAW = 'https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/Elahi-Order_form.html';
+// ---------------------------------------------------
+
+var deferredPrompt = null;
+var pwaInstalled = false;
+var eOpenPanel = null; // 'refresh' | 'save' | 'warning_info' | null
+
+// Detect already installed (standalone mode)
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  pwaInstalled = true;
+  setSaved();
+}
+
+// Chrome install prompt
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// After install
+window.addEventListener('appinstalled', function(){
+  pwaInstalled = true;
+  deferredPrompt = null;
+  setSaved();
+  closeAll();
+});
+
+function setSaved() {
+  document.getElementById('eSaveIcon').textContent = '✅';
+  document.getElementById('eSaveLabel').textContent = 'Installed ✓';
+  document.getElementById('eBtnSave').classList.add('saved');
+}
+
+function eToggle(panel) {
+  if (eOpenPanel === panel) {
+    closeAll();
+    return;
+  }
+  closeAll();
+  eOpenPanel = panel;
+  if (panel === 'refresh') {
+    document.getElementById('ePopRefresh').classList.add('open');
+  } else if (panel === 'save') {
+    document.getElementById('ePopSave').classList.add('open');
+  } else if (panel === 'warning_info') {
+    document.getElementById('ePopWarning').classList.add('open');
+  }
+}
+
+function closeAll() {
+  document.getElementById('ePopRefresh').classList.remove('open');
+  document.getElementById('ePopSave').classList.remove('open');
+  var pw = document.getElementById('ePopWarning');
+  if (pw) pw.classList.remove('open');
+  eOpenPanel = null;
+}
+
+// Close on outside tap
+document.addEventListener('click', function(e){
+  if (!eOpenPanel) return;
+  var bar = document.querySelector('.elahi-bar');
+  var pr = document.getElementById('ePopRefresh');
+  var ps = document.getElementById('ePopSave');
+  var pw = document.getElementById('ePopWarning');
+  if (!bar.contains(e.target) && !pr.contains(e.target) && !ps.contains(e.target) && (!pw || !pw.contains(e.target))) {
+    closeAll();
+  }
+});
+
+// ---- REFRESH / UPDATE ----
+function doRefresh() {
+  var btn = document.getElementById('eRefreshBtn');
+  var statusDiv = document.getElementById('eRefreshStatus');
+  var msg = document.getElementById('eRefreshMsg');
+  var spinner = document.getElementById('eRefreshSpinner');
+
+  if (!navigator.onLine) {
+    statusDiv.classList.add('show');
+    spinner.style.display = 'none';
+    msg.textContent = '⚠️ انٹرنیٹ نہیں — آن لائن ہو کر کوشش کریں';
+    setTimeout(function(){ statusDiv.classList.remove('show'); }, 3000);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  statusDiv.classList.add('show');
+  spinner.style.display = 'block';
+  msg.textContent = 'GitHub سے تازہ ڈیٹا آ رہا ہے...';
+
+  fetch(GITHUB_RAW + '?t=' + Date.now())
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(html){
+      // Cache in localStorage for offline use
+      try { localStorage.setItem('elahi_cached_html', html); localStorage.setItem('elahi_cache_time', Date.now()); } catch(ex){}
+      spinner.style.display = 'none';
+      msg.textContent = '✅ تازہ ڈیٹا محفوظ! صفحہ دوبارہ لوڈ ہو رہا ہے...';
+      btn.textContent = '✅ DONE';
+      document.getElementById('eRefreshDot').style.display = 'none';
+      setTimeout(function(){ location.reload(true); }, 1400);
+    })
+    .catch(function(err){
+      spinner.style.display = 'none';
+      msg.textContent = '⚠️ اپڈیٹ نہ ہو سکی — ' + (err.message || '');
+      btn.disabled = false;
+      btn.textContent = '🔃 UPDATE';
+      setTimeout(function(){ statusDiv.classList.remove('show'); btn.textContent='🔃 UPDATE'; }, 3500);
+    });
+}
+
+// ---- SAVE / INSTALL ----
+function doSave() {
+  if (pwaInstalled) {
+    closeAll();
+    return;
+  }
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r){
+      if (r.outcome === 'accepted') {
+        pwaInstalled = true;
+        deferredPrompt = null;
+        setSaved();
+        closeAll();
+      }
+    });
+  } else {
+    // iOS / unsupported: show manual guide
+    alert('iOS Safari:\n1. نیچے Share بٹن دبائیں\n2. "Add to Home Screen" منتخب کریں\n3. Add دبائیں ✅\n\nDesktop Chrome:\nایڈریس بار کے دائیں جانب انسٹال آئیکن دبائیں');
+  }
+}
+</script>
+
 </body>
