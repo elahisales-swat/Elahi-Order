@@ -1699,7 +1699,7 @@
 </div>
 
 
-<!-- Service Worker Registration -->
+<!-- Service Worker & Auto-Install PWA -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -1712,6 +1712,30 @@
         });
     });
   }
+
+  // Auto-prompt PWA installation on first user interaction
+  let pwaPromptEvent = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    pwaPromptEvent = e;
+    
+    function triggerAutoInstall() {
+      if (pwaPromptEvent) {
+        pwaPromptEvent.prompt();
+        pwaPromptEvent.userChoice.then(function(result) {
+          if (result.outcome === 'accepted') {
+            console.log('User accepted the PWA install prompt');
+          }
+          pwaPromptEvent = null;
+        });
+      }
+      document.removeEventListener('click', triggerAutoInstall);
+      document.removeEventListener('touchstart', triggerAutoInstall);
+    }
+    
+    document.addEventListener('click', triggerAutoInstall);
+    document.addEventListener('touchstart', triggerAutoInstall);
+  });
 </script>
 <script src="script.js"></script>
 </body>
