@@ -1708,14 +1708,14 @@ window.deferredPrompt = null;
 
 // If running inside Android App (local assets via file:/// protocol), disable and unregister Service Worker to prevent cache lock
 if (window.location.protocol === 'file:') {
-    if ('serviceWorker' in navigator) {
+    if (navigator.serviceWorker && typeof navigator.serviceWorker.getRegistrations === 'function') {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for (var i = 0; i < registrations.length; i++) {
                 registrations[i].unregister();
             }
-        });
+        }).catch(function(e) { console.error(e); });
     }
-} else if ('serviceWorker' in navigator) {
+} else if (navigator.serviceWorker && typeof navigator.serviceWorker.register === 'function') {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function(reg) {
             // Force checking for updates on page load
@@ -1756,6 +1756,12 @@ window.addEventListener('beforeinstallprompt', function(e) {
         if (cached) {
             var parsed = JSON.parse(cached);
             if (parsed && parsed.companies && parsed.products) {
+                // Validation check to prevent loading bad data format from older compiles
+                if (parsed.products.length > 0 && parsed.products[0].net === undefined) {
+                    console.warn("Invalid cached data format. Clearing cache...");
+                    localStorage.removeItem('elahi_supabase_data');
+                    return;
+                }
                 window.companies = parsed.companies;
                 window.products = parsed.products;
                 console.log("Loaded " + window.products.length + " products from Supabase cache.");
