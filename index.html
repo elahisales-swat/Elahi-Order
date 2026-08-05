@@ -489,16 +489,12 @@
     height: 100vh;
     overflow-y: auto;
     z-index: 9999;
-    transform: translateY(100%);
-    visibility: hidden;
-    transition: transform 0.35s cubic-bezier(.4,0,.2,1), visibility 0.35s;
-    padding-bottom: 30px;
-    display: flex;
+    display: none;
     flex-direction: column;
+    padding-bottom: 30px;
   }
   .cart-panel.open { 
-    transform: translateY(0); 
-    visibility: visible;
+    display: flex;
   }
   .cart-handle { display: none; }
   .cart-header {
@@ -1709,7 +1705,17 @@
 <!-- Service Worker & Auto-Install PWA -->
 <script>
 window.deferredPrompt = null;
-if ('serviceWorker' in navigator) {
+
+// If running inside Android App (local assets via file:/// protocol), disable and unregister Service Worker to prevent cache lock
+if (window.location.protocol === 'file:') {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var i = 0; i < registrations.length; i++) {
+                registrations[i].unregister();
+            }
+        });
+    }
+} else if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function(reg) {
             // Force checking for updates on page load
