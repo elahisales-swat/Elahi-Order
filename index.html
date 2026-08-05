@@ -1743,6 +1743,23 @@ window.addEventListener('beforeinstallprompt', function(e) {
 </script>
 <script src="script.js"></script>
 <script>
+// Apply cached Supabase data if available
+(function() {
+    try {
+        var cached = localStorage.getItem('elahi_supabase_data');
+        if (cached) {
+            var parsed = JSON.parse(cached);
+            if (parsed && parsed.companies && parsed.products) {
+                window.companies = parsed.companies;
+                window.products = parsed.products;
+                console.log("Loaded " + window.products.length + " products from Supabase cache.");
+            }
+        }
+    } catch(e) {
+        console.error("Failed to load cached Supabase data:", e);
+    }
+})();
+
 // Override doSave to trigger native APK download as fallback on Android
 (function() {
     // Check if PWA is already installed on page load
@@ -1821,5 +1838,82 @@ window.addEventListener('beforeinstallprompt', function(e) {
         }
     };
 })();
+
+// Override doRefresh to pull products database updates from Supabase rest API
+window.doRefresh = function() {
+    var refreshBtn = document.getElementById('eRefreshBtn');
+    var refreshStatus = document.getElementById('eRefreshStatus');
+    var refreshMsg = document.getElementById('eRefreshMsg');
+    var refreshSpinner = document.getElementById('eRefreshSpinner');
+    
+    if (!navigator.onLine) {
+        if (refreshStatus) refreshStatus.classList.add('loading');
+        if (refreshSpinner) refreshSpinner.style.display = 'none';
+        if (refreshMsg) refreshMsg.textContent = 'No Internet Connection';
+        setTimeout(function() {
+            if (refreshStatus) refreshStatus.classList.remove('loading');
+        }, 3000);
+        return;
+    }
+    
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = '⏳';
+    }
+    if (refreshStatus) {
+        refreshStatus.classList.add('loading');
+    }
+    if (refreshSpinner) {
+        refreshSpinner.style.display = 'block';
+    }
+    if (refreshMsg) {
+        refreshMsg.textContent = 'Updating from cloud...';
+    }
+    
+    var url = "https://qlgmmxknbvgrhidvksfp.supabase.co/rest/v1/reports_data?id=eq.elahi_order_db";
+    var key = "sb_publishable_KBdAWv3UYBtX3newYuk_Tw_QIy8ZmKL";
+    
+    fetch(url, {
+        headers: {
+            "apikey": key,
+            "Authorization": "Bearer " + key
+        }
+    })
+    .then(function(response) {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+    })
+    .then(function(data) {
+        if (data && data.length > 0 && data[0].data) {
+            var dbPayload = data[0].data;
+            if (dbPayload.companies && dbPayload.products) {
+                localStorage.setItem('elahi_supabase_data', JSON.stringify(dbPayload));
+                localStorage.setItem('elahi_cache_time', Date.now().toString());
+                
+                if (refreshSpinner) refreshSpinner.style.display = 'none';
+                if (refreshMsg) refreshMsg.textContent = 'Success! Reloading...';
+                if (refreshBtn) refreshBtn.textContent = '✅';
+                
+                setTimeout(function() {
+                    location.reload();
+                }, 800);
+                return;
+            }
+        }
+        throw new Error("Invalid format");
+    })
+    .catch(function(error) {
+        console.error("Sync error:", error);
+        if (refreshSpinner) refreshSpinner.style.display = 'none';
+        if (refreshMsg) refreshMsg.textContent = 'Failed: ' + error.message;
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '🔄 UPDATE';
+        }
+        setTimeout(function() {
+            if (refreshStatus) refreshStatus.classList.remove('loading');
+        }, 3000);
+    });
+};
 </script>
 </body>
