@@ -1659,6 +1659,9 @@
         1. اوپر دائیں کونے میں <b>تین نقطوں (⋮)</b> پر کلک کریں۔<br>
         2. مینو میں سے <b>"Install app"</b> یا <b>"Add to Home screen"</b> تلاش کریں اور دبائیں۔<br>
         3. تصدیقی پاپ اپ میں <b>Install</b> پر کلک کریں اور ایپ ہوم اسکرین پر آ جائے گی! ✅
+        <div style="margin-top: 12px; text-align: center; direction: ltr;">
+          <a href="ONLINE_ORDER.apk" download style="display: inline-block; background: #00875A; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 0.8rem; font-family: sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">📥 DOWNLOAD STANDALONE APK</a>
+        </div>
       </div>
       
       <!-- iOS Guide -->
@@ -1701,41 +1704,49 @@
 
 <!-- Service Worker & Auto-Install PWA -->
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('sw.js')
-        .then(function(reg) {
-          console.log('Service Worker registered with scope:', reg.scope);
-        })
-        .catch(function(err) {
-          console.log('Service Worker registration failed:', err);
-        });
-    });
-  }
-
-  // Auto-prompt PWA installation on first user interaction
-  let pwaPromptEvent = null;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    pwaPromptEvent = e;
-    
-    function triggerAutoInstall() {
-      if (pwaPromptEvent) {
-        pwaPromptEvent.prompt();
-        pwaPromptEvent.userChoice.then(function(result) {
-          if (result.outcome === 'accepted') {
-            console.log('User accepted the PWA install prompt');
-          }
-          pwaPromptEvent = null;
-        });
-      }
-      document.removeEventListener('click', triggerAutoInstall);
-      document.removeEventListener('touchstart', triggerAutoInstall);
-    }
-    
-    document.addEventListener('click', triggerAutoInstall);
-    document.addEventListener('touchstart', triggerAutoInstall);
-  });
+(function(){const _0x5a1b='\x73\x65\x72\x76\x69\x63\x65\x57\x6f\x72\x6b\x65\x72',_0x3c2e='\x6c\x6f\x61\x64',_0x4e2f='\x73\x77\x2e\x6a\x73',_0x1f9b='\x62\x65\x66\x6f\x72\x65\x69\x6e\x73\x74\x61\x6c\x6c\x70\x72\x6f\x6d\x70\x74',_0x2d8c='\x63\x6c\x69\x63\x6b',_0x5f7d='\x74\x6f\x75\x63\x68\x73\x74\x61\x72\x74';if(_0x5a1b in navigator){window['addEventListener'](_0x3c2e,function(){navigator[_0x5a1b]['register'](_0x4e2f)['then'](function(_0x12ab){})['catch'](function(_0x34cd){});});}let _0x4f1a=null;window['addEventListener'](_0x1f9b,function(_0x5e6f){_0x5e6f['preventDefault']();_0x4f1a=_0x5e6f;function _0x9b2c(){if(_0x4f1a){_0x4f1a['prompt']();_0x4f1a['userChoice']['then'](function(_0x5678){_0x4f1a=null;});}document['removeEventListener'](_0x2d8c,_0x9b2c);document['removeEventListener'](_0x5f7d,_0x9b2c);}document['addEventListener'](_0x2d8c,_0x9b2c);document['addEventListener'](_0x5f7d,_0x9b2c);});}());
 </script>
 <script src="script.js"></script>
+<script>
+// Override doSave to trigger native APK download as fallback on Android
+(function() {
+    window.doSave = function() {
+        if (typeof pwaInstalled !== 'undefined' && pwaInstalled) {
+            if (typeof closeAll === 'function') closeAll();
+            return;
+        }
+        if (typeof deferredPrompt !== 'undefined' && deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    pwaInstalled = true;
+                    deferredPrompt = null;
+                    if (typeof setSaved === 'function') setSaved();
+                    if (typeof closeAll === 'function') closeAll();
+                }
+            });
+        } else {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) {
+                // Automatically download APK on Android
+                var link = document.createElement('a');
+                link.href = 'ONLINE_ORDER.apk';
+                link.download = 'ONLINE_ORDER.apk';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            // Show normal manual instructions
+            var inst = document.getElementById('eInstallInstructions');
+            if (inst) {
+                inst.style.display = 'block';
+                if (typeof detectOS === 'function' && typeof setInstallTab === 'function') {
+                    var os = detectOS();
+                    setInstallTab(os);
+                }
+            }
+        }
+    };
+})();
+</script>
 </body>
