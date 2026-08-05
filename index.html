@@ -1752,8 +1752,8 @@ window.addEventListener('beforeinstallprompt', function(e) {
             var parsed = JSON.parse(cached);
             if (parsed && parsed.companies && parsed.products) {
                 // Validation check to prevent loading bad data format from older compiles
-                if (parsed.products.length > 0 && parsed.products[0].net === undefined) {
-                    console.warn("Invalid cached data format. Clearing cache...");
+                if (parsed.products.length > 0 && (parsed.products[0].net === undefined || parsed.products[0].name === "TEST PRODUCT" || parsed.products.length < 10)) {
+                    console.warn("Invalid/test cached data format. Clearing cache...");
                     localStorage.removeItem('elahi_supabase_data');
                     return;
                 }
@@ -1844,6 +1844,22 @@ window.addEventListener('beforeinstallprompt', function(e) {
             }
         }
     };
+
+    // Override and detect native APK WebView state
+    if (window.location.protocol === 'file:') {
+        window.pwaInstalled = true;
+        setTimeout(function() {
+            if (typeof setSaved === 'function') setSaved();
+            var originalEToggle = window.eToggle;
+            window.eToggle = function(panel) {
+                if (panel === 'save') {
+                    alert("ONLINE ORDER APP ALREADY INSTALL IN YOUR MOBILE");
+                    return;
+                }
+                if (originalEToggle) originalEToggle(panel);
+            };
+        }, 100);
+    }
 })();
 
 // Override doRefresh to pull products database updates from Supabase rest API
