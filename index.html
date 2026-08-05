@@ -1745,8 +1745,42 @@ window.addEventListener('beforeinstallprompt', function(e) {
 <script>
 // Override doSave to trigger native APK download as fallback on Android
 (function() {
+    // Check if PWA is already installed on page load
+    function checkPwaStatus() {
+        if ('getInstalledRelatedApps' in navigator) {
+            navigator.getInstalledRelatedApps().then(function(relatedApps) {
+                if (relatedApps.length > 0) {
+                    window.pwaInstalled = true;
+                    var saveBtn = document.getElementById('eSaveBtn');
+                    if (saveBtn) {
+                        saveBtn.textContent = 'INSTALLED';
+                    }
+                    if (typeof setSaved === 'function') setSaved();
+                }
+            });
+        }
+    }
+    
+    // Call PWA check on load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkPwaStatus);
+    } else {
+        checkPwaStatus();
+    }
+
+    // Hook PWA install event to set status
+    window.addEventListener('appinstalled', function() {
+        window.pwaInstalled = true;
+        var saveBtn = document.getElementById('eSaveBtn');
+        if (saveBtn) {
+            saveBtn.textContent = 'INSTALLED';
+        }
+        if (typeof setSaved === 'function') setSaved();
+    });
+
     window.doSave = function() {
-        if (typeof pwaInstalled !== 'undefined' && pwaInstalled) {
+        if (window.pwaInstalled || (typeof pwaInstalled !== 'undefined' && pwaInstalled)) {
+            alert("Online Order APP Already Install On Your Mobile");
             if (typeof closeAll === 'function') closeAll();
             return;
         }
@@ -1754,9 +1788,13 @@ window.addEventListener('beforeinstallprompt', function(e) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(function(choiceResult) {
                 if (choiceResult.outcome === 'accepted') {
-                    pwaInstalled = true;
+                    window.pwaInstalled = true;
                     deferredPrompt = null;
                     if (typeof setSaved === 'function') setSaved();
+                    var saveBtn = document.getElementById('eSaveBtn');
+                    if (saveBtn) {
+                        saveBtn.textContent = 'INSTALLED';
+                    }
                     if (typeof closeAll === 'function') closeAll();
                 }
             });
