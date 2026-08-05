@@ -475,14 +475,14 @@
   .cart-overlay {
     display: none;
     position: fixed;
-    inset: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.6);
     z-index: 9000;
   }
   .cart-overlay.open { display: block; }
   .cart-panel {
     position: fixed;
-    inset: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: #F4F5F7;
     border-radius: 0;
     max-height: 100vh;
@@ -1135,8 +1135,8 @@
 </style>
 
 <!-- ===================== ORDER HISTORY MODAL ===================== -->
-<div id="historyOverlay" onclick="closeHistory()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
-<div id="historyPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#F4F5F7;border-radius:18px 18px 0 0;z-index:8001;max-height:90vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
+<div id="historyOverlay" onclick="closeHistory()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
+<div id="historyPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#F4F5F7;border-radius:18px 18px 0 0;z-index:8001;height:90vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
   
   <!-- Header -->
   <div style="background:linear-gradient(135deg,#1a237e,#283593);padding:14px 16px 12px;border-radius:18px 18px 0 0;flex-shrink:0;">
@@ -1311,8 +1311,8 @@
 </style>
 
 <!-- ===================== INFO / BON SCHEM MODAL ===================== -->
-<div id="infoOverlay" onclick="closeInfo()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
-<div id="infoPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#fff;border-radius:18px 18px 0 0;z-index:8001;max-height:85vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
+<div id="infoOverlay" onclick="closeInfo()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:8000;backdrop-filter:blur(3px);"></div>
+<div id="infoPanel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-width:600px;margin:0 auto;background:#fff;border-radius:18px 18px 0 0;z-index:8001;height:85vh;overflow:hidden;flex-direction:column;box-shadow:0 -8px 32px rgba(0,0,0,0.25);">
 
   <!-- Header -->
   <div style="background:linear-gradient(135deg,#B71C1C,#c62828);padding:13px 16px 11px;border-radius:18px 18px 0 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
@@ -1391,7 +1391,7 @@
 #infoPanel.open { display:flex !important; }
 </style>
 <!-- ====== CLEAR ALL CONFIRM POPUP ====== -->
-<div id="clearAllOverlay" onclick="document.getElementById('clearAllOverlay').style.display='none';document.getElementById('clearAllPopup').style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
+<div id="clearAllOverlay" onclick="document.getElementById('clearAllOverlay').style.display='none';document.getElementById('clearAllPopup').style.display='none';" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
 <div id="clearAllPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:white;border-radius:16px;padding:24px 22px 18px;max-width:290px;width:88%;flex-direction:column;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.28);text-align:center;">
   <div style="font-size:2rem;">⚠️</div>
   <div style="font-size:0.95rem;font-weight:800;color:#172B4D;line-height:1.4;">Sure Clear All<br>Orders Record?</div>
@@ -1403,7 +1403,7 @@
 </div>
 
 <!-- ====== DELETE CONFIRM POPUP ====== -->
-<div id="deleteConfirmOverlay" onclick="document.getElementById('deleteConfirmOverlay').style.display='none';document.getElementById('deleteConfirmPopup').style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
+<div id="deleteConfirmOverlay" onclick="document.getElementById('deleteConfirmOverlay').style.display='none';document.getElementById('deleteConfirmPopup').style.display='none';" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:9000;backdrop-filter:blur(3px);"></div>
 <div id="deleteConfirmPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:white;border-radius:16px;padding:24px 22px 18px;max-width:280px;width:88%;flex-direction:column;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,0.28);text-align:center;">
   <div style="font-size:2rem;">🗑️</div>
   <div style="font-size:0.95rem;font-weight:800;color:#172B4D;">Delete the History?</div>
